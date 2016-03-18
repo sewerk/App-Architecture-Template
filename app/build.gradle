@@ -1,4 +1,6 @@
 apply plugin: 'com.android.application'
+apply plugin: 'me.tatarka.retrolambda'
+apply plugin: 'com.neenbedankt.android-apt'
 
 android {
     compileSdkVersion 23
@@ -11,6 +13,12 @@ android {
         versionCode 1
         versionName "1.0"
     }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -20,7 +28,18 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    apt 'com.google.dagger:dagger-compiler:2.0.1'
+
+    compile (
+            fileTree(dir: 'libs', include: ['*.jar']),
+            'com.android.support:appcompat-v7:23.2.1',
+            'com.jakewharton:butterknife:7.0.1',
+            'com.google.dagger:dagger:2.0.1',
+//            'io.reactivex:rxandroid:1.0.1',
+//            'org.projectlombok:lombok:1.16.6',
+//            'com.jakewharton.threetenabp:threetenabp:1.0.2',
+            'com.jakewharton.timber:timber:4.1.0',
+    )
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.2.1'
 }

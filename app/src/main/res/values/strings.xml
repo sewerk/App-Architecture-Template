@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">App Architecture Template</string>
+    <string name="hello_world">Hello World!</string>
+    <string name="hello_again">Hello again!</string>
 </resources>
