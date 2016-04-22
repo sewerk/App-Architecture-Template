@@ -29,7 +29,8 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getContentLayoutId());
-        ButterKnife.bind(this);        injectDependencies();
+        ButterKnife.bind(this);
+        injectDependencies();
         presenterDelegate = createPresenterDelegate();
     }
 

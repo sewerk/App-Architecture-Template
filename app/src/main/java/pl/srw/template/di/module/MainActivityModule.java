@@ -19,7 +19,7 @@ public class MainActivityModule {
     private final Set<BasePresenter> presenters;
 
     public MainActivityModule() {
-        presenters = new HashSet<>(8);
+        presenters = new HashSet<>(3);
     }
 
     @Provides
