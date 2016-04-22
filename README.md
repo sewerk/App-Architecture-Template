@@ -38,14 +38,8 @@ View changes are done through `BasePresenter.UIChange`. In case the view is miss
 data processing has finished, the presenter will hold the change request and execute when new view
 is bind.
 
-## Setup
-
-Implementation uses [retrolambda](https://github.com/orfjackal/retrolambda)
-so you need to set env. variable `JAVA8_HOME=path_to_java8`
-
 ## TODO
-1. remove retrolambda
-2. separate core to package
+1. separate core to package
 
 ## License
 

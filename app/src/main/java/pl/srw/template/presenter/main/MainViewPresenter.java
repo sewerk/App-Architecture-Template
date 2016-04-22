@@ -9,11 +9,21 @@ public class MainViewPresenter extends BasePresenter<MainView> {
 
     @Override
     protected void onFirstBind() {
-        present(MainView::showHelloWorld);
+        present(new UIChange<MainView>() {
+            @Override
+            public void change(MainView view) {
+                view.showHelloWorld();
+            }
+        });
     }
 
     @Override
     protected void onNewViewRestoreState() {
-        present(MainView::showHelloWorldAgain);
+        present(new UIChange<MainView>() {
+            @Override
+            public void change(MainView view) {
+                view.showHelloWorldAgain();
+            }
+        });
     }
 }
