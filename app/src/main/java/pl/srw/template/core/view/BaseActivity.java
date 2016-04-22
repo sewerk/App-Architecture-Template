@@ -1,4 +1,4 @@
-package pl.srw.template.view;
+package pl.srw.template.core.view;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -12,14 +12,14 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import pl.srw.template.R;
-import pl.srw.template.view.delegate.presenter.PresenterHandlingDelegate;
+import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
 import timber.log.Timber;
 
 /**
  * Base class for any Activity with support of scoped dependencies.
  * During creation it force to inject dependencies, on finishing it force to clear dependencies module.
  * It also provide common methods for fragment management
- * See also {@link pl.srw.template.di.scope.RetainActivityScope}
+ * See also {@link pl.srw.template.core.di.scope.RetainActivityScope}
  */
 public abstract class BaseActivity extends AppCompatActivity {
 

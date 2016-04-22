@@ -1,4 +1,4 @@
-package pl.srw.template.view.delegate.presenter;
+package pl.srw.template.core.view.delegate.presenter;
 
 /**
  * Represents component which owns presenter

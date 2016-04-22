@@ -1,4 +1,4 @@
-package pl.srw.template.di.scope;
+package pl.srw.template.core.di.scope;
 
 import javax.inject.Scope;
 

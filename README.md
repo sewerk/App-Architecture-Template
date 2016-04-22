@@ -38,9 +38,6 @@ View changes are done through `BasePresenter.UIChange`. In case the view is miss
 data processing has finished, the presenter will hold the change request and execute when new view
 is bind.
 
-## TODO
-1. separate core to package
-
 ## License
 
     Copyright 2016 Kamil Seweryn

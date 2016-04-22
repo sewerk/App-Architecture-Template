@@ -1,6 +1,6 @@
-package pl.srw.template.view.delegate.presenter;
+package pl.srw.template.core.view.delegate.presenter;
 
-import pl.srw.template.view.delegate.LifeCycleDelegating;
+import pl.srw.template.core.view.delegate.LifeCycleDelegating;
 
 /**
  * Delegate for managing associated presenter with its owner lifecycle

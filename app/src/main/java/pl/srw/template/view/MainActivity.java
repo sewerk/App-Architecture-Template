@@ -1,4 +1,4 @@
-package pl.srw.template.view.main;
+package pl.srw.template.view;
 
 import android.widget.TextView;
 
@@ -7,12 +7,12 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import pl.srw.template.R;
 import pl.srw.template.TemplateApplication;
-import pl.srw.template.presenter.main.MainView;
-import pl.srw.template.presenter.main.MainViewPresenter;
-import pl.srw.template.view.BaseActivity;
-import pl.srw.template.view.delegate.presenter.PresenterHandlingDelegate;
-import pl.srw.template.view.delegate.presenter.PresenterOwner;
-import pl.srw.template.view.delegate.presenter.SinglePresenterHandlingDelegate;
+import pl.srw.template.core.view.BaseActivity;
+import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
+import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
+import pl.srw.template.core.view.delegate.presenter.SinglePresenterHandlingDelegate;
+import pl.srw.template.presenter.MainView;
+import pl.srw.template.presenter.MainViewPresenter;
 
 public class MainActivity extends BaseActivity implements MainView, PresenterOwner {
 

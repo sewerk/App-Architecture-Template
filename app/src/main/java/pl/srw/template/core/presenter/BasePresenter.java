@@ -1,4 +1,4 @@
-package pl.srw.template.presenter;
+package pl.srw.template.core.presenter;
 
 import android.support.annotation.CallSuper;
 

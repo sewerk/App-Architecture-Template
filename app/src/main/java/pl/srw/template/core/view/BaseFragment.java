@@ -1,4 +1,4 @@
-package pl.srw.template.view;
+package pl.srw.template.core.view;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
-import pl.srw.template.view.delegate.LifeCycleDelegating;
-import pl.srw.template.view.delegate.presenter.EachViewNewPresenterOwner;
-import pl.srw.template.view.delegate.presenter.PresenterOwner;
+import pl.srw.template.core.view.delegate.LifeCycleDelegating;
+import pl.srw.template.core.view.delegate.presenter.EachViewNewPresenterOwner;
+import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
 
 /**
  * Base class for fragments which needs additional functionality

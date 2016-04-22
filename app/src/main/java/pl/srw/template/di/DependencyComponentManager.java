@@ -5,7 +5,7 @@ import pl.srw.template.di.component.ApplicationComponent;
 import pl.srw.template.di.component.DaggerApplicationComponent;
 import pl.srw.template.di.component.MainActivityComponent;
 import pl.srw.template.di.module.ApplicationModule;
-import pl.srw.template.presenter.BasePresenter;
+import pl.srw.template.core.presenter.BasePresenter;
 
 /**
  * Dagger component dependency holder

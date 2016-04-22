@@ -1,4 +1,4 @@
-package pl.srw.template.view.delegate;
+package pl.srw.template.core.view.delegate;
 
 /**
  * Base class for additional functionality based on component lifecycle

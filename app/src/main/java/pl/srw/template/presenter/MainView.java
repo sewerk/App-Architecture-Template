@@ -1,4 +1,4 @@
-package pl.srw.template.presenter.main;
+package pl.srw.template.presenter;
 
 /**
  * Main view actions

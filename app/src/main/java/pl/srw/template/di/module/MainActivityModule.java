@@ -5,10 +5,10 @@ import java.util.Set;
 
 import dagger.Module;
 import dagger.Provides;
-import pl.srw.template.di.scope.RetainActivityScope;
-import pl.srw.template.presenter.BasePresenter;
-import pl.srw.template.presenter.main.MainViewPresenter;
-import pl.srw.template.view.main.MainActivity;
+import pl.srw.template.core.di.scope.RetainActivityScope;
+import pl.srw.template.core.presenter.BasePresenter;
+import pl.srw.template.presenter.MainViewPresenter;
+import pl.srw.template.view.MainActivity;
 
 /**
  * Dependencies for {@link MainActivity} scope

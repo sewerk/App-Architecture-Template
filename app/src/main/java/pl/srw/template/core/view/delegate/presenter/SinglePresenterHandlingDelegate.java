@@ -1,6 +1,6 @@
-package pl.srw.template.view.delegate.presenter;
+package pl.srw.template.core.view.delegate.presenter;
 
-import pl.srw.template.presenter.BasePresenter;
+import pl.srw.template.core.presenter.BasePresenter;
 
 /**
  * Delegate for managing single presenter according to component lifecycle

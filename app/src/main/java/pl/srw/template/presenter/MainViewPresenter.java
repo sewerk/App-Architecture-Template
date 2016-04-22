@@ -1,6 +1,6 @@
-package pl.srw.template.presenter.main;
+package pl.srw.template.presenter;
 
-import pl.srw.template.presenter.BasePresenter;
+import pl.srw.template.core.presenter.BasePresenter;
 
 /**
  * Main view presenter
