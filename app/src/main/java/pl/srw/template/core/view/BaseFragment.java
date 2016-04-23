@@ -15,7 +15,7 @@ import pl.srw.template.core.view.delegate.presenter.EachViewNewPresenterOwner;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
 
 /**
- * Base class for fragments which needs additional functionality
+ * Base class for fragments which needs additional functionality, i.e. binding with presenter
  */
 public abstract class BaseFragment extends Fragment {
 

@@ -1,22 +1,23 @@
 package pl.srw.template.view;
 
-import android.widget.TextView;
+import android.view.View;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 import pl.srw.template.R;
-import pl.srw.template.TemplateApplication;
+import pl.srw.template.TodosApplication;
 import pl.srw.template.core.view.BaseActivity;
 import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
 import pl.srw.template.core.view.delegate.presenter.SinglePresenterHandlingDelegate;
-import pl.srw.template.presenter.MainView;
 import pl.srw.template.presenter.MainViewPresenter;
 
-public class MainActivity extends BaseActivity implements MainView, PresenterOwner {
+public class MainActivity extends BaseActivity
+        implements MainViewPresenter.MainView, PresenterOwner {
 
-    @Bind(R.id.hello) TextView helloView;
+    @Bind(R.id.add) View addView;
 
     @Inject MainViewPresenter presenter;
 
@@ -32,21 +33,42 @@ public class MainActivity extends BaseActivity implements MainView, PresenterOwn
 
     @Override
     public void injectDependencies() {
-        TemplateApplication.getDependencies(this).getMainActivityComponent().inject(this);
+        TodosApplication.getDependencies(this).getMainActivityComponent().inject(this);
     }
 
     @Override
     protected void resetDependencies() {
-        TemplateApplication.getDependencies(this).releaseMainActivityComponent();
+        TodosApplication.getDependencies(this).releaseMainActivityComponent();
+    }
+
+    @OnClick(R.id.add)
+    public void onAddViewClicked() {
+        presenter.addClicked();
     }
 
     @Override
-    public void showHelloWorld() {
-        helloView.setText(R.string.hello_world);
+    public void showAddView() {
+        changeFragmentWithStack(AddFragment.newInstance(), null);
     }
 
     @Override
-    public void showHelloWorldAgain() {
-        helloView.setText(R.string.hello_again);
+    public void showListView() {
+        changeFragment(ListFragment.newInstance(), null);
+    }
+
+    @Override
+    public void onBackPressed() {
+        presenter.backPressed();
+        super.onBackPressed();
+    }
+
+    @Override
+    public void hideAddButton() {
+        addView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void showAddButton() {
+        addView.setVisibility(View.VISIBLE);
     }
 }

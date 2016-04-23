@@ -3,7 +3,10 @@
 This template provides core logic for MVP architecture. Key points are:
  - Model - provides data
  - passive View - fulfill display commands and inform Presenter about user/device input
- - Presenter - contains application business logic, can survive view destruction
+ - Presenter - contains application business logic, cache model data, can survive view destruction
+
+Source code contains template implementation as 'Todo list app'. Base classes for
+architecture framework are placed in `core` java package.
 
 ## Details
 

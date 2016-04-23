@@ -9,7 +9,7 @@ import timber.log.Timber;
 /**
  * Application class
  */
-public class TemplateApplication extends Application {
+public class TodosApplication extends Application {
 
     private DependencyComponentManager dependencies;
 
@@ -29,7 +29,7 @@ public class TemplateApplication extends Application {
      * @return dependency manager
      */
     public static DependencyComponentManager getDependencies(Context context) {
-        TemplateApplication application = (TemplateApplication) context.getApplicationContext();
+        TodosApplication application = (TodosApplication) context.getApplicationContext();
         return application.dependencies;
     }
 }

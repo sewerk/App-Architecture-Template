@@ -8,9 +8,11 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import pl.srw.template.model.FakeRemoteRepo;
+import pl.srw.template.model.Repository;
 
 /**
- * Global dependencies module
+ * Provides application wide dependencies
  */
 @Module
 public class ApplicationModule {
@@ -27,4 +29,9 @@ public class ApplicationModule {
         return PreferenceManager.getDefaultSharedPreferences(context);
     }
 
+    @Provides
+    @Singleton
+    Repository provideRepository() {
+        return new FakeRemoteRepo();
+    }
 }
