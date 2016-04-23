@@ -4,7 +4,6 @@ import java.util.Collection;
 
 import pl.srw.template.core.di.scope.RetainActivityScope;
 import pl.srw.template.core.presenter.BasePresenter;
-import pl.srw.template.model.Repository;
 import pl.srw.template.model.Todo;
 import pl.srw.template.presenter.task.GetTask;
 import pl.srw.template.presenter.task.PushTask;
@@ -17,17 +16,18 @@ import timber.log.Timber;
 public class ListViewPresenter extends BasePresenter<ListViewPresenter.ListView>
         implements GetTask.Caller {
 
-    private Repository repository;
-
     private Collection<Todo> entries;
+    private GetTask getTask;
+    private PushTask pushTask;
 
-    public ListViewPresenter(Repository repository) {
-        this.repository = repository;
+    public ListViewPresenter(GetTask getTask, PushTask pushTask) {
+        this.getTask = getTask;
+        this.pushTask = pushTask;
     }
 
     @Override
     protected void onFirstBind() {
-        new GetTask(this, repository).execute();
+        getTask.execute(this);
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ListViewPresenter extends BasePresenter<ListViewPresenter.ListView>
     }
 
     public void checkboxClickedFor(Todo todo) {
-        new PushTask(repository).execute(new Todo(!todo.isDone(), todo.getText()));
+        pushTask.execute(new Todo(!todo.isDone(), todo.getText()));
     }
 
     @Override

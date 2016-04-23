@@ -4,7 +4,6 @@ import javax.inject.Inject;
 
 import pl.srw.template.core.di.scope.RetainFragmentScope;
 import pl.srw.template.core.presenter.BasePresenter;
-import pl.srw.template.model.Repository;
 import pl.srw.template.model.Todo;
 import pl.srw.template.presenter.task.PushTask;
 
@@ -14,15 +13,15 @@ import pl.srw.template.presenter.task.PushTask;
 @RetainFragmentScope
 public class AddViewPresenter extends BasePresenter<AddViewPresenter.AddView> {
 
-    private Repository repository;
+    private PushTask pushTask;
 
     @Inject
-    public AddViewPresenter(Repository repository) {
-        this.repository = repository;
+    public AddViewPresenter(PushTask pushTask) {
+        this.pushTask = pushTask;
     }
 
     public void addClicked(boolean done, String text) {
-        new PushTask(repository).execute(new Todo(done, text));
+        pushTask.execute(new Todo(done, text));
         present(new UIChange<AddView>() {
             @Override
             public void change(AddView view) {

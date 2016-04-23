@@ -4,6 +4,8 @@ import android.os.AsyncTask;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 import pl.srw.template.model.Repository;
 import pl.srw.template.model.Todo;
 import timber.log.Timber;
@@ -16,8 +18,8 @@ public class GetTask extends AsyncTask<Void, Void, Collection<Todo>> {
     private Caller caller;
     private Repository repository;
 
-    public GetTask(Caller caller, Repository repository) {
-        this.caller = caller;
+    @Inject
+    public GetTask(Repository repository) {
         this.repository = repository;
     }
 
@@ -29,7 +31,14 @@ public class GetTask extends AsyncTask<Void, Void, Collection<Todo>> {
 
     @Override
     protected void onPostExecute(Collection<Todo> todos) {
-        caller.onDataRetrieved(todos);
+        if (caller != null) {
+            caller.onDataRetrieved(todos);
+        }
+    }
+
+    public void execute(Caller caller) {
+        this.caller = caller;
+        this.execute();
     }
 
     /**

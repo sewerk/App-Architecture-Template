@@ -2,6 +2,8 @@ package pl.srw.template.presenter.task;
 
 import android.os.AsyncTask;
 
+import javax.inject.Inject;
+
 import pl.srw.template.model.Repository;
 import pl.srw.template.model.Todo;
 import timber.log.Timber;
@@ -13,6 +15,7 @@ public class PushTask extends AsyncTask<Todo, Void, Boolean> {
 
     private Repository repository;
 
+    @Inject
     public PushTask(Repository repository) {
         this.repository = repository;
     }

@@ -7,9 +7,10 @@ import dagger.Module;
 import dagger.Provides;
 import pl.srw.template.core.di.scope.RetainActivityScope;
 import pl.srw.template.core.presenter.BasePresenter;
-import pl.srw.template.model.Repository;
 import pl.srw.template.presenter.ListViewPresenter;
 import pl.srw.template.presenter.MainViewPresenter;
+import pl.srw.template.presenter.task.GetTask;
+import pl.srw.template.presenter.task.PushTask;
 import pl.srw.template.view.MainActivity;
 
 /**
@@ -34,8 +35,8 @@ public class MainActivityModule {
 
     @Provides
     @RetainActivityScope
-    ListViewPresenter provideListViewPresenter(Repository repository) {
-        final ListViewPresenter presenter = new ListViewPresenter(repository);
+    ListViewPresenter provideListViewPresenter(GetTask getTask, PushTask pushTask) {
+        final ListViewPresenter presenter = new ListViewPresenter(getTask, pushTask);
         presenters.add(presenter);
         return presenter;
     }

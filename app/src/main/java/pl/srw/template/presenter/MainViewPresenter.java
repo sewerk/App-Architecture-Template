@@ -9,6 +9,8 @@ import pl.srw.template.core.presenter.BasePresenter;
  */
 public class MainViewPresenter extends BasePresenter<MainViewPresenter.MainView> {
 
+    private boolean addViewVisible;
+
     @Inject
     public MainViewPresenter() {
     }
@@ -23,7 +25,20 @@ public class MainViewPresenter extends BasePresenter<MainViewPresenter.MainView>
         });
     }
 
+    @Override
+    protected void onNewViewRestoreState() {
+        if (addViewVisible) {
+            present(new UIChange<MainView>() {
+                @Override
+                public void change(MainView view) {
+                    view.hideAddButton();
+                }
+            });
+        }
+    }
+
     public void addClicked() {
+        addViewVisible = true;
         present(new UIChange<MainView>() {
             @Override
             public void change(MainView view) {
@@ -34,12 +49,15 @@ public class MainViewPresenter extends BasePresenter<MainViewPresenter.MainView>
     }
 
     public void backPressed() {
-        present(new UIChange<MainView>() {
-            @Override
-            public void change(MainView view) {
-                view.showAddButton();
-            }
-        });
+        if (addViewVisible) {
+            addViewVisible = false;
+            present(new UIChange<MainView>() {
+                @Override
+                public void change(MainView view) {
+                    view.showAddButton();
+                }
+            });
+        }
     }
 
     /**
