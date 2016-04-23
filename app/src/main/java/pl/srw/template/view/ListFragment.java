@@ -58,6 +58,7 @@ public class ListFragment extends BaseFragment
 
     @Override
     public void showEntries(Collection<Todo> entries) {
+        listView.removeAllViews();
         for (Todo t : entries) {
             final LinearLayout row = createRow(t);
             listView.addView(row);
