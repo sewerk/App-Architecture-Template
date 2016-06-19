@@ -15,7 +15,8 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import pl.srw.template.R;
-import pl.srw.template.TodosApplication;
+import pl.srw.template.core.di.ActivityScopedFragment;
+import pl.srw.template.core.view.BaseActivity;
 import pl.srw.template.core.view.BaseFragment;
 import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
@@ -24,7 +25,7 @@ import pl.srw.template.model.Todo;
 import pl.srw.template.presenter.ListViewPresenter;
 
 public class ListFragment extends BaseFragment
-        implements ListViewPresenter.ListView, PresenterOwner {
+        implements ListViewPresenter.ListView, PresenterOwner, ActivityScopedFragment {
 
     @Inject ListViewPresenter presenter;
 
@@ -47,13 +48,13 @@ public class ListFragment extends BaseFragment
     }
 
     @Override
-    public void injectDependencies() {
-        TodosApplication.getDependencies(getActivity()).getMainActivityComponent().inject(this);
+    public PresenterHandlingDelegate createPresenterDelegate() {
+        return new SinglePresenterHandlingDelegate(this, presenter);
     }
 
     @Override
-    public PresenterHandlingDelegate createPresenterDelegate() {
-        return new SinglePresenterHandlingDelegate(this, presenter);
+    public BaseActivity getBaseActivity() { // TODO move to base
+        return (BaseActivity) super.getActivity();
     }
 
     @Override

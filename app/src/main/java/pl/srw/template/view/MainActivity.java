@@ -7,14 +7,15 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 import pl.srw.template.R;
-import pl.srw.template.TodosApplication;
+import pl.srw.template.core.BaseApplication;
 import pl.srw.template.core.view.BaseActivity;
 import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
 import pl.srw.template.core.view.delegate.presenter.SinglePresenterHandlingDelegate;
+import pl.srw.template.di.component.MainActivityComponent;
 import pl.srw.template.presenter.MainViewPresenter;
 
-public class MainActivity extends BaseActivity
+public class MainActivity extends BaseActivity<MainActivityComponent>
         implements MainViewPresenter.MainView, PresenterOwner {
 
     @Bind(R.id.add) View addView;
@@ -32,13 +33,8 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void injectDependencies() {
-        TodosApplication.getDependencies(this).getMainActivityComponent().inject(this);
-    }
-
-    @Override
-    protected void resetDependencies() {
-        TodosApplication.getDependencies(this).releaseMainActivityComponent();
+    public MainActivityComponent prepareComponent() {
+        return BaseApplication.getDependencies(this).getApplicationComponent().getMainActivityComponent();
     }
 
     @OnClick(R.id.add)

@@ -2,7 +2,7 @@ package pl.srw.template.core.di.scope;
 
 import javax.inject.Scope;
 
-import pl.srw.template.di.DependencyComponentManager;
+import pl.srw.template.core.di.DependencyComponentManager;
 
 /**
  * Dagger scope for single activity type.

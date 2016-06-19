@@ -12,15 +12,17 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 import pl.srw.template.R;
-import pl.srw.template.TodosApplication;
+import pl.srw.template.core.BaseApplication;
+import pl.srw.template.core.di.OwnScopeFragment;
 import pl.srw.template.core.view.BaseFragment;
 import pl.srw.template.core.view.delegate.presenter.EachViewNewPresenterOwner;
 import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.template.core.view.delegate.presenter.SinglePresenterHandlingDelegate;
+import pl.srw.template.di.component.AddFragmentComponent;
 import pl.srw.template.presenter.AddViewPresenter;
 
 public class AddFragment extends BaseFragment
-        implements EachViewNewPresenterOwner, AddViewPresenter.AddView {
+        implements EachViewNewPresenterOwner, AddViewPresenter.AddView, OwnScopeFragment<AddFragmentComponent> {
 
     @Bind(R.id.add_text) EditText textView;
     @Bind(R.id.add_is_done) CheckBox doneView;
@@ -42,13 +44,8 @@ public class AddFragment extends BaseFragment
     }
 
     @Override
-    public void injectDependencies() {
-        TodosApplication.getDependencies(getActivity()).getAddFragmentComponent().inject(this);
-    }
-
-    @Override
-    public void resetDependencies() {
-        TodosApplication.getDependencies(getActivity()).releaseAddFragmentComponent();
+    public AddFragmentComponent prepareComponent() {
+        return BaseApplication.getDependencies(getActivity()).getComponentFor((MainActivity) getActivity()).getAddFragmentComponent();
     }
 
     @Override

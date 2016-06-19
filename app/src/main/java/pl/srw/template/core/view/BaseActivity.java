@@ -12,7 +12,9 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import pl.srw.template.R;
+import pl.srw.template.core.BaseApplication;
 import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
+import pl.srw.template.core.di.component.ActivityScopeComponent;
 import timber.log.Timber;
 
 /**
@@ -21,7 +23,7 @@ import timber.log.Timber;
  * It also provide common methods for fragment management
  * See also {@link pl.srw.template.core.di.scope.RetainActivityScope}
  */
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity<C extends ActivityScopeComponent> extends AppCompatActivity {
 
     private PresenterHandlingDelegate presenterDelegate;
 
@@ -82,12 +84,24 @@ public abstract class BaseActivity extends AppCompatActivity {
     /**
      * Compose dependency graph to inject this dependencies
      */
-    protected abstract void injectDependencies();
+    private void injectDependencies() {
+        BaseApplication.getDependencies(this).getComponentFor(this).inject(this);
+    }
 
     /**
      * Release dependency graph
      */
-    protected abstract void resetDependencies();
+    private void resetDependencies() {
+        BaseApplication.getDependencies(this).releaseComponentFor(this);
+    }
+
+    /**
+     * Provides associated dependency component.
+     * Component instance will be used to inject dependencies to this activity
+     * and hold them according to scope.
+     * @return component instance
+     */
+    public abstract C prepareComponent();
 
     /**
      * Replaces content fragment with adding to backstack

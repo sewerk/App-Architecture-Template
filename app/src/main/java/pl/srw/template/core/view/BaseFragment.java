@@ -10,6 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
+import pl.srw.template.core.BaseApplication;
+import pl.srw.template.core.di.ActivityScopedFragment;
+import pl.srw.template.core.di.OwnScopeFragment;
 import pl.srw.template.core.view.delegate.LifeCycleDelegating;
 import pl.srw.template.core.view.delegate.presenter.EachViewNewPresenterOwner;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
@@ -27,11 +30,28 @@ public abstract class BaseFragment extends Fragment {
         super.onCreate(savedInstanceState);
         delegates = new ArrayList<>();
         if (this instanceof PresenterOwner) {
-            PresenterOwner presenterOwner = (PresenterOwner) this;
-            presenterOwner.injectDependencies();
-            delegates.add(presenterOwner.createPresenterDelegate());
+            PresenterOwner presenterFragment = (PresenterOwner) this;
+            presenterFragment.injectDependencies();
+            delegates.add(presenterFragment.createPresenterDelegate());
         }
         // more delegates might come later
+    }
+
+    public final void injectDependencies() {
+        if (this instanceof OwnScopeFragment) {
+            final OwnScopeFragment fragment = (OwnScopeFragment) this;
+            BaseApplication.getDependencies(getActivity()).getComponentFor(fragment).inject(fragment);
+        } else if (this instanceof ActivityScopedFragment){
+            final ActivityScopedFragment fragment = (ActivityScopedFragment) this;
+            BaseApplication.getDependencies(getActivity()).getComponentFor(fragment).inject(fragment);
+        }
+    }
+
+    public final void resetDependencies() { // TODO
+        if (this instanceof OwnScopeFragment) {
+            final OwnScopeFragment fragment = (OwnScopeFragment) this;
+            BaseApplication.getDependencies(getActivity()).releaseComponentFor(fragment);
+        }
     }
 
     @Override

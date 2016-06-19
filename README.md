@@ -23,23 +23,38 @@ When the view is being recreated by configuration change, the presenter instance
 to bind again with new view. This is accomplished with use of Dagger2 scopes (see `RetainActivityScope`
 and `DependencyComponentManager`).
 
-View can be Activity, Fragment or View class. View can contain many presenters, but presenter must
+View can be Activity or Fragment class. View can contain many presenters, but presenter must
 manipulate only single view. This way we can separate different presentation responsibility to individual classes,
 but still display all within one screen.
 
 Processing starts when Activity, extending `BaseActivity`, is created. At first steps the dependency
-injection take place and presenter is created. When activity is destroyed and finishing
-then dependency scope is being reset. Activity is also responsible for informing Fragment and View
+injection take place and presenter is constructed. Presenter lives until Activity is finishing.
+Then dependency scope is being reset. Activity is also responsible for informing Fragment
 classes when they are finishing.
+
+`BaseActivity` extension always owns presenter, so upon creation injection take place.
+`BaseFragment` extension, on the other hand, can take 3 forms:
+- simple Fragment class with no presenter - dependency injection will not happen by default
+- Fragment implementing `ActivityScopedFragment` in `RetainActivityScope`
+- Fragment implementing `OwnScopeFragment` in `RetainFragmentScope`
 
 Binding view to presenter take place by delegate implementing `LifeCycleDelegating`.
 All presenters should extend `BasePresenter`. Initialization of state should happen in `onFirstBind`
 method, after view is bind for the first time, whereas restoring state, after every next bind,
-in `onNewViewRestoreState` method.
+in `onNewViewRestoreState` method. When scope of presenter comes to end, 'onFinish' callback is executed.
 
 View changes are done through `BasePresenter.UIChange`. In case the view is missing when
 data processing has finished, the presenter will hold the change request and execute when new view
 is bind.
+
+## How to start
+
+1. Clone this repo and copy `core` directory to your project
+1. Create Presenter by extending `BasePresenter`, with view interface
+1. Create Activity, by extending `BaseActivity`, with Dagger Component (and Module)
+1. Add Activity component accessor to ApplicationComponent interface
+1. Create Fragment, by extending `BaseFragment`,
+and decide in what scope its Presenter should live: fragment or activity scope
 
 ## License
 
