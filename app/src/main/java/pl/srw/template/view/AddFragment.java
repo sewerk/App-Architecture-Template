@@ -12,7 +12,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 import pl.srw.template.R;
-import pl.srw.template.core.BaseApplication;
+import pl.srw.template.TodosApplication;
 import pl.srw.template.core.di.OwnScopeFragment;
 import pl.srw.template.core.view.BaseFragment;
 import pl.srw.template.core.view.delegate.presenter.EachViewNewPresenterOwner;
@@ -45,7 +45,9 @@ public class AddFragment extends BaseFragment
 
     @Override
     public AddFragmentComponent prepareComponent() {
-        return BaseApplication.getDependencies(getActivity()).getComponentFor((MainActivity) getActivity()).getAddFragmentComponent();
+        return TodosApplication.getDependencies(getActivity())
+                .getComponentFor((MainActivity) getActivity())
+                .getAddFragmentComponent();
     }
 
     @Override

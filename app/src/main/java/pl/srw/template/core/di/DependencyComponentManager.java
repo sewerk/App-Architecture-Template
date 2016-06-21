@@ -1,38 +1,37 @@
 package pl.srw.template.core.di;
 
-import android.app.Application;
-
 import java.util.HashMap;
 import java.util.Set;
 
+import pl.srw.template.core.BaseApplication;
+import pl.srw.template.core.di.component.ActivityScopeComponent;
 import pl.srw.template.core.di.component.FragmentInActivityScopeComponent;
+import pl.srw.template.core.di.component.FragmentScopeComponent;
+import pl.srw.template.core.di.component.MvpApplicationComponent;
 import pl.srw.template.core.presenter.BasePresenter;
 import pl.srw.template.core.view.BaseActivity;
-import pl.srw.template.di.component.ApplicationComponent;
-import pl.srw.template.core.di.component.ActivityScopeComponent;
-import pl.srw.template.di.component.DaggerApplicationComponent;
-import pl.srw.template.core.di.component.FragmentScopeComponent;
-import pl.srw.template.di.module.ApplicationModule;
 
 /**
  * Dependency components holder
+ * @param <AC>    type of Dagger application component
  */
-public final class DependencyComponentManager {
+public final class DependencyComponentManager<AC extends MvpApplicationComponent> {
 
-    private ApplicationComponent applicationComponent;
-
+    private final AC applicationComponent;
     private final HashMap<BaseActivity, ActivityScopeComponent> activityComponentsMap;
     private final HashMap<OwnScopeFragment, FragmentScopeComponent> fragmentComponentMap;
 
-    public DependencyComponentManager(Application application) {
-        activityComponentsMap = new HashMap<>(1);
-        fragmentComponentMap = new HashMap<>(0);
-        applicationComponent = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(application))
-                .build();
+    public DependencyComponentManager(AC applicationComponent) {
+        this.activityComponentsMap = new HashMap<>(1);
+        this.fragmentComponentMap = new HashMap<>(0);
+        this.applicationComponent = applicationComponent;
     }
 
-    public ApplicationComponent getApplicationComponent() {
+    public static <C extends MvpApplicationComponent> DependencyComponentManager<C> get(BaseApplication<C> application) {
+        return application.getDependencies();
+    }
+
+    public AC getApplicationComponent() {
         return applicationComponent;
     }
 

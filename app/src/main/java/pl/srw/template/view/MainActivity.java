@@ -7,7 +7,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.OnClick;
 import pl.srw.template.R;
-import pl.srw.template.core.BaseApplication;
+import pl.srw.template.TodosApplication;
 import pl.srw.template.core.view.BaseActivity;
 import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
@@ -34,7 +34,7 @@ public class MainActivity extends BaseActivity<MainActivityComponent>
 
     @Override
     public MainActivityComponent prepareComponent() {
-        return BaseApplication.getDependencies(this).getApplicationComponent().getMainActivityComponent();
+        return TodosApplication.getDependencies(this).getApplicationComponent().getMainActivityComponent();
     }
 
     @OnClick(R.id.add)

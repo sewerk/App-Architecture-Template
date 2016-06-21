@@ -1,11 +1,18 @@
 package pl.srw.template;
 
+import android.content.Context;
+
+import pl.srw.template.core.BaseApplication;
+import pl.srw.template.core.di.DependencyComponentManager;
+import pl.srw.template.di.component.ApplicationComponent;
+import pl.srw.template.di.component.DaggerApplicationComponent;
+import pl.srw.template.di.module.ApplicationModule;
 import timber.log.Timber;
 
 /**
  * Application class
  */
-public class TodosApplication extends pl.srw.template.core.BaseApplication {
+public class TodosApplication extends BaseApplication<ApplicationComponent> {
 
     @Override
     public void onCreate() {
@@ -14,5 +21,16 @@ public class TodosApplication extends pl.srw.template.core.BaseApplication {
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
+    }
+
+    @Override
+    protected ApplicationComponent prepareApplicationComponent() {
+        return DaggerApplicationComponent.builder()
+                .applicationModule(new ApplicationModule(this))
+                .build();
+    }
+
+    public static DependencyComponentManager<ApplicationComponent> getDependencies(Context context) {
+        return ((TodosApplication) context.getApplicationContext()).getDependencies();
     }
 }

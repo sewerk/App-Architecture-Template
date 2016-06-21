@@ -1,29 +1,37 @@
 package pl.srw.template.core;
 
 import android.app.Application;
-import android.content.Context;
 import android.support.annotation.CallSuper;
 
 import pl.srw.template.core.di.DependencyComponentManager;
+import pl.srw.template.core.di.component.MvpApplicationComponent;
 
-public class BaseApplication extends Application {
+/**
+ * Parent application class
+ * @param <C>    type of Dagger application component
+ */
+public abstract class BaseApplication<C extends MvpApplicationComponent> extends Application {
 
-    private DependencyComponentManager dependencies;
+    private DependencyComponentManager<C> dependencies;
 
     @CallSuper
     @Override
     public void onCreate() {
         super.onCreate();
-        dependencies = new DependencyComponentManager(this);
+        dependencies = new DependencyComponentManager<>(prepareApplicationComponent());
     }
 
     /**
+     * Prepares Dagger application component
+     * @return application component instance
+     * */
+    protected abstract C prepareApplicationComponent();
+
+    /**
      * Gets dependency manager
-     * @param context    context
      * @return dependency manager
      */
-    public static DependencyComponentManager getDependencies(Context context) { //TODO
-        BaseApplication application = (BaseApplication) context.getApplicationContext();
-        return application.dependencies;
+    public DependencyComponentManager<C> getDependencies() {
+        return dependencies;
     }
 }
