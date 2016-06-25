@@ -15,7 +15,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import pl.srw.template.R;
-import pl.srw.template.core.view.fragment.ActivityScopedFragment;
+import pl.srw.template.core.view.fragment.MvpActivityScopedFragment;
 import pl.srw.template.core.view.activity.MvpActivity;
 import pl.srw.template.core.view.fragment.MvpFragment;
 import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
@@ -25,7 +25,7 @@ import pl.srw.template.model.Todo;
 import pl.srw.template.presenter.ListViewPresenter;
 
 public class ListFragment extends MvpFragment
-        implements ListViewPresenter.ListView, PresenterOwner, ActivityScopedFragment {
+        implements ListViewPresenter.ListView, PresenterOwner, MvpActivityScopedFragment {
 
     @Inject ListViewPresenter presenter;
 

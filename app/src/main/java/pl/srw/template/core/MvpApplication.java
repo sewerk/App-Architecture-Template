@@ -4,13 +4,13 @@ import android.app.Application;
 import android.support.annotation.CallSuper;
 
 import pl.srw.template.core.di.DependencyComponentManager;
-import pl.srw.template.core.di.component.ApplicationScopeComponent;
+import pl.srw.template.core.di.component.MvpApplicationScopeComponent;
 
 /**
  * Parent application class
  * @param <C>    type of Dagger application component
  */
-public abstract class MvpApplication<C extends ApplicationScopeComponent> extends Application {
+public abstract class MvpApplication<C extends MvpApplicationScopeComponent> extends Application {
 
     private DependencyComponentManager<C> dependencies;
 

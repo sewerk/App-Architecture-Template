@@ -14,7 +14,7 @@ import butterknife.OnClick;
 import pl.srw.template.R;
 import pl.srw.template.TodosApplication;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
-import pl.srw.template.core.view.fragment.OwnScopeFragment;
+import pl.srw.template.core.view.fragment.MvpFragmentScopedFragment;
 import pl.srw.template.core.view.fragment.MvpFragment;
 import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.template.core.view.delegate.presenter.SinglePresenterHandlingDelegate;
@@ -22,7 +22,7 @@ import pl.srw.template.di.component.AddFragmentComponent;
 import pl.srw.template.presenter.AddViewPresenter;
 
 public class AddFragment extends MvpFragment
-        implements PresenterOwner, AddViewPresenter.AddView, OwnScopeFragment<AddFragmentComponent> {
+        implements PresenterOwner, AddViewPresenter.AddView, MvpFragmentScopedFragment<AddFragmentComponent> {
 
     @Bind(R.id.add_text) EditText textView;
     @Bind(R.id.add_is_done) CheckBox doneView;

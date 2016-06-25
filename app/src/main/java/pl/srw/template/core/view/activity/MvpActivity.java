@@ -19,8 +19,8 @@ import pl.srw.template.core.di.DependencyComponentManager;
 import pl.srw.template.core.view.delegate.LifeCycleListener;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
 import pl.srw.template.core.view.fragment.MvpFragment;
-import pl.srw.template.core.di.component.ActivityScopeComponent;
-import pl.srw.template.core.view.fragment.OwnScopeFragment;
+import pl.srw.template.core.di.component.MvpActivityScopeComponent;
+import pl.srw.template.core.view.fragment.MvpFragmentScopedFragment;
 import timber.log.Timber;
 
 /**
@@ -32,7 +32,7 @@ import timber.log.Timber;
  *  - provide common methods for fragment management
  * See also {@link pl.srw.template.core.di.scope.RetainActivityScope}
  */
-public abstract class MvpActivity<C extends ActivityScopeComponent> extends AppCompatActivity {
+public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends AppCompatActivity {
 
     private List<LifeCycleListener> listeners;
 
@@ -184,7 +184,7 @@ public abstract class MvpActivity<C extends ActivityScopeComponent> extends AppC
     }
 
     private void notifyFragmentIsFinishing(Fragment fragment) {
-        if (fragment instanceof OwnScopeFragment && fragment instanceof MvpFragment) {
+        if (fragment instanceof MvpFragmentScopedFragment && fragment instanceof MvpFragment) {
             // fragment with own scope need to reset dependencies now, even when activity is not finishing
             ((MvpFragment) fragment).endOfScope();
         }
