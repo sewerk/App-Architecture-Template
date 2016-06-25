@@ -2,8 +2,10 @@ package pl.srw.template.presenter;
 
 import java.util.Collection;
 
+import javax.inject.Inject;
+
 import pl.srw.template.core.di.scope.RetainActivityScope;
-import pl.srw.template.core.presenter.BasePresenter;
+import pl.srw.template.core.presenter.MvpPresenter;
 import pl.srw.template.model.Todo;
 import pl.srw.template.presenter.task.GetTask;
 import pl.srw.template.presenter.task.PushTask;
@@ -13,13 +15,14 @@ import timber.log.Timber;
  * List view presenter. Lives as long as activity.
  */
 @RetainActivityScope
-public class ListViewPresenter extends BasePresenter<ListViewPresenter.ListView>
+public class ListViewPresenter extends MvpPresenter<ListViewPresenter.ListView>
         implements GetTask.Caller {
 
     private Collection<Todo> entries;
     private GetTask getTask;
     private PushTask pushTask;
 
+    @Inject
     public ListViewPresenter(GetTask getTask, PushTask pushTask) {
         this.getTask = getTask;
         this.pushTask = pushTask;

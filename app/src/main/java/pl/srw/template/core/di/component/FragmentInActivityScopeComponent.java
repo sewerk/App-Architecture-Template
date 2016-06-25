@@ -1,6 +1,6 @@
 package pl.srw.template.core.di.component;
 
-import pl.srw.template.core.di.ActivityScopedFragment;
+import pl.srw.template.core.view.fragment.ActivityScopedFragment;
 
 /**
  * Base Dagger component for fragment living in {@link pl.srw.template.core.di.scope.RetainActivityScope}

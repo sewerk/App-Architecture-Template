@@ -2,12 +2,14 @@ package pl.srw.template.presenter;
 
 import javax.inject.Inject;
 
-import pl.srw.template.core.presenter.BasePresenter;
+import pl.srw.template.core.di.scope.RetainActivityScope;
+import pl.srw.template.core.presenter.MvpPresenter;
 
 /**
  * Main view presenter
  */
-public class MainViewPresenter extends BasePresenter<MainViewPresenter.MainView> {
+@RetainActivityScope
+public class MainViewPresenter extends MvpPresenter<MainViewPresenter.MainView> {
 
     private boolean addViewVisible;
 

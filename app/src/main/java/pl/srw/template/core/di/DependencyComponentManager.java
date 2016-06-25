@@ -1,24 +1,24 @@
 package pl.srw.template.core.di;
 
 import java.util.HashMap;
-import java.util.Set;
 
-import pl.srw.template.core.BaseApplication;
+import pl.srw.template.core.MvpApplication;
 import pl.srw.template.core.di.component.ActivityScopeComponent;
+import pl.srw.template.core.di.component.ApplicationScopeComponent;
 import pl.srw.template.core.di.component.FragmentInActivityScopeComponent;
 import pl.srw.template.core.di.component.FragmentScopeComponent;
-import pl.srw.template.core.di.component.MvpApplicationComponent;
-import pl.srw.template.core.presenter.BasePresenter;
-import pl.srw.template.core.view.BaseActivity;
+import pl.srw.template.core.view.activity.MvpActivity;
+import pl.srw.template.core.view.fragment.ActivityScopedFragment;
+import pl.srw.template.core.view.fragment.OwnScopeFragment;
 
 /**
  * Dependency components holder
  * @param <AC>    type of Dagger application component
  */
-public final class DependencyComponentManager<AC extends MvpApplicationComponent> {
+public final class DependencyComponentManager<AC extends ApplicationScopeComponent> {
 
     private final AC applicationComponent;
-    private final HashMap<BaseActivity, ActivityScopeComponent> activityComponentsMap;
+    private final HashMap<MvpActivity, ActivityScopeComponent> activityComponentsMap;
     private final HashMap<OwnScopeFragment, FragmentScopeComponent> fragmentComponentMap;
 
     public DependencyComponentManager(AC applicationComponent) {
@@ -27,7 +27,7 @@ public final class DependencyComponentManager<AC extends MvpApplicationComponent
         this.applicationComponent = applicationComponent;
     }
 
-    public static <C extends MvpApplicationComponent> DependencyComponentManager<C> get(BaseApplication<C> application) {
+    public static <C extends ApplicationScopeComponent> DependencyComponentManager<C> get(MvpApplication<C> application) {
         return application.getDependencies();
     }
 
@@ -35,19 +35,14 @@ public final class DependencyComponentManager<AC extends MvpApplicationComponent
         return applicationComponent;
     }
 
-    public <C extends ActivityScopeComponent> C getComponentFor(BaseActivity<C> activity) {
+    public <C extends ActivityScopeComponent> C getComponentFor(MvpActivity<C> activity) {
         if (!activityComponentsMap.containsKey(activity)) {
             activityComponentsMap.put(activity, activity.prepareComponent());
         }
         return (C) activityComponentsMap.get(activity);
     }
 
-    public void releaseComponentFor(BaseActivity activity) {
-        final ActivityScopeComponent component = activityComponentsMap.get(activity);
-        final Set<BasePresenter> presenters = component.getPresenters();
-        for (BasePresenter presenter : presenters) {
-            presenter.onFinish();
-        }
+    public void releaseComponentFor(MvpActivity activity) {
         activityComponentsMap.remove(activity);
     }
 
@@ -64,8 +59,6 @@ public final class DependencyComponentManager<AC extends MvpApplicationComponent
     }
 
     public void releaseComponentFor(OwnScopeFragment fragment) {
-        final BasePresenter presenter = fragmentComponentMap.get(fragment).getPresenter();
-        presenter.onFinish();
         fragmentComponentMap.remove(fragment);
     }
 }

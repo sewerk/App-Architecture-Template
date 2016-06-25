@@ -8,14 +8,14 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import pl.srw.template.R;
 import pl.srw.template.TodosApplication;
-import pl.srw.template.core.view.BaseActivity;
+import pl.srw.template.core.view.activity.MvpActivity;
 import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
 import pl.srw.template.core.view.delegate.presenter.SinglePresenterHandlingDelegate;
 import pl.srw.template.di.component.MainActivityComponent;
 import pl.srw.template.presenter.MainViewPresenter;
 
-public class MainActivity extends BaseActivity<MainActivityComponent>
+public class MainActivity extends MvpActivity<MainActivityComponent>
         implements MainViewPresenter.MainView, PresenterOwner {
 
     @Bind(R.id.add) View addView;

@@ -5,18 +5,18 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.mockito.internal.util.collections.Sets;
 
 import pl.srw.template.core.di.component.ActivityScopeComponent;
 import pl.srw.template.core.di.component.FragmentInActivityScopeComponent;
 import pl.srw.template.core.di.component.FragmentScopeComponent;
-import pl.srw.template.core.presenter.BasePresenter;
-import pl.srw.template.core.view.BaseActivity;
+import pl.srw.template.core.view.activity.MvpActivity;
+import pl.srw.template.core.view.fragment.ActivityScopedFragment;
+import pl.srw.template.core.view.fragment.OwnScopeFragment;
 import pl.srw.template.di.component.ApplicationComponent;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.withSettings;
 
@@ -26,7 +26,7 @@ public class DependencyComponentManagerTest {
     private DependencyComponentManager sut;
 
     @Mock private ApplicationComponent applicationComponent;
-    @Mock private BaseActivity activity;
+    @Mock private MvpActivity activity;
     @Mock private ActivityScopedFragment activityScopedFragment;
     @Mock private OwnScopeFragment fragment;
 
@@ -64,7 +64,7 @@ public class DependencyComponentManagerTest {
     @Test
     public void activityComponentIsDifferentForDifferentInstance() throws Exception {
         // GIVEN
-        final BaseActivity secondActivity = mock(BaseActivity.class);
+        final MvpActivity secondActivity = mock(MvpActivity.class);
         when(secondActivity.prepareComponent()).thenReturn(mock(ActivityScopeComponent.class));
 
         // WHEN
@@ -73,20 +73,6 @@ public class DependencyComponentManagerTest {
 
         // THEN
         assertNotEquals(first, second);
-    }
-
-    @Test
-    public void callsPresentersFinishOnActivityComponentRelease() throws Exception {
-        // GIVEN
-        final ActivityScopeComponent component = sut.getComponentFor(activity);
-        final BasePresenter presenter = mock(BasePresenter.class);
-        when(component.getPresenters()).thenReturn(Sets.newSet(presenter));
-
-        // WHEN
-        sut.releaseComponentFor(activity);
-
-        // THEN
-        verify(presenter).onFinish();
     }
 
     @Test
@@ -116,7 +102,6 @@ public class DependencyComponentManagerTest {
     public void fragmentComponentIsDifferentIfItWasReleased() throws Exception {
         // GIVEN
         final FragmentScopeComponent firstTime = sut.getComponentFor(fragment);
-        when(firstTime.getPresenter()).thenReturn(mock(BasePresenter.class));
 
         // WHEN
         sut.releaseComponentFor(fragment);
@@ -138,19 +123,5 @@ public class DependencyComponentManagerTest {
 
         // THEN
         assertNotEquals(first, second);
-    }
-
-    @Test
-    public void callsPresenterFinishOnFragmentComponentRelease() throws Exception {
-        // GIVEN
-        final FragmentScopeComponent component = sut.getComponentFor(fragment);
-        final BasePresenter presenter = mock(BasePresenter.class);
-        when(component.getPresenter()).thenReturn(presenter);
-
-        // WHEN
-        sut.releaseComponentFor(fragment);
-
-        // THEN
-        verify(presenter).onFinish();
     }
 }

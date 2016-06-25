@@ -1,4 +1,4 @@
-package pl.srw.template.core.di;
+package pl.srw.template.core.view.fragment;
 
 import pl.srw.template.core.di.component.FragmentScopeComponent;
 

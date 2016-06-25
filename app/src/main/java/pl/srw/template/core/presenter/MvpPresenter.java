@@ -5,17 +5,17 @@ import android.support.annotation.CallSuper;
 import timber.log.Timber;
 
 /**
- * Base class for all presenters
+ * Parent class for all presenters
  *
  * @param <V> view type to present on
  */
-public abstract class BasePresenter<V> {
+public abstract class MvpPresenter<V> {
 
     private V view;
     private boolean firstBind = true;
     private UIChange<V> latestUIChange;
 
-    public BasePresenter() {
+    public MvpPresenter() {
         Timber.d("New presenter created " + this.getClass().getSimpleName());
     }
 

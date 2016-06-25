@@ -1,15 +1,15 @@
 package pl.srw.template.core.view.delegate.presenter;
 
-import pl.srw.template.core.presenter.BasePresenter;
+import pl.srw.template.core.presenter.MvpPresenter;
 
 /**
  * Delegate for managing multiple presenters according to component lifecycle
  */
 public class MultiplePresenterHandlingDelegate extends PresenterHandlingDelegate {
 
-    private final BasePresenter[] presenters;
+    private final MvpPresenter[] presenters;
 
-    public MultiplePresenterHandlingDelegate(PresenterOwner view, BasePresenter... presenter) {
+    public MultiplePresenterHandlingDelegate(PresenterOwner view, MvpPresenter... presenter) {
         super(view);
         this.presenters = presenter;
     }
@@ -25,6 +25,13 @@ public class MultiplePresenterHandlingDelegate extends PresenterHandlingDelegate
     public void onStop() {
         for (int i = 0; i < presenters.length; i++) {
             presenters[i].unbind();
+        }
+    }
+
+    @Override
+    public void onEnd() {
+        for (int i = 0; i < presenters.length; i++) {
+            presenters[i].onFinish();
         }
     }
 }

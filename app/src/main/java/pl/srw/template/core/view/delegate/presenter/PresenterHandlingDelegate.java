@@ -1,11 +1,11 @@
 package pl.srw.template.core.view.delegate.presenter;
 
-import pl.srw.template.core.view.delegate.LifeCycleDelegating;
+import pl.srw.template.core.view.delegate.LifeCycleListener;
 
 /**
  * Base class for delegate managing associated presenter with its owner lifecycle
  */
-public abstract class PresenterHandlingDelegate extends LifeCycleDelegating {
+public abstract class PresenterHandlingDelegate extends LifeCycleListener {
 
     protected final PresenterOwner view;
 

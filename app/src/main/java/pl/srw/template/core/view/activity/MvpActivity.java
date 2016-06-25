@@ -1,5 +1,6 @@
-package pl.srw.template.core.view;
+package pl.srw.template.core.view.activity;
 
+import android.app.Application;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
@@ -8,24 +9,36 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import pl.srw.template.R;
-import pl.srw.template.core.BaseApplication;
-import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
+import pl.srw.template.core.MvpApplication;
+import pl.srw.template.core.di.DependencyComponentManager;
+import pl.srw.template.core.view.delegate.LifeCycleListener;
+import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
+import pl.srw.template.core.view.fragment.MvpFragment;
 import pl.srw.template.core.di.component.ActivityScopeComponent;
+import pl.srw.template.core.view.fragment.OwnScopeFragment;
 import timber.log.Timber;
 
 /**
- * Base class for any Activity with support of scoped dependencies.
- * During creation it force to inject dependencies, on finishing it force to clear dependencies module.
- * It also provide common methods for fragment management
+ * Parent class for Activity-view in MVP model.
+ * Features:
+ *  - dependency injection is done every time activity is created
+ *  - releasing dependencies happens when activity is finishing
+ *  - lifecycle events will be communicated to added listeners
+ *  - provide common methods for fragment management
  * See also {@link pl.srw.template.core.di.scope.RetainActivityScope}
  */
-public abstract class BaseActivity<C extends ActivityScopeComponent> extends AppCompatActivity {
+public abstract class MvpActivity<C extends ActivityScopeComponent> extends AppCompatActivity {
 
-    private PresenterHandlingDelegate presenterDelegate;
+    private List<LifeCycleListener> listeners;
+
+    public MvpActivity() {
+        this.listeners = new ArrayList<>(1);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,28 +46,38 @@ public abstract class BaseActivity<C extends ActivityScopeComponent> extends App
         setContentView(getContentLayoutId());
         ButterKnife.bind(this);
         injectDependencies();
-        presenterDelegate = createPresenterDelegate();
+        if (this instanceof PresenterOwner) {
+            PresenterOwner presenterActivity = (PresenterOwner) this;
+            addListener(presenterActivity.createPresenterDelegate());
+        }
     }
 
     @Override
     @CallSuper
     protected void onStart() {
         super.onStart();
-        presenterDelegate.onStart();
+        for (LifeCycleListener listener : listeners) {
+            listener.onStart();
+        }
     }
 
     @Override
     @CallSuper
     protected void onStop() {
         super.onStop();
-        presenterDelegate.onStop();
+        for (LifeCycleListener listener : listeners) {
+            listener.onStop();
+        }
     }
 
     @Override
     protected void onDestroy() {
         if (isFinishing()) {
-            notifyStackedFragmentsFinishing();
+            notifyStackedFragmentsActivityIsFinishing();
             resetDependencies();
+            for (LifeCycleListener listener : listeners) {
+                listener.onEnd();
+            }
         }
         super.onDestroy();
     }
@@ -64,7 +87,7 @@ public abstract class BaseActivity<C extends ActivityScopeComponent> extends App
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             // if no more fragments to go back to then onDestroy will be called
         } else {
-            notifyLastFragmentFinishing();
+            notifyCurrentFragmentIsFinishing();
         }
         super.onBackPressed();
     }
@@ -76,23 +99,25 @@ public abstract class BaseActivity<C extends ActivityScopeComponent> extends App
     @LayoutRes protected abstract int getContentLayoutId();
 
     /**
-     * Provides presenter delegate implementation
-     * @return presenter delegate
+     * Add listener to this activity lifecycle
+     * @param listener    lifecycle listener
      */
-    protected abstract PresenterHandlingDelegate createPresenterDelegate();
+    public final void addListener(LifeCycleListener listener) {
+        listeners.add(listener);
+    }
 
     /**
      * Compose dependency graph to inject this dependencies
      */
     private void injectDependencies() {
-        BaseApplication.getDependencies(this).getComponentFor(this).inject(this);
+        getDependencyManager().getComponentFor(this).inject(this);
     }
 
     /**
      * Release dependency graph
      */
     private void resetDependencies() {
-        BaseApplication.getDependencies(this).releaseComponentFor(this);
+        getDependencyManager().releaseComponentFor(this);
     }
 
     /**
@@ -123,33 +148,45 @@ public abstract class BaseActivity<C extends ActivityScopeComponent> extends App
      */
     protected void changeFragment(Fragment fragment, String tag) {
         Timber.d("changing fragment " + fragment);
-        notifyStackedFragmentsFinishing();
+        notifyStackedFragmentsAreFinishing();
         clearBackStack();
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment, fragment, tag)
                 .commit();
     }
 
-    private void notifyStackedFragmentsFinishing() {
+    private void notifyStackedFragmentsActivityIsFinishing() {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         if (fragments != null && !fragments.isEmpty()) {
             for (Fragment fragment : fragments) {
-                notifyFinishing(fragment);
+                if (fragment instanceof MvpFragment) {
+                    // all fragment need to clean its dependencies now, since activity is finishing
+                    ((MvpFragment) fragment).endOfScope();
+                }
             }
         }
     }
 
-    private void notifyLastFragmentFinishing() {
+    private void notifyStackedFragmentsAreFinishing() {
         List<Fragment> fragments = getSupportFragmentManager().getFragments();
         if (fragments != null && !fragments.isEmpty()) {
-            notifyFinishing(getLastVisibleFragment(fragments));
+            for (Fragment fragment : fragments) {
+                notifyFragmentIsFinishing(fragment);
+            }
         }
     }
 
-    private void notifyFinishing(Fragment fragment) {
-        if (fragment instanceof BaseFragment) {
-            BaseFragment base = (BaseFragment) fragment;
-            base.onFinishing();
+    private void notifyCurrentFragmentIsFinishing() {
+        List<Fragment> fragments = getSupportFragmentManager().getFragments();
+        if (fragments != null && !fragments.isEmpty()) {
+            notifyFragmentIsFinishing(getLastVisibleFragment(fragments));
+        }
+    }
+
+    private void notifyFragmentIsFinishing(Fragment fragment) {
+        if (fragment instanceof OwnScopeFragment && fragment instanceof MvpFragment) {
+            // fragment with own scope need to reset dependencies now, even when activity is not finishing
+            ((MvpFragment) fragment).endOfScope();
         }
     }
 
@@ -169,5 +206,13 @@ public abstract class BaseActivity<C extends ActivityScopeComponent> extends App
             idx--;
         } while (last == null && idx > 0);
         return last;
+    }
+
+    private DependencyComponentManager getDependencyManager() {
+        final Application application = getApplication();
+        if (application instanceof MvpApplication) {
+            ((MvpApplication) application).getDependencies();
+        }
+        throw new ClassCastException("Application class must extend MvpApplication");
     }
 }

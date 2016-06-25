@@ -15,16 +15,16 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import pl.srw.template.R;
-import pl.srw.template.core.di.ActivityScopedFragment;
-import pl.srw.template.core.view.BaseActivity;
-import pl.srw.template.core.view.BaseFragment;
+import pl.srw.template.core.view.fragment.ActivityScopedFragment;
+import pl.srw.template.core.view.activity.MvpActivity;
+import pl.srw.template.core.view.fragment.MvpFragment;
 import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
 import pl.srw.template.core.view.delegate.presenter.SinglePresenterHandlingDelegate;
 import pl.srw.template.model.Todo;
 import pl.srw.template.presenter.ListViewPresenter;
 
-public class ListFragment extends BaseFragment
+public class ListFragment extends MvpFragment
         implements ListViewPresenter.ListView, PresenterOwner, ActivityScopedFragment {
 
     @Inject ListViewPresenter presenter;
@@ -53,8 +53,8 @@ public class ListFragment extends BaseFragment
     }
 
     @Override
-    public BaseActivity getBaseActivity() { // TODO move to base
-        return (BaseActivity) super.getActivity();
+    public MvpActivity getBaseActivity() { // TODO move to base
+        return (MvpActivity) super.getActivity();
     }
 
     @Override

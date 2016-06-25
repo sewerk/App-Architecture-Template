@@ -6,11 +6,6 @@ package pl.srw.template.core.view.delegate.presenter;
 public interface PresenterOwner {
 
     /**
-     * Inject dagger dependencies, especially presenter
-     */
-    void injectDependencies();
-
-    /**
      * Creates presenter delegate
      * @return delegate instance
      */

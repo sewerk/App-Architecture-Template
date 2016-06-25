@@ -3,7 +3,7 @@ package pl.srw.template.presenter;
 import javax.inject.Inject;
 
 import pl.srw.template.core.di.scope.RetainFragmentScope;
-import pl.srw.template.core.presenter.BasePresenter;
+import pl.srw.template.core.presenter.MvpPresenter;
 import pl.srw.template.model.Todo;
 import pl.srw.template.presenter.task.PushTask;
 
@@ -11,7 +11,7 @@ import pl.srw.template.presenter.task.PushTask;
  * Add view presenter. Lives as long as fragment.
  */
 @RetainFragmentScope
-public class AddViewPresenter extends BasePresenter<AddViewPresenter.AddView> {
+public class AddViewPresenter extends MvpPresenter<AddViewPresenter.AddView> {
 
     private PushTask pushTask;
 

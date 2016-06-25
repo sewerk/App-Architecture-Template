@@ -2,7 +2,7 @@ package pl.srw.template;
 
 import android.content.Context;
 
-import pl.srw.template.core.BaseApplication;
+import pl.srw.template.core.MvpApplication;
 import pl.srw.template.core.di.DependencyComponentManager;
 import pl.srw.template.di.component.ApplicationComponent;
 import pl.srw.template.di.component.DaggerApplicationComponent;
@@ -12,7 +12,7 @@ import timber.log.Timber;
 /**
  * Application class
  */
-public class TodosApplication extends BaseApplication<ApplicationComponent> {
+public class TodosApplication extends MvpApplication<ApplicationComponent> {
 
     @Override
     public void onCreate() {

@@ -3,7 +3,7 @@ package pl.srw.template.core.view.delegate;
 /**
  * Base class for additional functionality based on component lifecycle
  */
-public abstract class LifeCycleDelegating {
+public abstract class LifeCycleListener {
 
     /**
      * Reacts on onStart callback
@@ -18,8 +18,8 @@ public abstract class LifeCycleDelegating {
     }
 
     /**
-     * Reacts on 'view is finishing' callback
+     * Reacts on 'view went out of scope' callback
      */
-    public void onFinish() {
+    public void onEnd() {
     }
 }
