@@ -62,7 +62,7 @@ public class DependencyComponentManagerTest {
     }
 
     @Test
-    public void activityComponentIsDifferentForDifferentInstance() throws Exception {
+    public void activityComponentIsSameForDifferentInstance() throws Exception {
         // GIVEN
         final MvpActivity secondActivity = mock(MvpActivity.class);
         when(secondActivity.prepareComponent()).thenReturn(mock(MvpActivityScopeComponent.class));
@@ -72,7 +72,7 @@ public class DependencyComponentManagerTest {
         final MvpActivityScopeComponent second = sut.getComponentFor(secondActivity);
 
         // THEN
-        assertNotEquals(first, second);
+        assertEquals(first, second);
     }
 
     @Test
@@ -112,7 +112,7 @@ public class DependencyComponentManagerTest {
     }
 
     @Test
-    public void fragmentComponentIsDifferentForDifferentInstance() throws Exception {
+    public void fragmentComponentIsSameForDifferentInstance() throws Exception {
         // GIVEN
         final MvpFragmentScopedFragment secondFragment = mock(MvpFragmentScopedFragment.class);
         when(secondFragment.prepareComponent()).thenReturn(mock(MvpFragmentScopeComponent.class));
@@ -122,6 +122,6 @@ public class DependencyComponentManagerTest {
         final MvpFragmentScopeComponent second = sut.getComponentFor(secondFragment);
 
         // THEN
-        assertNotEquals(first, second);
+        assertEquals(first, second);
     }
 }

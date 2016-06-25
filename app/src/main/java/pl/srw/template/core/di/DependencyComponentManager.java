@@ -10,6 +10,7 @@ import pl.srw.template.core.di.component.MvpFragmentScopeComponent;
 import pl.srw.template.core.view.activity.MvpActivity;
 import pl.srw.template.core.view.fragment.MvpActivityScopedFragment;
 import pl.srw.template.core.view.fragment.MvpFragmentScopedFragment;
+import timber.log.Timber;
 
 /**
  * Dependency components holder
@@ -18,8 +19,8 @@ import pl.srw.template.core.view.fragment.MvpFragmentScopedFragment;
 public final class DependencyComponentManager<AC extends MvpApplicationScopeComponent> {
 
     private final AC applicationComponent;
-    private final HashMap<MvpActivity, MvpActivityScopeComponent> activityComponentsMap;
-    private final HashMap<MvpFragmentScopedFragment, MvpFragmentScopeComponent> fragmentComponentMap;
+    private final HashMap<Class<? extends MvpActivity>, MvpActivityScopeComponent> activityComponentsMap;
+    private final HashMap<Class<? extends MvpFragmentScopedFragment>, MvpFragmentScopeComponent> fragmentComponentMap;
 
     public DependencyComponentManager(AC applicationComponent) {
         this.activityComponentsMap = new HashMap<>(1);
@@ -36,14 +37,18 @@ public final class DependencyComponentManager<AC extends MvpApplicationScopeComp
     }
 
     public <C extends MvpActivityScopeComponent> C getComponentFor(MvpActivity<C> activity) {
-        if (!activityComponentsMap.containsKey(activity)) {
-            activityComponentsMap.put(activity, activity.prepareComponent());
+        final Class<? extends MvpActivity> activityClass = activity.getClass();
+        if (!activityComponentsMap.containsKey(activityClass)) {
+            Timber.d("preparing component for %s", activityClass.getSimpleName());
+            activityComponentsMap.put(activityClass, activity.prepareComponent());
         }
-        return (C) activityComponentsMap.get(activity);
+        return (C) activityComponentsMap.get(activityClass);
     }
 
     public void releaseComponentFor(MvpActivity activity) {
-        activityComponentsMap.remove(activity);
+        final Class<? extends MvpActivity> activityClass = activity.getClass();
+        Timber.d("releasing component for %s", activityClass.getSimpleName());
+        activityComponentsMap.remove(activityClass);
     }
 
     public <C extends MvpFragmentInActivityScopeComponent> C getComponentFor(MvpActivityScopedFragment fragment) {
@@ -52,13 +57,17 @@ public final class DependencyComponentManager<AC extends MvpApplicationScopeComp
     }
 
     public <C extends MvpFragmentScopeComponent> C getComponentFor(MvpFragmentScopedFragment<C> fragment) {
-        if (!fragmentComponentMap.containsKey(fragment)) {
-            fragmentComponentMap.put(fragment, fragment.prepareComponent());
+        final Class<? extends MvpFragmentScopedFragment> fragmentClass = fragment.getClass();
+        if (!fragmentComponentMap.containsKey(fragmentClass)) {
+            Timber.d("preparing component for %s", fragmentClass.getSimpleName());
+            fragmentComponentMap.put(fragmentClass, fragment.prepareComponent());
         }
-        return (C) fragmentComponentMap.get(fragment);
+        return (C) fragmentComponentMap.get(fragmentClass);
     }
 
     public void releaseComponentFor(MvpFragmentScopedFragment fragment) {
-        fragmentComponentMap.remove(fragment);
+        final Class<? extends MvpFragmentScopedFragment> fragmentClass = fragment.getClass();
+        Timber.d("releasing component for %s", fragmentClass.getSimpleName());
+        fragmentComponentMap.remove(fragmentClass);
     }
 }

@@ -208,7 +208,7 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
     private DependencyComponentManager getDependencyManager() {
         final Application application = getApplication();
         if (application instanceof MvpApplication) {
-            ((MvpApplication) application).getDependencies();
+            return ((MvpApplication) application).getDependencies();
         }
         throw new ClassCastException("Application class must extend MvpApplication");
     }
