@@ -13,6 +13,7 @@ import java.util.List;
 import butterknife.ButterKnife;
 import pl.srw.template.core.MvpApplication;
 import pl.srw.template.core.di.DependencyComponentManager;
+import pl.srw.template.core.view.activity.MvpActivity;
 import pl.srw.template.core.view.delegate.LifeCycleListener;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
 
@@ -83,6 +84,10 @@ public abstract class MvpFragment extends Fragment {
             listener.onEnd();
         }
         resetDependencies();
+    }
+
+    public MvpActivity getBaseActivity() {
+        return (MvpActivity) super.getActivity();
     }
 
     /**

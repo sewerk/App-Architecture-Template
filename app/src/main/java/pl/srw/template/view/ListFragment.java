@@ -53,11 +53,6 @@ public class ListFragment extends MvpFragment
     }
 
     @Override
-    public MvpActivity getBaseActivity() { // TODO move to base
-        return (MvpActivity) super.getActivity();
-    }
-
-    @Override
     public void showEntries(Collection<Todo> entries) {
         listView.removeAllViews();
         for (Todo t : entries) {

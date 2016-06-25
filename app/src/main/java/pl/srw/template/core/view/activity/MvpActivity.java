@@ -41,6 +41,7 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
     }
 
     @Override
+    @CallSuper
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getContentLayoutId());
@@ -71,6 +72,7 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
     }
 
     @Override
+    @CallSuper
     protected void onDestroy() {
         if (isFinishing()) {
             notifyStackedFragmentsActivityIsFinishing();
@@ -83,6 +85,7 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
     }
 
     @Override
+    @CallSuper
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 0) {
             // if no more fragments to go back to then onDestroy will be called
@@ -93,31 +96,11 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
     }
 
     /**
-     * Provides content layout resource id
-     * @return layout id
-     */
-    @LayoutRes protected abstract int getContentLayoutId();
-
-    /**
      * Add listener to this activity lifecycle
      * @param listener    lifecycle listener
      */
     public final void addListener(LifeCycleListener listener) {
         listeners.add(listener);
-    }
-
-    /**
-     * Compose dependency graph to inject this dependencies
-     */
-    private void injectDependencies() {
-        getDependencyManager().getComponentFor(this).inject(this);
-    }
-
-    /**
-     * Release dependency graph
-     */
-    private void resetDependencies() {
-        getDependencyManager().releaseComponentFor(this);
     }
 
     /**
@@ -127,6 +110,12 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
      * @return component instance
      */
     public abstract C prepareComponent();
+
+    /**
+     * Provides content layout resource id
+     * @return layout id
+     */
+    @LayoutRes protected abstract int getContentLayoutId();
 
     /**
      * Replaces content fragment with adding to backstack
@@ -206,6 +195,14 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
             idx--;
         } while (last == null && idx > 0);
         return last;
+    }
+
+    private void injectDependencies() {
+        getDependencyManager().getComponentFor(this).inject(this);
+    }
+
+    private void resetDependencies() {
+        getDependencyManager().releaseComponentFor(this);
     }
 
     private DependencyComponentManager getDependencyManager() {
