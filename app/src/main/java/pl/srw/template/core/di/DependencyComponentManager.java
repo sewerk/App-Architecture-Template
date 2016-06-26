@@ -2,9 +2,7 @@ package pl.srw.template.core.di;
 
 import java.util.HashMap;
 
-import pl.srw.template.core.MvpApplication;
 import pl.srw.template.core.di.component.MvpActivityScopeComponent;
-import pl.srw.template.core.di.component.MvpApplicationScopeComponent;
 import pl.srw.template.core.di.component.MvpFragmentInActivityScopeComponent;
 import pl.srw.template.core.di.component.MvpFragmentScopeComponent;
 import pl.srw.template.core.view.activity.MvpActivity;
@@ -14,26 +12,15 @@ import timber.log.Timber;
 
 /**
  * Dependency components holder
- * @param <AC>    type of Dagger application component
  */
-public final class DependencyComponentManager<AC extends MvpApplicationScopeComponent> {
+public final class DependencyComponentManager {
 
-    private final AC applicationComponent;
     private final HashMap<Class<? extends MvpActivity>, MvpActivityScopeComponent> activityComponentsMap;
     private final HashMap<Class<? extends MvpFragmentScopedFragment>, MvpFragmentScopeComponent> fragmentComponentMap;
 
-    public DependencyComponentManager(AC applicationComponent) {
+    public DependencyComponentManager() {
         this.activityComponentsMap = new HashMap<>(1);
         this.fragmentComponentMap = new HashMap<>(0);
-        this.applicationComponent = applicationComponent;
-    }
-
-    public static <C extends MvpApplicationScopeComponent> DependencyComponentManager<C> get(MvpApplication<C> application) {
-        return application.getDependencies();
-    }
-
-    public AC getApplicationComponent() {
-        return applicationComponent;
     }
 
     public <C extends MvpActivityScopeComponent> C getComponentFor(MvpActivity<C> activity) {

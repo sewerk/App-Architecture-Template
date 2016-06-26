@@ -1,6 +1,5 @@
 package pl.srw.template.core.view.fragment;
 
-import android.app.Application;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
@@ -12,7 +11,6 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import pl.srw.template.core.MvpApplication;
-import pl.srw.template.core.di.DependencyComponentManager;
 import pl.srw.template.core.view.activity.MvpActivity;
 import pl.srw.template.core.view.delegate.LifeCycleListener;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
@@ -101,10 +99,10 @@ public abstract class MvpFragment extends Fragment {
     private void injectDependencies() {
         if (this instanceof MvpFragmentScopedFragment) {
             final MvpFragmentScopedFragment fragment = (MvpFragmentScopedFragment) this;
-            getDependencyManager().getComponentFor(fragment).inject(fragment);
+            MvpApplication.getDependencies(getContext()).getComponentFor(fragment).inject(fragment);
         } else if (this instanceof MvpActivityScopedFragment){
             final MvpActivityScopedFragment fragment = (MvpActivityScopedFragment) this;
-            getDependencyManager().getComponentFor(fragment).inject(fragment);
+            MvpApplication.getDependencies(getContext()).getComponentFor(fragment).inject(fragment);
         } else {
             throw new ClassCastException("MvpFragment must implement " +
                     "one of interfaces: MvpFragmentScopedFragment or MvpActivityScopedFragment");
@@ -114,16 +112,8 @@ public abstract class MvpFragment extends Fragment {
     private void resetDependencies() {
         if (this instanceof MvpFragmentScopedFragment) {
             final MvpFragmentScopedFragment fragment = (MvpFragmentScopedFragment) this;
-            getDependencyManager().releaseComponentFor(fragment);
+            MvpApplication.getDependencies(getContext()).releaseComponentFor(fragment);
         }
         // else dependencies will be reset by activity
-    }
-
-    private DependencyComponentManager getDependencyManager() {
-        final Application application = getActivity().getApplication();
-        if (application instanceof MvpApplication) {
-            return ((MvpApplication) application).getDependencies();
-        }
-        throw new ClassCastException("Application class must extend MvpApplication");
     }
 }

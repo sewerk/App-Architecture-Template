@@ -1,20 +1,19 @@
 package pl.srw.template.core;
 
 import android.app.Application;
+import android.content.Context;
 import android.support.annotation.CallSuper;
 
 import pl.srw.template.BuildConfig;
 import pl.srw.template.core.di.DependencyComponentManager;
-import pl.srw.template.core.di.component.MvpApplicationScopeComponent;
 import timber.log.Timber;
 
 /**
  * Parent application class
- * @param <C>    type of Dagger application component
  */
-public abstract class MvpApplication<C extends MvpApplicationScopeComponent> extends Application {
+public abstract class MvpApplication extends Application {
 
-    private DependencyComponentManager<C> dependencies;
+    private DependencyComponentManager dependencies;
 
     @CallSuper
     @Override
@@ -25,20 +24,18 @@ public abstract class MvpApplication<C extends MvpApplicationScopeComponent> ext
             Timber.plant(new Timber.DebugTree());
         }
 
-        dependencies = new DependencyComponentManager<>(prepareApplicationComponent());
+        dependencies = new DependencyComponentManager();
     }
-
-    /**
-     * Prepares Dagger application component
-     * @return application component instance
-     * */
-    protected abstract C prepareApplicationComponent();
 
     /**
      * Gets dependency manager
      * @return dependency manager
      */
-    public DependencyComponentManager<C> getDependencies() {
-        return dependencies;
+    public static DependencyComponentManager getDependencies(Context context) {
+        final Context applicationContext = context.getApplicationContext();
+        if (applicationContext instanceof MvpApplication) {
+            return ((MvpApplication) applicationContext).dependencies;
+        }
+        throw new ClassCastException("Application class must extend MvpApplication");
     }
 }

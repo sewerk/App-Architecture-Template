@@ -10,16 +10,16 @@ import pl.srw.template.di.module.ApplicationModule;
 /**
  * Application class
  */
-public class TodosApplication extends MvpApplication<ApplicationComponent> {
+public class TodosApplication extends MvpApplication {
 
     private ApplicationComponent applicationComponent;
 
     @Override
-    protected ApplicationComponent prepareApplicationComponent() {
+    public void onCreate() {
+        super.onCreate();
         applicationComponent = DaggerApplicationComponent.builder()
                 .applicationModule(new ApplicationModule(this))
                 .build();
-        return applicationComponent;
     }
 
     public static TodosApplication get(Context context) {

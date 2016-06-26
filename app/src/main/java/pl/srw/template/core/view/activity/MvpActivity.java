@@ -1,6 +1,5 @@
 package pl.srw.template.core.view.activity;
 
-import android.app.Application;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.LayoutRes;
@@ -15,7 +14,6 @@ import java.util.List;
 import butterknife.ButterKnife;
 import pl.srw.template.R;
 import pl.srw.template.core.MvpApplication;
-import pl.srw.template.core.di.DependencyComponentManager;
 import pl.srw.template.core.view.delegate.LifeCycleListener;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
 import pl.srw.template.core.view.fragment.MvpFragment;
@@ -123,7 +121,7 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
      * @param tag         fragment tag
      */
     protected void changeFragmentWithStack(Fragment fragment, String tag) {
-        Timber.d("adding fragment " + fragment);
+        Timber.d("adding fragment %s", fragment);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment, fragment, tag)
                 .addToBackStack(null)
@@ -136,7 +134,7 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
      * @param tag         fragment tag
      */
     protected void changeFragment(Fragment fragment, String tag) {
-        Timber.d("changing fragment " + fragment);
+        Timber.d("changing fragment %s", fragment);
         notifyStackedFragmentsAreFinishing();
         clearBackStack();
         getSupportFragmentManager().beginTransaction()
@@ -198,18 +196,11 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
     }
 
     private void injectDependencies() {
-        getDependencyManager().getComponentFor(this).inject(this);
+        MvpApplication.getDependencies(this).getComponentFor(this).inject(this);
     }
 
     private void resetDependencies() {
-        getDependencyManager().releaseComponentFor(this);
+        MvpApplication.getDependencies(this).releaseComponentFor(this);
     }
 
-    private DependencyComponentManager getDependencyManager() {
-        final Application application = getApplication();
-        if (application instanceof MvpApplication) {
-            return ((MvpApplication) application).getDependencies();
-        }
-        throw new ClassCastException("Application class must extend MvpApplication");
-    }
 }
