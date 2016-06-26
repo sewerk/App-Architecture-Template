@@ -34,7 +34,9 @@ public class MainActivity extends MvpActivity<MainActivityComponent>
 
     @Override
     public MainActivityComponent prepareComponent() {
-        return TodosApplication.getDependencies(this).getApplicationComponent().getMainActivityComponent();
+        return TodosApplication.get(this)
+                .getApplicationComponent()
+                .getMainActivityComponent();
     }
 
     @OnClick(R.id.add)

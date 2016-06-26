@@ -3,8 +3,10 @@ package pl.srw.template.core;
 import android.app.Application;
 import android.support.annotation.CallSuper;
 
+import pl.srw.template.BuildConfig;
 import pl.srw.template.core.di.DependencyComponentManager;
 import pl.srw.template.core.di.component.MvpApplicationScopeComponent;
+import timber.log.Timber;
 
 /**
  * Parent application class
@@ -18,6 +20,11 @@ public abstract class MvpApplication<C extends MvpApplicationScopeComponent> ext
     @Override
     public void onCreate() {
         super.onCreate();
+
+        if (BuildConfig.DEBUG) {
+            Timber.plant(new Timber.DebugTree());
+        }
+
         dependencies = new DependencyComponentManager<>(prepareApplicationComponent());
     }
 
