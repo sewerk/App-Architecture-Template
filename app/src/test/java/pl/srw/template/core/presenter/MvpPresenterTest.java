@@ -12,16 +12,16 @@ import static org.mockito.Mockito.verify;
 
 public class MvpPresenterTest {
 
-    private MvpPresenterImpl sut;
+    private TestMvpPresenter sut;
 
-    @Mock private ViewImpl view;
+    @Mock private TestView view;
 
-    @Mock private MvpPresenter.UIChange<ViewImpl> uiChange;
+    @Mock private MvpPresenter.UIChange<TestView> uiChange;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
-        sut = new MvpPresenterImpl();
+        sut = new TestMvpPresenter();
     }
 
     @Test
@@ -137,9 +137,9 @@ public class MvpPresenterTest {
         verify(uiChange).change(view);
     }
 
-    private class MvpPresenterImpl extends MvpPresenter<ViewImpl> {
+    private class TestMvpPresenter extends MvpPresenter<TestView> {
     }
 
-    private class ViewImpl {
+    private class TestView {
     }
 }
