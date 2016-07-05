@@ -6,13 +6,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.ButterKnife;
 import pl.srw.template.core.MvpApplication;
 import pl.srw.template.core.view.activity.MvpActivity;
 import pl.srw.template.core.view.delegate.LifeCycleListener;
+import pl.srw.template.core.view.delegate.LifeCycleNotifier;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
 
 /**
@@ -24,10 +22,10 @@ import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
  */
 public abstract class MvpFragment extends Fragment {
 
-    private List<LifeCycleListener> listeners;
+    private LifeCycleNotifier notifier;
 
     public MvpFragment() {
-        listeners = new ArrayList<>(1);
+        notifier = new LifeCycleNotifier();
     }
 
     @Override
@@ -52,18 +50,14 @@ public abstract class MvpFragment extends Fragment {
     @CallSuper
     public void onStart() {
         super.onStart();
-        for (LifeCycleListener listener : listeners) {
-            listener.onStart();
-        }
+        notifier.notifyOnStart();
     }
 
     @Override
     @CallSuper
     public void onStop() {
         super.onStop();
-        for (LifeCycleListener listener : listeners) {
-            listener.onStop();
-        }
+        notifier.notifyOnStop();
     }
 
     @Override
@@ -78,9 +72,7 @@ public abstract class MvpFragment extends Fragment {
      */
     @CallSuper
     public void endOfScope() {
-        for (LifeCycleListener listener : listeners) {
-            listener.onEnd();
-        }
+        notifier.notifyOnEnd();
         resetDependencies();
     }
 
@@ -93,7 +85,7 @@ public abstract class MvpFragment extends Fragment {
      * @param listener    lifecycle listener
      */
     public final void addListener(LifeCycleListener listener) {
-        listeners.add(listener);
+        notifier.register(listener);
     }
 
     private void injectDependencies() {

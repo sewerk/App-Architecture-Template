@@ -8,16 +8,16 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.ButterKnife;
 import pl.srw.template.R;
 import pl.srw.template.core.MvpApplication;
+import pl.srw.template.core.di.component.MvpActivityScopeComponent;
 import pl.srw.template.core.view.delegate.LifeCycleListener;
+import pl.srw.template.core.view.delegate.LifeCycleNotifier;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
 import pl.srw.template.core.view.fragment.MvpFragment;
-import pl.srw.template.core.di.component.MvpActivityScopeComponent;
 import pl.srw.template.core.view.fragment.MvpFragmentScopedFragment;
 import timber.log.Timber;
 
@@ -32,10 +32,10 @@ import timber.log.Timber;
  */
 public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends AppCompatActivity {
 
-    private List<LifeCycleListener> listeners;
+    private LifeCycleNotifier notifier;
 
     public MvpActivity() {
-        this.listeners = new ArrayList<>(1);
+        notifier = new LifeCycleNotifier();
     }
 
     @Override
@@ -55,18 +55,14 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
     @CallSuper
     protected void onStart() {
         super.onStart();
-        for (LifeCycleListener listener : listeners) {
-            listener.onStart();
-        }
+        notifier.notifyOnStart();
     }
 
     @Override
     @CallSuper
     protected void onStop() {
         super.onStop();
-        for (LifeCycleListener listener : listeners) {
-            listener.onStop();
-        }
+        notifier.notifyOnStop();
     }
 
     @Override
@@ -75,9 +71,7 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
         if (isFinishing()) {
             notifyStackedFragmentsActivityIsFinishing();
             resetDependencies();
-            for (LifeCycleListener listener : listeners) {
-                listener.onEnd();
-            }
+            notifier.notifyOnEnd();
         }
         super.onDestroy();
     }
@@ -98,7 +92,7 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
      * @param listener    lifecycle listener
      */
     public final void addListener(LifeCycleListener listener) {
-        listeners.add(listener);
+        notifier.register(listener);
     }
 
     /**
