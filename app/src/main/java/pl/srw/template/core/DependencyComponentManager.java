@@ -1,11 +1,10 @@
-package pl.srw.template.core.di;
+package pl.srw.template.core;
 
 import java.util.HashMap;
 
 import pl.srw.template.core.di.component.MvpActivityScopeComponent;
 import pl.srw.template.core.di.component.MvpFragmentInActivityScopeComponent;
 import pl.srw.template.core.di.component.MvpFragmentScopeComponent;
-import pl.srw.template.core.view.activity.MvpActivity;
 import pl.srw.template.core.view.fragment.MvpActivityScopedFragment;
 import pl.srw.template.core.view.fragment.MvpFragmentScopedFragment;
 import timber.log.Timber;
@@ -13,12 +12,12 @@ import timber.log.Timber;
 /**
  * Dependency components holder
  */
-public final class DependencyComponentManager {
+final class DependencyComponentManager {
 
     private final HashMap<Class<? extends MvpActivity>, MvpActivityScopeComponent> activityComponentsMap;
     private final HashMap<Class<? extends MvpFragmentScopedFragment>, MvpFragmentScopeComponent> fragmentComponentMap;
 
-    public DependencyComponentManager() {
+    DependencyComponentManager() {
         this.activityComponentsMap = new HashMap<>(1);
         this.fragmentComponentMap = new HashMap<>(0);
     }

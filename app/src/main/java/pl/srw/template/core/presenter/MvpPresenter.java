@@ -59,7 +59,7 @@ public abstract class MvpPresenter<V> {
      *
      * @param uiChange change view action
      */
-    protected void present(UIChange<V> uiChange) {
+    protected final void present(UIChange<V> uiChange) {
         if (view != null) {
             uiChange.change(view);
             latestUIChange = null;

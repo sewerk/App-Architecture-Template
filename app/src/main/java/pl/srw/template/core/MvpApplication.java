@@ -4,10 +4,6 @@ import android.app.Application;
 import android.content.Context;
 import android.support.annotation.CallSuper;
 
-import pl.srw.template.BuildConfig;
-import pl.srw.template.core.di.DependencyComponentManager;
-import timber.log.Timber;
-
 /**
  * Parent application class
  */
@@ -19,11 +15,6 @@ public abstract class MvpApplication extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-
-        if (BuildConfig.DEBUG) {
-            Timber.plant(new Timber.DebugTree());
-        }
-
         dependencies = new DependencyComponentManager();
     }
 
@@ -31,7 +22,7 @@ public abstract class MvpApplication extends Application {
      * Gets dependency manager
      * @return dependency manager
      */
-    public static DependencyComponentManager getDependencies(Context context) {
+    static DependencyComponentManager getDependencies(Context context) {
         final Context applicationContext = context.getApplicationContext();
         if (applicationContext instanceof MvpApplication) {
             return ((MvpApplication) applicationContext).dependencies;

@@ -16,7 +16,7 @@ import pl.srw.template.TodosApplication;
 import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
 import pl.srw.template.core.view.delegate.presenter.SinglePresenterHandlingDelegate;
-import pl.srw.template.core.view.fragment.MvpFragment;
+import pl.srw.template.core.MvpFragment;
 import pl.srw.template.core.view.fragment.MvpFragmentScopedFragment;
 import pl.srw.template.di.component.AddFragmentComponent;
 import pl.srw.template.presenter.AddViewPresenter;

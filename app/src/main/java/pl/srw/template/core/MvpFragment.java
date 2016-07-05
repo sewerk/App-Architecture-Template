@@ -1,4 +1,4 @@
-package pl.srw.template.core.view.fragment;
+package pl.srw.template.core;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -7,11 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 
 import butterknife.ButterKnife;
-import pl.srw.template.core.MvpApplication;
-import pl.srw.template.core.view.activity.MvpActivity;
 import pl.srw.template.core.view.delegate.LifeCycleListener;
 import pl.srw.template.core.view.delegate.LifeCycleNotifier;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
+import pl.srw.template.core.view.fragment.MvpActivityScopedFragment;
+import pl.srw.template.core.view.fragment.MvpFragmentScopedFragment;
 
 /**
  * Parent class for fragments-view in MVP model.
@@ -71,7 +71,7 @@ public abstract class MvpFragment extends Fragment {
      * Callback when view if out of scope and all dependent objects need to be destroyed
      */
     @CallSuper
-    public void endOfScope() {
+    void endOfScope() {
         notifier.notifyOnEnd();
         resetDependencies();
     }

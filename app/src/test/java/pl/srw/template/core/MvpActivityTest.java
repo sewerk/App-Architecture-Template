@@ -1,4 +1,4 @@
-package pl.srw.template.core.view.activity;
+package pl.srw.template.core;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -12,10 +12,8 @@ import org.mockito.Spy;
 
 import java.util.Collections;
 
-import pl.srw.template.core.MvpApplication;
 import pl.srw.template.core.di.component.MvpActivityScopeComponent;
 import pl.srw.template.core.view.fragment.MvpActivityScopedFragment;
-import pl.srw.template.core.view.fragment.MvpFragment;
 import pl.srw.template.core.view.fragment.MvpFragmentScopedFragment;
 
 import static org.mockito.Matchers.any;

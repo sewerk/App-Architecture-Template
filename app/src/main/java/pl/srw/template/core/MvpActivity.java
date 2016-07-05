@@ -1,4 +1,4 @@
-package pl.srw.template.core.view.activity;
+package pl.srw.template.core;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
@@ -12,12 +12,10 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import pl.srw.template.R;
-import pl.srw.template.core.MvpApplication;
 import pl.srw.template.core.di.component.MvpActivityScopeComponent;
 import pl.srw.template.core.view.delegate.LifeCycleListener;
 import pl.srw.template.core.view.delegate.LifeCycleNotifier;
 import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
-import pl.srw.template.core.view.fragment.MvpFragment;
 import pl.srw.template.core.view.fragment.MvpFragmentScopedFragment;
 import timber.log.Timber;
 

@@ -1,6 +1,6 @@
 package pl.srw.template.core.di.component;
 
-import pl.srw.template.core.view.activity.MvpActivity;
+import pl.srw.template.core.MvpActivity;
 
 /**
  * Base Dagger component for activity in {@link pl.srw.template.core.di.scope.RetainActivityScope}

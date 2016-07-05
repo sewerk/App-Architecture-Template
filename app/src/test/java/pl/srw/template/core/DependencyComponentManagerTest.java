@@ -1,4 +1,4 @@
-package pl.srw.template.core.di;
+package pl.srw.template.core;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -9,7 +9,6 @@ import org.mockito.MockitoAnnotations;
 import pl.srw.template.core.di.component.MvpActivityScopeComponent;
 import pl.srw.template.core.di.component.MvpFragmentInActivityScopeComponent;
 import pl.srw.template.core.di.component.MvpFragmentScopeComponent;
-import pl.srw.template.core.view.activity.MvpActivity;
 import pl.srw.template.core.view.fragment.MvpActivityScopedFragment;
 import pl.srw.template.core.view.fragment.MvpFragmentScopedFragment;
 import pl.srw.template.di.component.ApplicationComponent;
