@@ -3,6 +3,7 @@ package pl.srw.template.presenter;
 import java.util.Collection;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 
 import pl.srw.mfvp.di.scope.RetainActivityScope;
 import pl.srw.mfvp.presenter.MvpPresenter;
@@ -20,12 +21,12 @@ public class ListViewPresenter extends MvpPresenter<ListViewPresenter.ListView>
 
     private Collection<Todo> entries;
     private GetTask getTask;
-    private PushTask pushTask;
+    private Provider<PushTask> pushTasks;
 
     @Inject
-    public ListViewPresenter(GetTask getTask, PushTask pushTask) {
+    public ListViewPresenter(GetTask getTask, Provider<PushTask> pushTasks) {
         this.getTask = getTask;
-        this.pushTask = pushTask;
+        this.pushTasks = pushTasks;
     }
 
     @Override
@@ -35,11 +36,12 @@ public class ListViewPresenter extends MvpPresenter<ListViewPresenter.ListView>
 
     @Override
     protected void onNewViewRestoreState() {
+        Timber.d("Displaying cached data");
         displayEntries();
     }
 
     public void checkboxClickedFor(Todo todo) {
-        pushTask.execute(new Todo(!todo.isDone(), todo.getText()));
+        pushTasks.get().execute(new Todo(!todo.isDone(), todo.getText()));
     }
 
     @Override
@@ -49,7 +51,6 @@ public class ListViewPresenter extends MvpPresenter<ListViewPresenter.ListView>
     }
 
     private void displayEntries() {
-        Timber.d("Displaying cached data");
         present(new UIChange<ListView>() {
             @Override
             public void change(ListView view) {
