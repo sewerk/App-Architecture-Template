@@ -15,11 +15,11 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import pl.srw.template.R;
-import pl.srw.template.core.view.fragment.MvpActivityScopedFragment;
-import pl.srw.template.core.MvpFragment;
-import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
-import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
-import pl.srw.template.core.view.delegate.presenter.SinglePresenterHandlingDelegate;
+import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
+import pl.srw.mfvp.MvpFragment;
+import pl.srw.mfvp.view.delegate.presenter.PresenterHandlingDelegate;
+import pl.srw.mfvp.view.delegate.presenter.PresenterOwner;
+import pl.srw.mfvp.view.delegate.presenter.SinglePresenterHandlingDelegate;
 import pl.srw.template.model.Todo;
 import pl.srw.template.presenter.ListViewPresenter;
 

@@ -2,8 +2,8 @@ package pl.srw.template.presenter;
 
 import javax.inject.Inject;
 
-import pl.srw.template.core.di.scope.RetainActivityScope;
-import pl.srw.template.core.presenter.MvpPresenter;
+import pl.srw.mfvp.di.scope.RetainActivityScope;
+import pl.srw.mfvp.presenter.MvpPresenter;
 
 /**
  * Main view presenter

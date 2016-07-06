@@ -2,7 +2,7 @@ package pl.srw.template;
 
 import android.content.Context;
 
-import pl.srw.template.core.MvpApplication;
+import pl.srw.mfvp.MvpApplication;
 import pl.srw.template.di.component.ApplicationComponent;
 import pl.srw.template.di.component.DaggerApplicationComponent;
 import pl.srw.template.di.module.ApplicationModule;

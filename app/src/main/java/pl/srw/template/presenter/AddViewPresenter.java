@@ -2,8 +2,8 @@ package pl.srw.template.presenter;
 
 import javax.inject.Inject;
 
-import pl.srw.template.core.di.scope.RetainFragmentScope;
-import pl.srw.template.core.presenter.MvpPresenter;
+import pl.srw.mfvp.di.scope.RetainFragmentScope;
+import pl.srw.mfvp.presenter.MvpPresenter;
 import pl.srw.template.model.Todo;
 import pl.srw.template.presenter.task.PushTask;
 

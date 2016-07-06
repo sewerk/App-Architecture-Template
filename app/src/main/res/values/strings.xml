@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TODOs - from App Architecture Template</string>
+    <string name="app_name">TODOs - MFVP sample</string>
     <string name="add_new">ADD NEW</string>
     <string name="add_text">to do</string>
     <string name="add_done">is done?</string>

@@ -8,10 +8,10 @@ import butterknife.Bind;
 import butterknife.OnClick;
 import pl.srw.template.R;
 import pl.srw.template.TodosApplication;
-import pl.srw.template.core.MvpActivity;
-import pl.srw.template.core.view.delegate.presenter.PresenterHandlingDelegate;
-import pl.srw.template.core.view.delegate.presenter.PresenterOwner;
-import pl.srw.template.core.view.delegate.presenter.SinglePresenterHandlingDelegate;
+import pl.srw.mfvp.MvpActivity;
+import pl.srw.mfvp.view.delegate.presenter.PresenterHandlingDelegate;
+import pl.srw.mfvp.view.delegate.presenter.PresenterOwner;
+import pl.srw.mfvp.view.delegate.presenter.SinglePresenterHandlingDelegate;
 import pl.srw.template.di.component.MainActivityComponent;
 import pl.srw.template.presenter.MainViewPresenter;
 
@@ -46,12 +46,12 @@ public class MainActivity extends MvpActivity<MainActivityComponent>
 
     @Override
     public void showAddView() {
-        changeFragmentWithStack(AddFragment.newInstance(), null);
+        changeFragmentWithStack(R.id.fragment, AddFragment.newInstance(), null);
     }
 
     @Override
     public void showListView() {
-        changeFragment(ListFragment.newInstance(), null);
+        changeFragment(R.id.fragment, ListFragment.newInstance(), null);
     }
 
     @Override

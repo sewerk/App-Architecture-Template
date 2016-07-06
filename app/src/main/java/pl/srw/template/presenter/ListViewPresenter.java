@@ -4,8 +4,8 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
-import pl.srw.template.core.di.scope.RetainActivityScope;
-import pl.srw.template.core.presenter.MvpPresenter;
+import pl.srw.mfvp.di.scope.RetainActivityScope;
+import pl.srw.mfvp.presenter.MvpPresenter;
 import pl.srw.template.model.Todo;
 import pl.srw.template.presenter.task.GetTask;
 import pl.srw.template.presenter.task.PushTask;
