@@ -1,6 +1,7 @@
-# App-Architecture-Template
+# Model Fragment-View Presenter
 
-This template provides core logic for MVP architecture. Key points are:
+This library provides core logic for MVP architecture with use of Activity and Fragment as view component.
+Key points are:
  - Model - provides data
  - passive View - fulfill display commands and inform Presenter about user/device input
  - Presenter - contains application business logic, cache model data, can survive view destruction
