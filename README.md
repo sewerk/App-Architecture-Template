@@ -1,61 +1,160 @@
 # Model Fragment-View Presenter
 
-This library provides core logic for MVP architecture with use of Activity and Fragment as view component.
+This library provides core logic for MVP architecture with use of Activities+Fragments as view components.
 Key points are:
  - Model - provides data
  - passive View - fulfill display commands and inform Presenter about user/device input
  - Presenter - contains application business logic, cache model data, can survive view destruction
 
-Source code contains template implementation as 'Todo list app'. Base classes for
-architecture framework are placed in `core` java package.
-
 ## Details
 
-Presenter connects model with view.
-It hold current state and lives in scope of view.
-This means it is created with associated view but stays alive as long as it is required.
-In particular:
-- it can be new for each view instance, like forms, where you don't want the same data that were
-previously entered to be restored in new view (see `EachViewNewPresenterOwner`),
-- or every time the same, to not perform expensive data processing many times,
-when going back and forth between screens (see `PresenterOwner`).
+### V
 
-When the view is being recreated by configuration change, the presenter instance is being retained
-to bind again with new view. This is accomplished with use of Dagger2 scopes (see `RetainActivityScope`
-and `DependencyComponentManager`).
-
-View can be Activity or Fragment class. View can contain many presenters, but presenter must
+View(in MVP) can be Activity or Fragment class. View can contain many presenters, but presenter must
 manipulate only single view. This way we can separate different presentation responsibility to individual classes,
-but still display all within one screen.
+but still display all within one screen, if required.
 
-Processing starts when Activity, extending `BaseActivity`, is created. At first steps the dependency
-injection take place and presenter is constructed. Presenter lives until Activity is finishing.
-Then dependency scope is being reset. Activity is also responsible for informing Fragment
-classes when they are finishing.
+Processing starts when Activity, extending `MvpActivity`, is created. At first steps the dependency
+injection take place and, if Activity implements `PresenterOwner`, presenter gets constructed and connected.
+Presenter lives until Activity is finishing. Then dependency scope is being reset.
 
-`BaseActivity` extension always owns presenter, so upon creation injection take place.
-`BaseFragment` extension, on the other hand, can take 3 forms:
-- simple Fragment class with no presenter - dependency injection will not happen by default
-- Fragment implementing `ActivityScopedFragment` in `RetainActivityScope`
-- Fragment implementing `OwnScopeFragment` in `RetainFragmentScope`
+Activity is also responsible for informing Fragment classes when they are finishing.
+Similar flow applies to Fragment, which should extend `MvpFragment`, might implement `PresenterOwner`
+and one of `MvpActivityScopedFragment` or `MvpFragmentScopedFragment`.
 
-Binding view to presenter take place by delegate implementing `LifeCycleDelegating`.
-All presenters should extend `BasePresenter`. Initialization of state should happen in `onFirstBind`
+Simple Fragment without those extensions will also work.
+You can also connect your own delegate by implementing `LifeCycleListener` and adding it to view component.
+
+### P
+
+Binding view to presenter take place by `PresenterHandlingDelegate`, which is created when view implements `PresenterOwner`.
+All presenters should extend `MvpPresenter`. Initialization of state should be implemented in `onFirstBind`
 method, after view is bind for the first time, whereas restoring state, after every next bind,
-in `onNewViewRestoreState` method. When scope of presenter comes to end, 'onFinish' callback is executed.
+in `onNewViewRestoreState` method. When scope of presenter comes to end, `onFinish` callback is executed.
 
-View changes are done through `BasePresenter.UIChange`. In case the view is missing when
-data processing has finished, the presenter will hold the change request and execute when new view
+View changes are done through `MvpPresenter.UIChange`. In case the view is missing when
+data processing has finished, the presenter will hold the change request and execute as soon as new view
 is bind.
+
+Presenter connects also with Model. It hold current state and lives in scope of the "screen".
+This means it is created with associated view component but stays alive as long as it is required,
+especially retains over configuration changes(like screen rotation).
+In particular:
+- it can be new for each screen, like forms, where you don't want the same data that were
+previously entered to be restored in new view (Fragment view will implement `MvpFragmentScopedFragment`),
+- or every time the same, to not perform expensive data processing many times,
+when going back and forth between screens (Fragment view will implement `MvpActivityScopedFragment`).
+
+This is accomplished by annotating presenter with Dagger2 scopes: `RetainActivityScope` and `RetainFragmentScope`.
+
+### M
+
+It's all up to you how do you want Model to work.
 
 ## How to start
 
-1. Clone this repo and copy `core` directory to your project
-1. Create Presenter by extending `BasePresenter`, with view interface
-1. Create Activity, by extending `BaseActivity`, with Dagger Component (and Module)
-1. Add Activity component accessor to ApplicationComponent interface
-1. Create Fragment, by extending `BaseFragment`,
-and decide in what scope its Presenter should live: fragment or activity scope
+1. Add dependency to your 'build.gradle' file:
+//TODO:
+1. Create application class, by extending `MvpApplication`
+1. Create Dagger component for Activity, extending `MvpActivityScopeComponent` and optionally `MvpFragmentInActivityScopeComponent`
+```java
+@RetainActivityScope
+public interface MainActivityComponent
+        extends MvpActivityScopeComponent<MainActivity>,
+        MvpFragmentInActivityScopeComponent<ListFragment> { // ListFragment will get 'end lifecycle' callback when activity is finishing
+
+}
+```
+1. Create Activity class, by extending `MvpActivity`
+```java
+public class MainActivity extends MvpActivity<MainActivityComponent>
+        implements MainViewPresenter.MainView, PresenterOwner {
+
+    @Inject MainViewPresenter presenter;
+
+    @Override
+    public PresenterHandlingDelegate createPresenterDelegate() {
+        return new SinglePresenterHandlingDelegate(this, presenter);
+    }
+
+    @Override
+    public MainActivityComponent prepareComponent() {
+        // create MainActivityComponent
+    }
+}
+```
+1. Create Presenter by extending `MvpPresenter`, with view interface
+```java
+@RetainActivityScope
+public class MainViewPresenter extends MvpPresenter<MainViewPresenter.MainView> {
+
+    private Object data;
+
+    @Inject
+    public MainViewPresenter() {
+    }
+
+    @Override
+    protected void onFirstBind() {
+        data = model.getData(); // do work once (asynchronously)
+
+        // when data ready, present result
+        present(new UIChange<MainView>() {
+            @Override
+            public void change(MainView view) {
+                // view.displayData(data)
+            }
+        });
+    }
+
+    @Override
+    protected void onNewViewRestoreState() {
+        // present available data
+    }
+
+    public interface MainView {
+        // view change commands:
+        void displayData(Object data);
+    }
+}
+```
+1. Optionally, create Fragment, by extending `MvpFragment`, living in activity scope:
+```java
+public class ListFragment extends MvpFragment
+        implements MvpActivityScopedFragment, // ListViewPresenter will live until activity is finishing
+        PresenterOwner, ListViewPresenter.ListView {
+
+    @Inject ListViewPresenter presenter;
+
+    @Override
+    public PresenterHandlingDelegate createPresenterDelegate() {
+        return new SinglePresenterHandlingDelegate(this, presenter);
+    }
+}
+```
+
+or in own(fragment) scope:
+```java
+public class AddFragment extends MvpFragment
+        implements MvpFragmentScopedFragment<AddFragmentComponent>, // AddViewPresenter will live until host activity removes this fragment
+        PresenterOwner, AddViewPresenter.AddView {
+
+    @Inject AddViewPresenter presenter;
+
+    @Override
+    public AddFragmentComponent prepareComponent() {
+        // create own component instance
+    }
+}
+
+@RetainFragmentScope
+@Subcomponent
+public interface AddFragmentComponent extends MvpFragmentScopeComponent<AddFragment> {
+
+}
+```
+
+More can be found in simple implementation of 'Todo list app' which is located in `app` directory.
 
 ## License
 
