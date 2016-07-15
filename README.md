@@ -12,7 +12,7 @@ Key points are:
 
 View(in MVP) can be Activity or Fragment class. View can contain many presenters, but presenter must
 manipulate only single view. This way we can separate different presentation responsibility to individual classes,
-but still display all within one screen, if required.
+but still display all within one screen.
 
 Processing starts when Activity, extending `MvpActivity`, is created. At first steps the dependency
 injection take place and, if Activity implements `PresenterOwner`, presenter gets constructed and connected.
@@ -36,27 +36,27 @@ View changes are done through `MvpPresenter.UIChange`. In case the view is missi
 data processing has finished, the presenter will hold the change request and execute as soon as new view
 is bind.
 
-Presenter connects also with Model. It hold current state and lives in scope of the "screen".
-This means it is created with associated view component but stays alive as long as it is required,
+Presenter holds current state and lives in scope of the "screen".
+This means it is created with associated view component but stay alive as long as it is required,
 especially retains over configuration changes(like screen rotation).
 In particular:
 - it can be new for each screen, like forms, where you don't want the same data that were
-previously entered to be restored in new view (Fragment view will implement `MvpFragmentScopedFragment`),
+previously entered, to be restored in new view (Fragment-view will implement `MvpFragmentScopedFragment`),
 - or every time the same, to not perform expensive data processing many times,
-when going back and forth between screens (Fragment view will implement `MvpActivityScopedFragment`).
+when going back and forth between screens (Fragment-view will implement `MvpActivityScopedFragment`).
 
-This is accomplished by annotating presenter with Dagger2 scopes: `RetainActivityScope` and `RetainFragmentScope`.
+This is accomplished by annotating presenters with Dagger2 scopes: `RetainActivityScope` and `RetainFragmentScope`.
 
 ### M
 
-It's all up to you how do you want Model to work.
+It's all up to you how you want the Model to work.
 
 ## How to start
 
-1. Add dependency to your 'build.gradle' file:
+1. Add dependency to your `build.gradle` file:
 //TODO:
-1. Create application class, by extending `MvpApplication`
-1. Create Dagger component for Activity, extending `MvpActivityScopeComponent` and optionally `MvpFragmentInActivityScopeComponent`
+2. Create application class, by extending `MvpApplication`
+3. Create Dagger component for Activity, extending `MvpActivityScopeComponent` and optionally `MvpFragmentInActivityScopeComponent`
 ```java
 @RetainActivityScope
 public interface MainActivityComponent
@@ -65,7 +65,7 @@ public interface MainActivityComponent
 
 }
 ```
-1. Create Activity class, by extending `MvpActivity`
+4. Create Activity class, by extending `MvpActivity`
 ```java
 public class MainActivity extends MvpActivity<MainActivityComponent>
         implements MainViewPresenter.MainView, PresenterOwner {
@@ -83,12 +83,12 @@ public class MainActivity extends MvpActivity<MainActivityComponent>
     }
 }
 ```
-1. Create Presenter by extending `MvpPresenter`, with view interface
+5. Create presenter class by extending `MvpPresenter`, with view interface
 ```java
 @RetainActivityScope
 public class MainViewPresenter extends MvpPresenter<MainViewPresenter.MainView> {
 
-    private Object data;
+    private Object data; // holding state
 
     @Inject
     public MainViewPresenter() {
@@ -109,7 +109,7 @@ public class MainViewPresenter extends MvpPresenter<MainViewPresenter.MainView> 
 
     @Override
     protected void onNewViewRestoreState() {
-        // present available data
+        // present available data on each next time
     }
 
     public interface MainView {
@@ -118,7 +118,7 @@ public class MainViewPresenter extends MvpPresenter<MainViewPresenter.MainView> 
     }
 }
 ```
-1. Optionally, create Fragment, by extending `MvpFragment`, living in activity scope:
+6. Optionally, create Fragment, by extending `MvpFragment`, living in activity scope:
 ```java
 public class ListFragment extends MvpFragment
         implements MvpActivityScopedFragment, // ListViewPresenter will live until activity is finishing
