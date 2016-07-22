@@ -1,8 +1,8 @@
 package pl.srw.template;
 
+import android.app.Application;
 import android.content.Context;
 
-import pl.srw.mfvp.MvpApplication;
 import pl.srw.template.di.component.ApplicationComponent;
 import pl.srw.template.di.component.DaggerApplicationComponent;
 import pl.srw.template.di.module.ApplicationModule;
@@ -11,7 +11,7 @@ import timber.log.Timber;
 /**
  * Application class
  */
-public class TodosApplication extends MvpApplication {
+public class TodosApplication extends Application {
 
     private ApplicationComponent applicationComponent;
 

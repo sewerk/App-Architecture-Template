@@ -91,10 +91,10 @@ public abstract class MvpFragment extends Fragment {
     private void injectDependencies() {
         if (this instanceof MvpFragmentScopedFragment) {
             final MvpFragmentScopedFragment fragment = (MvpFragmentScopedFragment) this;
-            MvpApplication.getDependencies(getContext()).getComponentFor(fragment).inject(fragment);
+            DependencyComponentManager.getInstance().getComponentFor(fragment).inject(fragment);
         } else if (this instanceof MvpActivityScopedFragment){
             final MvpActivityScopedFragment fragment = (MvpActivityScopedFragment) this;
-            MvpApplication.getDependencies(getContext()).getComponentFor(fragment).inject(fragment);
+            DependencyComponentManager.getInstance().getComponentFor(fragment).inject(fragment);
         } else {
             throw new ClassCastException("MvpFragment must implement " +
                     "one of interfaces: MvpFragmentScopedFragment or MvpActivityScopedFragment");
@@ -104,7 +104,7 @@ public abstract class MvpFragment extends Fragment {
     private void resetDependencies() {
         if (this instanceof MvpFragmentScopedFragment) {
             final MvpFragmentScopedFragment fragment = (MvpFragmentScopedFragment) this;
-            MvpApplication.getDependencies(getContext()).releaseComponentFor(fragment);
+            DependencyComponentManager.getInstance().releaseComponentFor(fragment);
         }
         // else dependencies will be reset by activity
     }

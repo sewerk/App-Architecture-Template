@@ -189,11 +189,11 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
     }
 
     private void injectDependencies() {
-        MvpApplication.getDependencies(this).getComponentFor(this).inject(this);
+        DependencyComponentManager.getInstance().getComponentFor(this).inject(this);
     }
 
     private void resetDependencies() {
-        MvpApplication.getDependencies(this).releaseComponentFor(this);
+        DependencyComponentManager.getInstance().releaseComponentFor(this);
     }
 
 }

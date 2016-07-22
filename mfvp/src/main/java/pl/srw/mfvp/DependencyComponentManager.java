@@ -14,10 +14,16 @@ import timber.log.Timber;
  */
 final class DependencyComponentManager {
 
+    private final static DependencyComponentManager INSTANCE = new DependencyComponentManager();
+
     private final HashMap<Class<? extends MvpActivity>, MvpActivityScopeComponent> activityComponentsMap;
     private final HashMap<Class<? extends MvpFragmentScopedFragment>, MvpFragmentScopeComponent> fragmentComponentMap;
 
-    DependencyComponentManager() {
+    static DependencyComponentManager getInstance() {
+        return INSTANCE;
+    }
+
+    private DependencyComponentManager() {
         this.activityComponentsMap = new HashMap<>(1);
         this.fragmentComponentMap = new HashMap<>(0);
     }
