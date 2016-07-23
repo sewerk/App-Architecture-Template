@@ -4,121 +4,127 @@
 
 This library provides core logic for MVP architecture with use of Activities+Fragments as view components.
 Key points are:
- - Model - provides data
- - passive View - fulfill display commands and inform Presenter about user/device input
- - Presenter - contains application business logic, survives view destruction, cache model data
+ - **M**odel - provides data
+ - passive **V**iew - fulfill display commands and inform Presenter about user/device input
+ - **P**resenter - contains application business logic, survives view destruction, cache model data
+
+Provide Dagger component instance and injection will be done automatically.
 
 ## How to start
 
-1. Add *dependency* to your `build.gradle` file:
-    ```groovy
-    allprojects {
-     repositories {
+### 1. Add **dependency** to your `build.gradle` file
+```groovy
+allprojects {
+    repositories {
         jcenter()
         maven { url "https://jitpack.io" }
-     }
     }
-    dependencies {
-        compile 'com.github.sewerk:mfvp:0.9'
-    }
-    ```
-1. Create Dagger *component* for Activity, extending `MvpActivityScopeComponent` and optionally `MvpFragmentInActivityScopeComponent`
-    ```java
-    @RetainActivityScope
-    public interface MainActivityComponent
-            extends MvpActivityScopeComponent<MainActivity>,
-            MvpFragmentInActivityScopeComponent<ListFragment> { // ListFragment will get 'end lifecycle' callback when activity is finishing
+}
 
-    }
-    ```
-1. Create *Activity* class, by extending `MvpActivity`
-    ```java
-    public class MainActivity extends MvpActivity<MainActivityComponent>
-            implements MainViewPresenter.MainView, PresenterOwner {
+dependencies {
+    compile 'com.github.sewerk:mfvp:0.9'
+}
+```
+### 2. Create **presenter** by extending `MvpPresenter` (with view interface)
+```java
+@RetainActivityScope
+public class MainViewPresenter extends MvpPresenter<MainViewPresenter.MainView> {
 
-        @Inject MainViewPresenter presenter;
+    private Object data; // holding state
 
-        @Override
-        public PresenterHandlingDelegate createPresenterDelegate() {
-            return new SinglePresenterHandlingDelegate(this, presenter);
-        }
-
-        @Override
-        public MainActivityComponent prepareComponent() {
-            // create MainActivityComponent
-        }
-    }
-    ```
-1. Create *presenter* class by extending `MvpPresenter`, with view interface
-    ```java
-    @RetainActivityScope
-    public class MainViewPresenter extends MvpPresenter<MainViewPresenter.MainView> {
-
-        private Object data; // holding state
-
-        @Inject
-        public MainViewPresenter() {
-        }
-
-        @Override
-        protected void onFirstBind() {
-            data = model.getData(); // do work once and cache the result in field
-
-            // when data ready, present result
-            present(new UIChange<MainView>() {
-                @Override
-                public void change(MainView view) {
-                    view.displayData(data)
-                }
-            });
-        }
-
-        @Override
-        protected void onNewViewRestoreState() {
-            // present available data on each next time
-            present(...);
-        }
-
-        public interface MainView {
-            // view change commands:
-            void displayData(Object data);
-        }
-    }
-    ```
-1. Create *Fragment*, by extending `MvpFragment`:
-    ```java
-    // living in activity scope
-    public class ListFragment extends MvpFragment
-            implements MvpActivityScopedFragment, // ListViewPresenter will live until activity is finishing
-            PresenterOwner, ListViewPresenter.ListView {
-
-        @Inject ListViewPresenter presenter;
-
-        @Override
-        public PresenterHandlingDelegate createPresenterDelegate() {
-            return new SinglePresenterHandlingDelegate(this, presenter);
-        }
+    @Inject
+    public MainViewPresenter() {
     }
 
-    // or in own(fragment) scope
-    public class AddFragment extends MvpFragment
-            implements MvpFragmentScopedFragment<AddFragmentComponent>, // AddViewPresenter will live until fragment is finishing
-            PresenterOwner, AddViewPresenter.AddView {
+    @Override
+    protected void onFirstBind() {
+        data = model.getData(); // do work once and cache the result in field
 
-        @Inject AddViewPresenter presenter;
-
-        @Override
-        public AddFragmentComponent prepareComponent() {
-            // create AddFragmentComponent
-        }
+        // when data ready, present result
+        present(new UIChange<MainView>() {
+            @Override
+            public void change(MainView view) {
+                view.displayData(data)
+            }
+        });
     }
 
-    @RetainFragmentScope
-    @Subcomponent
-    public interface AddFragmentComponent extends MvpFragmentScopeComponent<AddFragment> {
-
+    @Override
+    protected void onNewViewRestoreState() {
+        // present available data on each next time
+        present(...);
     }
-    ```
+
+    public interface MainView {
+        // view change commands:
+        void displayData(Object data);
+    }
+}
+```
+### 3. Create Dagger **component** for Activity, extending `MvpActivityScopeComponent`
+```java
+@RetainActivityScope
+public interface MainActivityComponent
+        extends MvpActivityScopeComponent<MainActivity>, // this component is for MainActivity
+        MvpFragmentInActivityScopeComponent<ListFragment> { // in addition, ListFragment presenter will live until activity is finishing
+
+}
+```
+### 4. Create **activity**, by extending `MvpActivity`
+```java
+public class MainActivity extends MvpActivity<MainActivityComponent>
+        implements PresenterOwner, // required when using presenter
+        MainViewPresenter.MainView { // fulfill presenter commands
+
+    @Inject MainViewPresenter presenter; // injection will be done in super.onCreate()
+
+    @Override
+    public PresenterHandlingDelegate createPresenterDelegate() {
+        return new SinglePresenterHandlingDelegate(this, presenter);
+    }
+
+    @Override
+    public MainActivityComponent prepareComponent() {
+        // create MainActivityComponent
+    }
+}
+```
+### 5. Create **fragment**, by extending `MvpFragment`:
+```java
+// living in activity scope
+public class ListFragment extends MvpFragment
+        implements MvpActivityScopedFragment,
+        PresenterOwner, // required when using presenter 
+        ListViewPresenter.ListView { // fulfill presenter commands
+
+    @Inject ListViewPresenter presenter; // will live until activity is finishing
+
+    @Override
+    public PresenterHandlingDelegate createPresenterDelegate() {
+        return new SinglePresenterHandlingDelegate(this, presenter);
+    }
+}
+
+// or in own(fragment) scope
+public class AddFragment extends MvpFragment
+        implements MvpFragmentScopedFragment<AddFragmentComponent>, 
+        PresenterOwner, // required when using presenter 
+        AddViewPresenter.AddView { // fulfill presenter commands
+
+    @Inject AddViewPresenter presenter; // will live until fragment is finishing
+
+    @Override
+    public AddFragmentComponent prepareComponent() {
+        // create AddFragmentComponent
+    }
+}
+
+@RetainFragmentScope
+@Subcomponent
+public interface AddFragmentComponent extends MvpFragmentScopeComponent<AddFragment> {
+
+}
+```
 
 More can be found in simple implementation of 'Todo list app' which is located in `app` directory.
 
