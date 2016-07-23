@@ -1,5 +1,7 @@
 # Model Fragment-View Presenter
 
+[![](https://jitpack.io/v/sewerk/MFVP-app-architecture.svg)](https://jitpack.io/#sewerk/MFVP-app-architecture)
+
 ## TLDR;
 
 This library provides core logic for MVP architecture with use of Activities+Fragments as view components.
