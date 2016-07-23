@@ -95,13 +95,13 @@ It's all up to you how you want the Model to work.
 
         @Override
         protected void onFirstBind() {
-            data = model.getData(); // do work once (asynchronously)
+            data = model.getData(); // do work once and cache the result in field
 
             // when data ready, present result
             present(new UIChange<MainView>() {
                 @Override
                 public void change(MainView view) {
-                    // view.displayData(data)
+                    view.displayData(data)
                 }
             });
         }
@@ -109,6 +109,7 @@ It's all up to you how you want the Model to work.
         @Override
         protected void onNewViewRestoreState() {
             // present available data on each next time
+            present(...);
         }
 
         public interface MainView {
@@ -133,6 +134,7 @@ It's all up to you how you want the Model to work.
     ```
 
 or in own(fragment) scope:
+
     ```java
     public class AddFragment extends MvpFragment
             implements MvpFragmentScopedFragment<AddFragmentComponent>, // AddViewPresenter will live until host activity removes this fragment
