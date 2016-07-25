@@ -4,7 +4,7 @@ Small and powerful combination for your Android app architecture: **MVP+Fragment
  - Activity+Fragment as a view 
  - retain-over-configuration-change presenter
  - automatic dependency injection and scope management
- - base clasess for view, presenter and DI component
+ - base classes for view, presenter and DI component
 
 Get it from [![](https://jitpack.io/v/sewerk/mfvp.svg)](https://jitpack.io/#sewerk/mfvp)
 
