@@ -1,33 +1,16 @@
 # Model Fragment-View Presenter
 
-[![](https://jitpack.io/v/sewerk/MFVP-app-architecture.svg)](https://jitpack.io/#sewerk/MFVP-app-architecture)
+Small and powerful combination for your Android app architecture: **MVP+Fragments+Dagger2**
+ - Activity+Fragment as a view 
+ - retain-over-configuration-change presenter
+ - automatic dependency injection and scope management
+ - base clasess for view, presenter and DI component
 
-## TLDR;
-
-This library provides core logic for MVP architecture with use of Activities+Fragments as view components.
-Key points are:
- - **M**odel - provides data
- - passive **V**iew - fulfill display commands and inform Presenter about user/device input
- - **P**resenter - contains application business logic, survives view destruction, cache model data
-
-Provide Dagger component instance and injection will be done automatically.
+Get it from [![](https://jitpack.io/v/sewerk/mvfp.svg)](https://jitpack.io/#sewerk/mvfp)
 
 ## How to start
 
-### 1. Add **dependency** to your `build.gradle` file
-```groovy
-allprojects {
-    repositories {
-        jcenter()
-        maven { url "https://jitpack.io" }
-    }
-}
-
-dependencies {
-    compile 'com.github.sewerk:mfvp:0.9'
-}
-```
-### 2. Create **presenter** by extending `MvpPresenter` (with view interface)
+### 1. Create **presenter** by extending `MvpPresenter` (with view interface)
 ```java
 @RetainActivityScope
 public class MainViewPresenter extends MvpPresenter<MainViewPresenter.MainView> {
@@ -63,7 +46,7 @@ public class MainViewPresenter extends MvpPresenter<MainViewPresenter.MainView> 
     }
 }
 ```
-### 3. Create Dagger **component** for Activity, extending `MvpActivityScopeComponent`
+### 2. Create Dagger **component** for Activity, extending `MvpActivityScopeComponent`
 ```java
 @RetainActivityScope
 public interface MainActivityComponent
@@ -72,7 +55,7 @@ public interface MainActivityComponent
 
 }
 ```
-### 4. Create **activity**, by extending `MvpActivity`
+### 3. Create **activity**, by extending `MvpActivity`
 ```java
 public class MainActivity extends MvpActivity<MainActivityComponent>
         implements PresenterOwner, // required when using presenter
@@ -82,16 +65,20 @@ public class MainActivity extends MvpActivity<MainActivityComponent>
 
     @Override
     public PresenterHandlingDelegate createPresenterDelegate() {
-        return new SinglePresenterHandlingDelegate(this, presenter);
+        return new SinglePresenterHandlingDelegate(this, presenter); // single presenter managing this activity
     }
 
     @Override
     public MainActivityComponent prepareComponent() {
         // create MainActivityComponent
     }
+    
+    public void changeScreen(Fragment fragment) {
+        changeFragment(R.id.fragmentResId, fragment, "optional tag"); // use API from base class for proper Fragment scope management
+    }
 }
 ```
-### 5. Create **fragment**, by extending `MvpFragment`:
+### 4. Create **fragment**, by extending `MvpFragment`:
 ```java
 // living in activity scope
 public class ListFragment extends MvpFragment
@@ -128,7 +115,7 @@ public interface AddFragmentComponent extends MvpFragmentScopeComponent<AddFragm
 }
 ```
 
-More can be found in simple implementation of 'Todo list app' which is located in `app` directory.
+More can be found in sample implementation of 'Todo list' app.
 
 ## Details
 
