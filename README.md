@@ -6,7 +6,7 @@ Small and powerful combination for your Android app architecture: **MVP+Fragment
  - automatic dependency injection and scope management
  - base clasess for view, presenter and DI component
 
-Get it from [![](https://jitpack.io/v/sewerk/mvfp.svg)](https://jitpack.io/#sewerk/mvfp)
+Get it from [![](https://jitpack.io/v/sewerk/mfvp.svg)](https://jitpack.io/#sewerk/mfvp)
 
 ## How to start
 
