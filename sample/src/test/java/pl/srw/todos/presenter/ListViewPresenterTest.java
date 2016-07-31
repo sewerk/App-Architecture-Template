@@ -8,6 +8,8 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Collection;
 
+import javax.inject.Provider;
+
 import pl.srw.todos.model.Todo;
 import pl.srw.todos.presenter.task.GetTask;
 import pl.srw.todos.presenter.task.PushTask;
@@ -17,6 +19,7 @@ import static org.mockito.Matchers.anyCollectionOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class ListViewPresenterTest {
 
@@ -24,11 +27,13 @@ public class ListViewPresenterTest {
 
     @Mock private GetTask getTask;
     @Mock private PushTask pushTask;
+    @Mock private Provider<PushTask> pushTaskProvider;
     @Mock private ListViewPresenter.ListView view;
 
     @Before
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
+        when(pushTaskProvider.get()).thenReturn(pushTask);
     }
 
     @Test

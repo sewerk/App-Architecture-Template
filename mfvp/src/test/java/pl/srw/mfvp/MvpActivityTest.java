@@ -38,8 +38,6 @@ public class MvpActivityTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        final MvpApplication applicationMock = mock(MvpApplication.class);
-        doReturn(applicationMock).when(sut).getApplicationContext();
         fragmentManagerMock = mock(FragmentManager.class);
         final FragmentTransaction fragmentTransactionMock = mock(FragmentTransaction.class);
         when(fragmentTransactionMock.replace(anyInt(), any(Fragment.class), anyString())).thenReturn(fragmentTransactionMock);
@@ -58,8 +56,8 @@ public class MvpActivityTest {
         // WHEN
         try {
             sut.onDestroy();
-        } catch (NullPointerException e) {
-            // cannot mock MvpApplication.dependency field
+        } catch (RuntimeException e) {
+            // cannot mock FragmentActivity.onDestroy
         }
 
         // THEN
@@ -76,8 +74,8 @@ public class MvpActivityTest {
         // WHEN
         try {
             sut.onDestroy();
-        } catch (NullPointerException e) {
-            // cannot mock MvpApplication.dependency field
+        } catch (RuntimeException e) {
+            // cannot mock FragmentActivity.onDestroy
         }
 
         // THEN
