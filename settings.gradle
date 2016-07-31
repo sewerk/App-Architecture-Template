@@ -1,1 +1,1 @@
-include ':app', ':mfvp'
+include ':sample', ':mfvp'
