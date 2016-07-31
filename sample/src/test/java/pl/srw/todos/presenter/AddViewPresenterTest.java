@@ -1,4 +1,4 @@
-package pl.srw.template.presenter;
+package pl.srw.todos.presenter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -6,8 +6,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import pl.srw.template.model.Todo;
-import pl.srw.template.presenter.task.PushTask;
+import pl.srw.todos.model.Todo;
+import pl.srw.todos.presenter.task.PushTask;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.verify;

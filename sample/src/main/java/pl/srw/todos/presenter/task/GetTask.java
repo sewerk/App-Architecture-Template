@@ -1,4 +1,4 @@
-package pl.srw.template.presenter.task;
+package pl.srw.todos.presenter.task;
 
 import android.os.AsyncTask;
 
@@ -6,8 +6,8 @@ import java.util.Collection;
 
 import javax.inject.Inject;
 
-import pl.srw.template.model.Repository;
-import pl.srw.template.model.Todo;
+import pl.srw.todos.model.Repository;
+import pl.srw.todos.model.Todo;
 import timber.log.Timber;
 
 /**

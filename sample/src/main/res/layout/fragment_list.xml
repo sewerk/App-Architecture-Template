@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="pl.srw.template.view.ListFragment">
+    tools:context="pl.srw.todos.view.ListFragment">
 
     <LinearLayout
         android:id="@+id/list"

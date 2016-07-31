@@ -1,4 +1,4 @@
-package pl.srw.template.view;
+package pl.srw.todos.view;
 
 import android.view.View;
 
@@ -6,14 +6,14 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import pl.srw.template.R;
-import pl.srw.template.TodosApplication;
+import pl.srw.todos.R;
+import pl.srw.todos.TodosApplication;
 import pl.srw.mfvp.MvpActivity;
 import pl.srw.mfvp.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.mfvp.view.delegate.presenter.PresenterOwner;
 import pl.srw.mfvp.view.delegate.presenter.SinglePresenterHandlingDelegate;
-import pl.srw.template.di.component.MainActivityComponent;
-import pl.srw.template.presenter.MainViewPresenter;
+import pl.srw.todos.di.component.MainActivityComponent;
+import pl.srw.todos.presenter.MainViewPresenter;
 
 public class MainActivity extends MvpActivity<MainActivityComponent>
         implements MainViewPresenter.MainView, PresenterOwner {

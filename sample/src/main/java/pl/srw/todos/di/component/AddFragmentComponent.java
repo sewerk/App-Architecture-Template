@@ -1,9 +1,9 @@
-package pl.srw.template.di.component;
+package pl.srw.todos.di.component;
 
 import dagger.Subcomponent;
 import pl.srw.mfvp.di.component.MvpFragmentScopeComponent;
 import pl.srw.mfvp.di.scope.RetainFragmentScope;
-import pl.srw.template.view.AddFragment;
+import pl.srw.todos.view.AddFragment;
 
 @RetainFragmentScope
 @Subcomponent

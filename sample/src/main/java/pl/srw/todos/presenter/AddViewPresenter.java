@@ -1,11 +1,11 @@
-package pl.srw.template.presenter;
+package pl.srw.todos.presenter;
 
 import javax.inject.Inject;
 
 import pl.srw.mfvp.di.scope.RetainFragmentScope;
 import pl.srw.mfvp.presenter.MvpPresenter;
-import pl.srw.template.model.Todo;
-import pl.srw.template.presenter.task.PushTask;
+import pl.srw.todos.model.Todo;
+import pl.srw.todos.presenter.task.PushTask;
 
 /**
  * Add view presenter. Lives as long as fragment.

@@ -1,4 +1,4 @@
-package pl.srw.template.presenter;
+package pl.srw.todos.presenter;
 
 import java.util.Collection;
 
@@ -7,9 +7,9 @@ import javax.inject.Provider;
 
 import pl.srw.mfvp.di.scope.RetainActivityScope;
 import pl.srw.mfvp.presenter.MvpPresenter;
-import pl.srw.template.model.Todo;
-import pl.srw.template.presenter.task.GetTask;
-import pl.srw.template.presenter.task.PushTask;
+import pl.srw.todos.model.Todo;
+import pl.srw.todos.presenter.task.GetTask;
+import pl.srw.todos.presenter.task.PushTask;
 import timber.log.Timber;
 
 /**

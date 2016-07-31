@@ -1,4 +1,4 @@
-package pl.srw.template.presenter;
+package pl.srw.todos.presenter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -8,9 +8,9 @@ import org.mockito.MockitoAnnotations;
 
 import java.util.Collection;
 
-import pl.srw.template.model.Todo;
-import pl.srw.template.presenter.task.GetTask;
-import pl.srw.template.presenter.task.PushTask;
+import pl.srw.todos.model.Todo;
+import pl.srw.todos.presenter.task.GetTask;
+import pl.srw.todos.presenter.task.PushTask;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyCollectionOf;

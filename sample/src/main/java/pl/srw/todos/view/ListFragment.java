@@ -1,4 +1,4 @@
-package pl.srw.template.view;
+package pl.srw.todos.view;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -14,14 +14,14 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import pl.srw.template.R;
+import pl.srw.todos.R;
 import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.mfvp.MvpFragment;
 import pl.srw.mfvp.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.mfvp.view.delegate.presenter.PresenterOwner;
 import pl.srw.mfvp.view.delegate.presenter.SinglePresenterHandlingDelegate;
-import pl.srw.template.model.Todo;
-import pl.srw.template.presenter.ListViewPresenter;
+import pl.srw.todos.model.Todo;
+import pl.srw.todos.presenter.ListViewPresenter;
 
 public class ListFragment extends MvpFragment
         implements ListViewPresenter.ListView, PresenterOwner, MvpActivityScopedFragment {

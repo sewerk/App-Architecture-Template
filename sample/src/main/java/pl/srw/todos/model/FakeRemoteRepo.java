@@ -1,4 +1,4 @@
-package pl.srw.template.model;
+package pl.srw.todos.model;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package pl.srw.template.di.module;
+package pl.srw.todos.di.module;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -8,8 +8,8 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import pl.srw.template.model.FakeRemoteRepo;
-import pl.srw.template.model.Repository;
+import pl.srw.todos.model.FakeRemoteRepo;
+import pl.srw.todos.model.Repository;
 
 /**
  * Provides application wide dependencies

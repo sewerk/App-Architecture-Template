@@ -1,4 +1,4 @@
-package pl.srw.template.view;
+package pl.srw.todos.view;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,15 +11,15 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
-import pl.srw.template.R;
-import pl.srw.template.TodosApplication;
+import pl.srw.todos.R;
+import pl.srw.todos.TodosApplication;
 import pl.srw.mfvp.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.mfvp.view.delegate.presenter.PresenterOwner;
 import pl.srw.mfvp.view.delegate.presenter.SinglePresenterHandlingDelegate;
 import pl.srw.mfvp.MvpFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
-import pl.srw.template.di.component.AddFragmentComponent;
-import pl.srw.template.presenter.AddViewPresenter;
+import pl.srw.todos.di.component.AddFragmentComponent;
+import pl.srw.todos.presenter.AddViewPresenter;
 
 public class AddFragment extends MvpFragment
         implements PresenterOwner, AddViewPresenter.AddView, MvpFragmentScopedFragment<AddFragmentComponent> {

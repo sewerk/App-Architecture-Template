@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:columnCount="2"
     android:layout_margin="@dimen/activity_horizontal_margin"
-    tools:context="pl.srw.template.view.AddFragment">
+    tools:context="pl.srw.todos.view.AddFragment">
 
     <TextView
         android:layout_width="wrap_content"

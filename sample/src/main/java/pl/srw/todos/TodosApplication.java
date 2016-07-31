@@ -1,11 +1,11 @@
-package pl.srw.template;
+package pl.srw.todos;
 
 import android.app.Application;
 import android.content.Context;
 
-import pl.srw.template.di.component.ApplicationComponent;
-import pl.srw.template.di.component.DaggerApplicationComponent;
-import pl.srw.template.di.module.ApplicationModule;
+import pl.srw.todos.di.component.ApplicationComponent;
+import pl.srw.todos.di.component.DaggerApplicationComponent;
+import pl.srw.todos.di.module.ApplicationModule;
 import timber.log.Timber;
 
 /**

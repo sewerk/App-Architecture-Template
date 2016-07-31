@@ -1,4 +1,4 @@
-package pl.srw.template.presenter;
+package pl.srw.todos.presenter;
 
 import javax.inject.Inject;
 
