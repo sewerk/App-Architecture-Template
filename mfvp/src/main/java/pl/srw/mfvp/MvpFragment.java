@@ -3,7 +3,7 @@ package pl.srw.mfvp;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 
 import butterknife.ButterKnife;
@@ -20,7 +20,7 @@ import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
  *  - releasing dependencies depends on associated scope component
  *  - lifecycle events will be communicated to added listeners
  */
-public abstract class MvpFragment extends Fragment {
+public abstract class MvpFragment extends DialogFragment {
 
     private LifeCycleNotifier notifier;
 
