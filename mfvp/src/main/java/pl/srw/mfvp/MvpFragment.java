@@ -4,9 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.view.View;
 
-import butterknife.ButterKnife;
 import pl.srw.mfvp.view.delegate.LifeCycleListener;
 import pl.srw.mfvp.view.delegate.LifeCycleNotifier;
 import pl.srw.mfvp.view.delegate.presenter.PresenterOwner;
@@ -41,13 +39,6 @@ public abstract class MvpFragment extends DialogFragment {
 
     @Override
     @CallSuper
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
-    }
-
-    @Override
-    @CallSuper
     public void onStart() {
         super.onStart();
         notifier.notifyOnStart();
@@ -58,13 +49,6 @@ public abstract class MvpFragment extends DialogFragment {
     public void onStop() {
         super.onStop();
         notifier.notifyOnStop();
-    }
-
-    @Override
-    @CallSuper
-    public void onDestroyView() {
-        ButterKnife.unbind(this);
-        super.onDestroyView();
     }
 
     /**

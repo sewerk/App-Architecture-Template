@@ -10,7 +10,6 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
-import butterknife.ButterKnife;
 import pl.srw.mfvp.di.component.MvpActivityScopeComponent;
 import pl.srw.mfvp.view.delegate.LifeCycleListener;
 import pl.srw.mfvp.view.delegate.LifeCycleNotifier;
@@ -40,7 +39,6 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getContentLayoutId());
-        ButterKnife.bind(this);
         injectDependencies();
         if (this instanceof PresenterOwner) {
             PresenterOwner presenterActivity = (PresenterOwner) this;
