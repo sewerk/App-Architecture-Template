@@ -3,9 +3,7 @@ package pl.srw.mfvp;
 import java.util.HashMap;
 
 import pl.srw.mfvp.di.component.MvpActivityScopeComponent;
-import pl.srw.mfvp.di.component.MvpFragmentInActivityScopeComponent;
 import pl.srw.mfvp.di.component.MvpFragmentScopeComponent;
-import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 import timber.log.Timber;
 
@@ -43,16 +41,13 @@ final class DependencyComponentManager {
         activityComponentsMap.remove(activityClass);
     }
 
-    public <C extends MvpFragmentInActivityScopeComponent> C getComponentFor(MvpActivityScopedFragment fragment) {
-        final MvpActivityScopeComponent activityComponent = getComponentFor(fragment.getBaseActivity());
-        return (C) activityComponent;
-    }
+    public <C extends MvpFragmentScopeComponent, AC extends MvpActivityScopeComponent>
+        C getComponentFor(MvpFragmentScopedFragment<C, AC> fragment, AC activityComponent) {
 
-    public <C extends MvpFragmentScopeComponent> C getComponentFor(MvpFragmentScopedFragment<C> fragment) {
         final Class<? extends MvpFragmentScopedFragment> fragmentClass = fragment.getClass();
         if (!fragmentComponentMap.containsKey(fragmentClass)) {
             Timber.d("preparing component for %s", fragmentClass.getSimpleName());
-            fragmentComponentMap.put(fragmentClass, fragment.prepareComponent());
+            fragmentComponentMap.put(fragmentClass, fragment.getFragmentComponent(activityComponent));
         }
         return (C) fragmentComponentMap.get(fragmentClass);
     }

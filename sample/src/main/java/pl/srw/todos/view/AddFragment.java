@@ -14,17 +14,19 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.srw.todos.R;
-import pl.srw.todos.TodosApplication;
 import pl.srw.mfvp.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.mfvp.view.delegate.presenter.PresenterOwner;
 import pl.srw.mfvp.view.delegate.presenter.SinglePresenterHandlingDelegate;
 import pl.srw.mfvp.MvpFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 import pl.srw.todos.di.component.AddFragmentComponent;
+import pl.srw.todos.di.component.MainActivityComponent;
 import pl.srw.todos.presenter.AddViewPresenter;
 
 public class AddFragment extends MvpFragment
-        implements PresenterOwner, AddViewPresenter.AddView, MvpFragmentScopedFragment<AddFragmentComponent> {
+        implements PresenterOwner,
+        AddViewPresenter.AddView,
+        MvpFragmentScopedFragment<AddFragmentComponent, MainActivityComponent> {
 
     @Bind(R.id.add_text) EditText textView;
     @Bind(R.id.add_is_done) CheckBox doneView;
@@ -58,11 +60,8 @@ public class AddFragment extends MvpFragment
     }
 
     @Override
-    public AddFragmentComponent prepareComponent() {
-        return TodosApplication.get(getActivity())
-                .getApplicationComponent()
-                .getMainActivityComponent()
-                .getAddFragmentComponent();
+    public AddFragmentComponent getFragmentComponent(MainActivityComponent activityComponent) {
+        return activityComponent.getAddFragmentComponent();
     }
 
     @Override

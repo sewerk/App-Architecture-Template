@@ -1,16 +1,16 @@
 package pl.srw.mfvp.view.fragment;
 
 import pl.srw.mfvp.di.component.MvpActivityScopeComponent;
-import pl.srw.mfvp.MvpActivity;
 
 /**
  * Fragment depending on {@link MvpActivityScopeComponent}
+ * Note: injection must happen on client code due to Dagger limitations
  */
-public interface MvpActivityScopedFragment {
+public interface MvpActivityScopedFragment<AC extends MvpActivityScopeComponent> {
 
     /**
-     * Gets hosted activity
-     * @return activity
+     * Does injection on associated component
+     * @param activityComponent component for injection
      */
-    MvpActivity getBaseActivity();
+    void injectDependencies(AC activityComponent);
 }

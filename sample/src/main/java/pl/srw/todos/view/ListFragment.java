@@ -22,11 +22,14 @@ import pl.srw.mfvp.MvpFragment;
 import pl.srw.mfvp.view.delegate.presenter.PresenterHandlingDelegate;
 import pl.srw.mfvp.view.delegate.presenter.PresenterOwner;
 import pl.srw.mfvp.view.delegate.presenter.SinglePresenterHandlingDelegate;
+import pl.srw.todos.di.component.MainActivityComponent;
 import pl.srw.todos.model.Todo;
 import pl.srw.todos.presenter.ListViewPresenter;
 
 public class ListFragment extends MvpFragment
-        implements ListViewPresenter.ListView, PresenterOwner, MvpActivityScopedFragment {
+        implements ListViewPresenter.ListView,
+        PresenterOwner,
+        MvpActivityScopedFragment<MainActivityComponent> {
 
     @Inject ListViewPresenter presenter;
 
@@ -58,6 +61,11 @@ public class ListFragment extends MvpFragment
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void injectDependencies(MainActivityComponent activityComponent) {
+        activityComponent.inject(this);
     }
 
     @Override

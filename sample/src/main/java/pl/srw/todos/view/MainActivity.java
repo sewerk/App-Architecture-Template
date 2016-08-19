@@ -1,10 +1,12 @@
 package pl.srw.todos.view;
 
+import android.os.Bundle;
 import android.view.View;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.srw.todos.R;
 import pl.srw.todos.TodosApplication;
@@ -21,6 +23,12 @@ public class MainActivity extends MvpActivity<MainActivityComponent>
     @Bind(R.id.add) View addView;
 
     @Inject MainViewPresenter presenter;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        ButterKnife.bind(this);
+    }
 
     @Override
     protected int getContentLayoutId() {

@@ -8,8 +8,6 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import pl.srw.todos.model.FakeRemoteRepo;
-import pl.srw.todos.model.Repository;
 
 /**
  * Provides application wide dependencies
@@ -27,11 +25,5 @@ public class ApplicationModule {
     @Singleton
     SharedPreferences provideSharedPreferences() {
         return PreferenceManager.getDefaultSharedPreferences(context);
-    }
-
-    @Provides
-    @Singleton
-    Repository provideRepository() {
-        return new FakeRemoteRepo();
     }
 }

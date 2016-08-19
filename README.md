@@ -8,7 +8,18 @@ Small and powerful combination for your Android app architecture: **MVP+Fragment
 
 Get it from [![](https://jitpack.io/v/sewerk/mfvp.svg)](https://jitpack.io/#sewerk/mfvp)
 
+### Changes in progress
+
+This API most likely will change until stable version is released. The documentation below might be outdated:
+- MvpFragmentInActivityScopeComponent removed
+- MvpActivityScopedFragment injects manually
+- MvpFragmentScopedFragment prepares component basing on input
+
+
 ## How to start
+
+### 0. Configure dagger dependency
+//TODO
 
 ### 1. Create **presenter** by extending `MvpPresenter` (with view interface)
 ```java

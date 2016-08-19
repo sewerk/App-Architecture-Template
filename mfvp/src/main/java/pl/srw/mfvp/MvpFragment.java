@@ -5,6 +5,7 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 
+import pl.srw.mfvp.di.component.MvpActivityScopeComponent;
 import pl.srw.mfvp.view.delegate.LifeCycleListener;
 import pl.srw.mfvp.view.delegate.LifeCycleNotifier;
 import pl.srw.mfvp.view.delegate.presenter.PresenterOwner;
@@ -60,7 +61,7 @@ public abstract class MvpFragment extends DialogFragment {
         resetDependencies();
     }
 
-    public MvpActivity getBaseActivity() {
+    protected MvpActivity getBaseActivity() {
         return (MvpActivity) super.getActivity();
     }
 
@@ -73,12 +74,13 @@ public abstract class MvpFragment extends DialogFragment {
     }
 
     private void injectDependencies() {
+        final MvpActivityScopeComponent activityComponent = DependencyComponentManager.getInstance().getComponentFor(getBaseActivity());
         if (this instanceof MvpFragmentScopedFragment) {
             final MvpFragmentScopedFragment fragment = (MvpFragmentScopedFragment) this;
-            DependencyComponentManager.getInstance().getComponentFor(fragment).inject(fragment);
+            DependencyComponentManager.getInstance().getComponentFor(fragment, activityComponent).inject(fragment);
         } else if (this instanceof MvpActivityScopedFragment){
             final MvpActivityScopedFragment fragment = (MvpActivityScopedFragment) this;
-            DependencyComponentManager.getInstance().getComponentFor(fragment).inject(fragment);
+            fragment.injectDependencies(activityComponent);
         } else {
             throw new ClassCastException("MvpFragment must implement " +
                     "one of interfaces: MvpFragmentScopedFragment or MvpActivityScopedFragment");

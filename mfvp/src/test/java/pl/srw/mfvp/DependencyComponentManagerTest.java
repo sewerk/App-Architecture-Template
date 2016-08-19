@@ -7,16 +7,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import pl.srw.mfvp.di.component.MvpActivityScopeComponent;
-import pl.srw.mfvp.di.component.MvpFragmentInActivityScopeComponent;
 import pl.srw.mfvp.di.component.MvpFragmentScopeComponent;
 import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
+import static org.mockito.Matchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.withSettings;
 
 public class DependencyComponentManagerTest {
 
@@ -31,8 +30,8 @@ public class DependencyComponentManagerTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         when(activity.prepareComponent()).thenReturn(mock(MvpActivityScopeComponent.class), mock(MvpActivityScopeComponent.class));
-        when(activityScopedFragment.getBaseActivity()).thenReturn(activity);
-        when(fragment.prepareComponent()).thenReturn(mock(MvpFragmentScopeComponent.class), mock(MvpFragmentScopeComponent.class));
+        when(fragment.getFragmentComponent(any(MvpActivityScopeComponent.class)))
+                .thenReturn(mock(MvpFragmentScopeComponent.class), mock(MvpFragmentScopeComponent.class));
     }
 
     @Test
@@ -73,23 +72,13 @@ public class DependencyComponentManagerTest {
     }
 
     @Test
-    public void activityComponentIsSameForFragmentInActivityScope() throws Exception {
-        // GIVEN
-        when(activity.prepareComponent())
-                .thenReturn(mock(MvpActivityScopeComponent.class, withSettings().extraInterfaces(MvpFragmentInActivityScopeComponent.class)));
-        // WHEN
-        final MvpActivityScopeComponent activityComponent = sut.getComponentFor(activity);
-        final MvpFragmentInActivityScopeComponent fragmentComponent = sut.getComponentFor(activityScopedFragment);
-
-        // THEN
-        assertEquals(activityComponent, fragmentComponent);
-    }
-
-    @Test
     public void fragmentComponentIsTheSameAtSecondTime() throws Exception {
+        // GIVEN
+        MvpActivityScopeComponent activityComponent = mock(MvpActivityScopeComponent.class);
+
         // WHEN
-        final MvpFragmentScopeComponent firstTime = sut.getComponentFor(fragment);
-        final MvpFragmentScopeComponent secondTime = sut.getComponentFor(fragment);
+        final MvpFragmentScopeComponent firstTime = sut.getComponentFor(fragment, activityComponent);
+        final MvpFragmentScopeComponent secondTime = sut.getComponentFor(fragment, activityComponent);
 
         // THEN
         assertEquals(firstTime, secondTime);
@@ -98,25 +87,28 @@ public class DependencyComponentManagerTest {
     @Test
     public void fragmentComponentIsDifferentIfItWasReleased() throws Exception {
         // GIVEN
-        final MvpFragmentScopeComponent firstTime = sut.getComponentFor(fragment);
+        MvpActivityScopeComponent activityComponent = mock(MvpActivityScopeComponent.class);
 
         // WHEN
+        final MvpFragmentScopeComponent firstTime = sut.getComponentFor(fragment, activityComponent);
         sut.releaseComponentFor(fragment);
+        final MvpFragmentScopeComponent secondTime = sut.getComponentFor(fragment, activityComponent);
 
         // THEN
-        final MvpFragmentScopeComponent secondTime = sut.getComponentFor(fragment);
         assertNotEquals(firstTime, secondTime);
     }
 
     @Test
     public void fragmentComponentIsSameForDifferentInstance() throws Exception {
         // GIVEN
+        MvpActivityScopeComponent activityComponent = mock(MvpActivityScopeComponent.class);
+
         final MvpFragmentScopedFragment secondFragment = mock(MvpFragmentScopedFragment.class);
-        when(secondFragment.prepareComponent()).thenReturn(mock(MvpFragmentScopeComponent.class));
+        when(secondFragment.getFragmentComponent(activityComponent)).thenReturn(mock(MvpFragmentScopeComponent.class));
 
         // WHEN
-        final MvpFragmentScopeComponent first = sut.getComponentFor(fragment);
-        final MvpFragmentScopeComponent second = sut.getComponentFor(secondFragment);
+        final MvpFragmentScopeComponent first = sut.getComponentFor(fragment, activityComponent);
+        final MvpFragmentScopeComponent second = sut.getComponentFor(secondFragment, activityComponent);
 
         // THEN
         assertEquals(first, second);
