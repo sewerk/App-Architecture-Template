@@ -6,20 +6,30 @@ Small and powerful combination for your Android app architecture: **MVP+Fragment
  - automatic dependency injection and scope management
  - base classes for view, presenter and DI component
 
+[![BuddyBuild](https://dashboard.buddybuild.com/api/statusImage?appID=57ab933e40aec601003836de&branch=master&build=latest)](https://dashboard.buddybuild.com/apps/57ab933e40aec601003836de/build/latest)
 Get it from [![](https://jitpack.io/v/sewerk/mfvp.svg)](https://jitpack.io/#sewerk/mfvp)
 
 ### Changes in progress
 
-This API most likely will change until stable version is released. The documentation below might be outdated:
-- MvpFragmentInActivityScopeComponent removed
-- MvpActivityScopedFragment injects manually
-- MvpFragmentScopedFragment prepares component basing on input
+This API might change until stable version is released. The documentation below might be outdated.
 
 
 ## How to start
 
-### 0. Configure dagger dependency
-//TODO
+### 0. Configure dependency
+```groovy
+    allprojects {
+        repositories {
+            ...
+            maven { url "https://jitpack.io" }
+        }
+    }
+    dependencies {
+        ...
+        compile 'com.github.sewerk:mfvp:1.0-alpha3'
+        annotationProcessor 'com.google.dagger:dagger-compiler:2.0.1'
+    }
+```
 
 ### 1. Create **presenter** by extending `MvpPresenter` (with view interface)
 ```java
@@ -61,9 +71,9 @@ public class MainViewPresenter extends MvpPresenter<MainViewPresenter.MainView> 
 ```java
 @RetainActivityScope
 public interface MainActivityComponent
-        extends MvpActivityScopeComponent<MainActivity>, // this component is for MainActivity
-        MvpFragmentInActivityScopeComponent<ListFragment> { // in addition, ListFragment presenter will live until activity is finishing
+        extends MvpActivityScopeComponent<MainActivity> { // this component is for MainActivity
 
+    // add methods for injecting fragments in activity scope
 }
 ```
 ### 3. Create **activity**, by extending `MvpActivity`
@@ -85,7 +95,7 @@ public class MainActivity extends MvpActivity<MainActivityComponent>
     }
     
     public void changeScreen(Fragment fragment) {
-        changeFragment(R.id.fragmentResId, fragment, "optional tag"); // use API from base class for proper Fragment scope management
+        changeFragment(R.id.fragmentResId, fragment, "optional tag"); // use API from MvpActivity class for proper Fragment scope management
     }
 }
 ```
@@ -93,8 +103,8 @@ public class MainActivity extends MvpActivity<MainActivityComponent>
 ```java
 // living in activity scope
 public class ListFragment extends MvpFragment
-        implements MvpActivityScopedFragment,
-        PresenterOwner, // required when using presenter 
+        implements MvpActivityScopedFragment<MainActivityComponent>,
+        PresenterOwner, // required when using presenter
         ListViewPresenter.ListView { // fulfill presenter commands
 
     @Inject ListViewPresenter presenter; // will live until activity is finishing
@@ -103,19 +113,24 @@ public class ListFragment extends MvpFragment
     public PresenterHandlingDelegate createPresenterDelegate() {
         return new SinglePresenterHandlingDelegate(this, presenter);
     }
+
+    @Override
+    public void injectDependencies(MainActivityComponent activityComponent) {
+        activityComponent.inject(this);
+    }
 }
 
 // or in own(fragment) scope
 public class AddFragment extends MvpFragment
-        implements MvpFragmentScopedFragment<AddFragmentComponent>, 
+        implements MvpFragmentScopedFragment<AddFragmentComponent, MainActivityComponent>, // own and parent component types
         PresenterOwner, // required when using presenter 
         AddViewPresenter.AddView { // fulfill presenter commands
 
     @Inject AddViewPresenter presenter; // will live until fragment is finishing
 
     @Override
-    public AddFragmentComponent prepareComponent() {
-        // create AddFragmentComponent
+    public AddFragmentComponent getFragmentComponent(MainActivityComponent activityComponent) {
+        return activityComponent.getAddFragmentComponent();
     }
 }
 
