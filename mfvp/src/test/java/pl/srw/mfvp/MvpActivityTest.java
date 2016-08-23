@@ -38,7 +38,6 @@ public class MvpActivityTest {
     public void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
 
-        fragmentManagerMock = mock(FragmentManager.class);
         final FragmentTransaction fragmentTransactionMock = mock(FragmentTransaction.class);
         when(fragmentTransactionMock.replace(anyInt(), any(Fragment.class), anyString())).thenReturn(fragmentTransactionMock);
         when(fragmentTransactionMock.addToBackStack(anyString())).thenReturn(fragmentTransactionMock);

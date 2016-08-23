@@ -1,5 +1,6 @@
 package pl.srw.mfvp;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
@@ -22,6 +23,7 @@ import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 public abstract class MvpFragment extends DialogFragment {
 
     private LifeCycleNotifier notifier;
+    private boolean endOfScopeOnDestroy;
 
     public MvpFragment() {
         notifier = new LifeCycleNotifier();
@@ -50,6 +52,30 @@ public abstract class MvpFragment extends DialogFragment {
     public void onStop() {
         super.onStop();
         notifier.notifyOnStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        if (endOfScopeOnDestroy) {
+            endOfScope();
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onCancel(DialogInterface dialog) {
+        if (this instanceof MvpFragmentScopedFragment) {
+            endOfScopeOnDestroy = true;
+        }
+        super.onCancel(dialog);
+    }
+
+    @Override
+    public void dismiss() {
+        if (this instanceof MvpFragmentScopedFragment) {
+            endOfScopeOnDestroy = true;
+        }
+        super.dismiss();
     }
 
     /**
