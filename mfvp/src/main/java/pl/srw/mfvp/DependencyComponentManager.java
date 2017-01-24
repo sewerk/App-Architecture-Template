@@ -29,7 +29,7 @@ final class DependencyComponentManager {
     public <C extends MvpActivityScopeComponent> C getComponentFor(MvpActivity<C> activity) {
         final Class<? extends MvpActivity> activityClass = activity.getClass();
         if (!activityComponentsMap.containsKey(activityClass)) {
-            Timber.d("preparing component for %s", activityClass.getSimpleName());
+            Timber.v("preparing component for %s", activityClass.getSimpleName());
             activityComponentsMap.put(activityClass, activity.prepareComponent());
         }
         return (C) activityComponentsMap.get(activityClass);
@@ -37,7 +37,7 @@ final class DependencyComponentManager {
 
     public void releaseComponentFor(MvpActivity activity) {
         final Class<? extends MvpActivity> activityClass = activity.getClass();
-        Timber.d("releasing component for %s", activityClass.getSimpleName());
+        Timber.v("releasing component for %s", activityClass.getSimpleName());
         activityComponentsMap.remove(activityClass);
     }
 
@@ -46,7 +46,7 @@ final class DependencyComponentManager {
 
         final Class<? extends MvpFragmentScopedFragment> fragmentClass = fragment.getClass();
         if (!fragmentComponentMap.containsKey(fragmentClass)) {
-            Timber.d("preparing component for %s", fragmentClass.getSimpleName());
+            Timber.v("preparing component for %s", fragmentClass.getSimpleName());
             fragmentComponentMap.put(fragmentClass, fragment.getFragmentComponent(activityComponent));
         }
         return (C) fragmentComponentMap.get(fragmentClass);
@@ -54,7 +54,7 @@ final class DependencyComponentManager {
 
     public void releaseComponentFor(MvpFragmentScopedFragment fragment) {
         final Class<? extends MvpFragmentScopedFragment> fragmentClass = fragment.getClass();
-        Timber.d("releasing component for %s", fragmentClass.getSimpleName());
+        Timber.v("releasing component for %s", fragmentClass.getSimpleName());
         fragmentComponentMap.remove(fragmentClass);
     }
 }

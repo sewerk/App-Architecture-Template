@@ -19,7 +19,7 @@ public abstract class MvpPresenter<V> {
     private Queue<UIChange<V>> changes = new LinkedList<>();
 
     protected MvpPresenter() {
-        Timber.d("New presenter created " + this.getClass().getSimpleName());
+        Timber.v("Creating " + this.getClass().getSimpleName());
     }
 
     /**
@@ -84,7 +84,7 @@ public abstract class MvpPresenter<V> {
      */
     @CallSuper
     public void onFinish() {
-        Timber.d("Presenter finishing " + this.getClass().getSimpleName());
+        Timber.v("Finishing " + this.getClass().getSimpleName());
     }
 
     /**

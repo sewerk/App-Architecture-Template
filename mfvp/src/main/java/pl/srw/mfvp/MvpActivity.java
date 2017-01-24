@@ -111,7 +111,7 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
      * @param tag               fragment tag
      */
     protected void changeFragmentWithStack(int fragmentResId, Fragment fragment, String tag) {
-        Timber.d("adding fragment %s", fragment);
+        Timber.v("adding fragment %s", fragment);
         getSupportFragmentManager().beginTransaction()
                 .replace(fragmentResId, fragment, tag)
                 .addToBackStack(null)
@@ -125,7 +125,7 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
      * @param tag               fragment tag
      */
     protected void changeFragment(int fragmentResId, Fragment fragment, String tag) {
-        Timber.d("changing fragment %s", fragment);
+        Timber.v("changing fragment %s", fragment);
         notifyStackedFragmentsAreFinishing();
         clearBackStack();
         getSupportFragmentManager().beginTransaction()
