@@ -2,6 +2,9 @@ package pl.srw.mfvp.presenter;
 
 import android.support.annotation.CallSuper;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 import timber.log.Timber;
 
 /**
@@ -13,9 +16,9 @@ public abstract class MvpPresenter<V> {
 
     private V view;
     private boolean firstBind = true;
-    private UIChange<V> latestUIChange;
+    private Queue<UIChange<V>> changes = new LinkedList<>();
 
-    public MvpPresenter() {
+    protected MvpPresenter() {
         Timber.d("New presenter created " + this.getClass().getSimpleName());
     }
 
@@ -37,8 +40,9 @@ public abstract class MvpPresenter<V> {
         } else {
             onNewViewRestoreState();
         }
-        if (latestUIChange != null) {
-            present(latestUIChange);
+        UIChange<V> uiChange;
+        while ((uiChange = changes.poll()) != null) {
+            uiChange.change(view);
         }
     }
 
@@ -62,9 +66,8 @@ public abstract class MvpPresenter<V> {
     protected final void present(UIChange<V> uiChange) {
         if (view != null) {
             uiChange.change(view);
-            latestUIChange = null;
         } else {
-            latestUIChange = uiChange;
+            changes.add(uiChange);
         }
     }
 

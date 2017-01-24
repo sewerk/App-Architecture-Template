@@ -2,9 +2,12 @@ package pl.srw.mfvp.presenter;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.InOrder;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import static org.mockito.Mockito.inOrder;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
@@ -124,7 +127,7 @@ public class MvpPresenterTest {
     }
 
     @Test
-    public void bindViewNotExecuteLatestUIChangeIfWasExecuted() throws Exception {
+    public void bindViewNotExecuteAgainLatestUIChangeIfWasExecuted() throws Exception {
         // GIVEN
         sut.present(uiChange);
         sut.bind(view);
@@ -135,6 +138,26 @@ public class MvpPresenterTest {
 
         // THEN
         verify(uiChange).change(view);
+    }
+
+    @Test
+    public void presentMultipleUIChangesAfterViewIsBind() throws Exception {
+        // GIVEN
+        MvpPresenter.UIChange<TestView> uiChange1 = mock(MvpPresenter.UIChange.class);
+        MvpPresenter.UIChange<TestView> uiChange2 = mock(MvpPresenter.UIChange.class);
+        MvpPresenter.UIChange<TestView> uiChange3 = mock(MvpPresenter.UIChange.class);
+        sut.present(uiChange1);
+        sut.present(uiChange2);
+        sut.present(uiChange3);
+
+        // WHEN
+        sut.bind(view);
+
+        // THEN
+        InOrder inOrder = inOrder(uiChange1, uiChange2, uiChange3);
+        inOrder.verify(uiChange1).change(view);
+        inOrder.verify(uiChange2).change(view);
+        inOrder.verify(uiChange3).change(view);
     }
 
     private class TestMvpPresenter extends MvpPresenter<TestView> {
