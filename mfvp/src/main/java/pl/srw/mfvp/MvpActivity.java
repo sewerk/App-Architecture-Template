@@ -10,10 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
-import pl.srw.mfvp.di.component.MvpActivityScopeComponent;
-import pl.srw.mfvp.view.delegate.LifeCycleListener;
-import pl.srw.mfvp.view.delegate.LifeCycleNotifier;
-import pl.srw.mfvp.view.delegate.presenter.PresenterOwner;
+import pl.srw.mfvp.di.component.MvpComponent;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 import timber.log.Timber;
 
@@ -22,17 +19,11 @@ import timber.log.Timber;
  * Features:
  *  - dependency injection is done every time activity is created
  *  - releasing dependencies happens when activity is finishing
- *  - lifecycle events will be communicated to added listeners
- *  - provide common methods for fragment management
+ *  - associated presenter will be bind and unbind to/from this view
+ *  - provide methods for fragment management to manage scoping
  * See also {@link pl.srw.mfvp.di.scope.RetainActivityScope}
  */
-public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends AppCompatActivity {
-
-    private LifeCycleNotifier notifier;
-
-    public MvpActivity() {
-        notifier = new LifeCycleNotifier();
-    }
+public abstract class MvpActivity<C extends MvpComponent, P extends MvpPresenter> extends AppCompatActivity {
 
     @Override
     @CallSuper
@@ -40,24 +31,20 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
         super.onCreate(savedInstanceState);
         setContentView(getContentLayoutId());
         injectDependencies();
-        if (this instanceof PresenterOwner) {
-            PresenterOwner presenterActivity = (PresenterOwner) this;
-            addListener(presenterActivity.createPresenterDelegate());
-        }
     }
 
     @Override
     @CallSuper
     protected void onStart() {
         super.onStart();
-        notifier.notifyOnStart();
+        getPresenter().bind(this);
     }
 
     @Override
     @CallSuper
     protected void onStop() {
+        getPresenter().unbind(this);
         super.onStop();
-        notifier.notifyOnStop();
     }
 
     @Override
@@ -65,9 +52,8 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
     protected void onDestroy() {
         if (isFinishing()) {
             notifyStackedFragmentsActivityIsFinishing();
-            resetDependencies();
-            notifier.notifyOnEnd();
         }
+        resetDependencies(isFinishing());
         super.onDestroy();
     }
 
@@ -83,12 +69,10 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
     }
 
     /**
-     * Add listener to this activity lifecycle
-     * @param listener    lifecycle listener
+     * Provides associated presenter instance
+     * @return presenter
      */
-    public final void addListener(LifeCycleListener listener) {
-        notifier.register(listener);
-    }
+    protected abstract P getPresenter();
 
     /**
      * Provides associated dependency component.
@@ -96,7 +80,7 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
      * and hold them according to scope.
      * @return component instance
      */
-    public abstract C prepareComponent();
+    protected abstract C prepareComponent();
 
     /**
      * Provides content layout resource id
@@ -190,8 +174,9 @@ public abstract class MvpActivity<C extends MvpActivityScopeComponent> extends A
         DependencyComponentManager.getInstance().getComponentFor(this).inject(this);
     }
 
-    private void resetDependencies() {
-        DependencyComponentManager.getInstance().releaseComponentFor(this);
+    private void resetDependencies(boolean isFinishing) {
+        if (DependencyComponentManager.getInstance().releaseComponentFor(this, isFinishing)) {
+            getPresenter().onFinish();
+        }
     }
-
 }

@@ -6,7 +6,7 @@ import javax.inject.Inject;
 import javax.inject.Provider;
 
 import pl.srw.mfvp.di.scope.RetainActivityScope;
-import pl.srw.mfvp.presenter.MvpPresenter;
+import pl.srw.mfvp.MvpPresenter;
 import pl.srw.todos.model.Todo;
 import pl.srw.todos.presenter.task.GetTask;
 import pl.srw.todos.presenter.task.PushTask;

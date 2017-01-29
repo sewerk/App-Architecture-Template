@@ -1,4 +1,4 @@
-package pl.srw.mfvp.presenter;
+package pl.srw.mfvp;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -12,6 +12,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 
 public class MvpPresenterTest {
 
@@ -31,7 +32,7 @@ public class MvpPresenterTest {
     public void viewCanRebindAfterUnbind() throws Exception {
         // GIVEN
         sut.bind(view);
-        sut.unbind();
+        sut.unbind(view);
 
         // WHEN
         sut.bind(view);
@@ -40,15 +41,40 @@ public class MvpPresenterTest {
         // no exception is thrown
     }
 
-    @Test(expected = RuntimeException.class)
-    public void concurrentViewBindThrowException() throws Exception {
+    @Test
+    public void nextViewCanBindBeforeFirstUnbind() throws Exception {
+        // GIVEN
+        sut = spy(sut);
+        TestView view1 = view;
+        TestView view2 = mock(TestView.class);
+
         // WHEN
-        sut.bind(view);
-        sut.bind(view);
+        sut.bind(view1);
+        sut.bind(view2);
+
+        // THEN
+        // no exception is thrown
     }
 
     @Test
-    public void firstBindIsCallsOnFirstBindOnly() throws Exception {
+    public void oldViewUnbindDoesNotUnbindView() throws Exception {
+        // GIVEN
+        sut = spy(sut);
+        TestView view1 = view;
+        TestView view2 = mock(TestView.class);
+
+        // WHEN
+        sut.bind(view1);
+        sut.bind(view2);
+        sut.unbind(view1);
+        sut.testChangeUI();
+
+        // THEN
+        verify(view2).testChangeUI();
+    }
+
+    @Test
+    public void firstBindCallsOnFirstBindOnly() throws Exception {
         // GIVEN
         sut = spy(sut);
 
@@ -67,11 +93,13 @@ public class MvpPresenterTest {
 
         // WHEN
         sut.bind(view);
-        sut.unbind();
+        sut.unbind(view);
         sut.bind(view);
 
         // THEN
-        verify(sut).onNewViewRestoreState();
+        InOrder inOrder = inOrder(sut);
+        inOrder.verify(sut).onFirstBind();
+        inOrder.verify(sut).onNewViewRestoreState();
     }
 
     @Test
@@ -81,13 +109,15 @@ public class MvpPresenterTest {
 
         // WHEN
         sut.bind(view);
-        sut.unbind();
+        sut.unbind(view);
         sut.bind(view);
-        sut.unbind();
+        sut.unbind(view);
         sut.bind(view);
 
         // THEN
-        verify(sut, times(2)).onNewViewRestoreState();
+        InOrder inOrder = inOrder(sut);
+        inOrder.verify(sut).onFirstBind();
+        inOrder.verify(sut, times(2)).onNewViewRestoreState();
     }
 
     @Test
@@ -105,39 +135,13 @@ public class MvpPresenterTest {
     @Test
     public void presentUIChangeIsNotExecutedWhenViewIsUnbind() throws Exception {
         // GIVEN
-        sut.unbind();
+        sut.unbind(view);
 
         // WHEN
         sut.present(uiChange);
 
         // THEN
         verify(uiChange, never()).change(view);
-    }
-
-    @Test
-    public void bindViewExecutesLatestUIChangeIfWasNotExecuted() throws Exception {
-        // GIVEN
-        sut.present(uiChange);
-
-        // WHEN
-        sut.bind(view);
-
-        // THEN
-        verify(uiChange).change(view);
-    }
-
-    @Test
-    public void bindViewNotExecuteAgainLatestUIChangeIfWasExecuted() throws Exception {
-        // GIVEN
-        sut.present(uiChange);
-        sut.bind(view);
-        sut.unbind();
-
-        // WHEN
-        sut.bind(view);
-
-        // THEN
-        verify(uiChange).change(view);
     }
 
     @Test
@@ -160,9 +164,34 @@ public class MvpPresenterTest {
         inOrder.verify(uiChange3).change(view);
     }
 
+    @Test
+    public void bindViewDoesNotExecuteAgainLatestUIChangeIfWasExecuted() throws Exception {
+        // GIVEN
+        sut.present(uiChange);
+        sut.bind(view);
+        verify(uiChange).change(view);
+        sut.unbind(view);
+
+        // WHEN
+        sut.bind(view);
+
+        // THEN
+        verifyNoMoreInteractions(uiChange);
+    }
+
     private class TestMvpPresenter extends MvpPresenter<TestView> {
+        public void testChangeUI() {
+            present(new UIChange<TestView>() {
+                @Override
+                public void change(TestView view) {
+                    view.testChangeUI();
+                }
+            });
+        }
     }
 
     private class TestView {
+        public void testChangeUI() {
+        }
     }
 }

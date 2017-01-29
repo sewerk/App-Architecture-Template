@@ -1,4 +1,4 @@
-package pl.srw.mfvp.presenter;
+package pl.srw.mfvp;
 
 import android.support.annotation.CallSuper;
 
@@ -23,15 +23,15 @@ public abstract class MvpPresenter<V> {
     }
 
     /**
-     * Bind view to presenter
+     * Bind view to presenter.
+     * If some UI changes were queued during view was missing
+     * they will be executed immediately on this new view
      *
      * @param view view to control
      */
-    @CallSuper
-    public void bind(V view) {
+    final void bind(V view) {
         if (this.view != null) {
-            throw new RuntimeException("Concurrent view bind! Unexpected, second instance of view occurred"
-                    + " before first one unbind.");
+            Timber.v("Concurrent view bind before previous unbind.");
         }
         this.view = view;
         if (firstBind) {
@@ -47,6 +47,17 @@ public abstract class MvpPresenter<V> {
     }
 
     /**
+     * Unbind view from presenter
+     * If passed view differs from current bind then current will persist,
+     * as this is assumed to be late unbind which is no more relevant
+     *
+     * @param view view to unbind
+     */
+    final void unbind(V view) {
+        if (this.view == view) this.view = null;
+    }
+
+    /**
      * Does additional work only on first bind view
      */
     protected void onFirstBind() {
@@ -59,7 +70,16 @@ public abstract class MvpPresenter<V> {
     }
 
     /**
-     * Make changes on view, if view is currently available. If not changes are postponed until next bind.
+     * Cleanup after view is being destroyed
+     */
+    @CallSuper
+    protected void onFinish() {
+        Timber.v("Finishing " + this.getClass().getSimpleName());
+    }
+
+    /**
+     * Make changes on view, if view is currently available.
+     * If not changes are postponed until next bind.
      *
      * @param uiChange change view action
      */
@@ -69,22 +89,6 @@ public abstract class MvpPresenter<V> {
         } else {
             changes.add(uiChange);
         }
-    }
-
-    /**
-     * Unbind view from presenter
-     */
-    @CallSuper
-    public void unbind() {
-        view = null;
-    }
-
-    /**
-     * Cleanup after view is being destroyed
-     */
-    @CallSuper
-    public void onFinish() {
-        Timber.v("Finishing " + this.getClass().getSimpleName());
     }
 
     /**

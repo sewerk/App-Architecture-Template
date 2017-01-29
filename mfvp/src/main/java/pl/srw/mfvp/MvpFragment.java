@@ -6,10 +6,6 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 
-import pl.srw.mfvp.di.component.MvpActivityScopeComponent;
-import pl.srw.mfvp.view.delegate.LifeCycleListener;
-import pl.srw.mfvp.view.delegate.LifeCycleNotifier;
-import pl.srw.mfvp.view.delegate.presenter.PresenterOwner;
 import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 
@@ -18,106 +14,80 @@ import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
  * Features:
  *  - dependency injection is done every time fragment is created
  *  - releasing dependencies depends on associated scope component
- *  - lifecycle events will be communicated to added listeners
+ *  - associated presenter will be bind and unbind from/to this view
  */
-public abstract class MvpFragment extends DialogFragment {
+public abstract class MvpFragment<P extends MvpPresenter> extends DialogFragment {
 
-    private LifeCycleNotifier notifier;
-    private boolean endOfScopeOnDestroy;
-
-    public MvpFragment() {
-        notifier = new LifeCycleNotifier();
-    }
+    private boolean isFinishing;
 
     @Override
     @CallSuper
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         injectDependencies();
-        if (this instanceof PresenterOwner) {
-            PresenterOwner presenterFragment = (PresenterOwner) this;
-            addListener(presenterFragment.createPresenterDelegate());
-        }
     }
 
     @Override
     @CallSuper
     public void onStart() {
         super.onStart();
-        notifier.notifyOnStart();
+        getPresenter().bind(this);
     }
 
     @Override
     @CallSuper
     public void onStop() {
+        getPresenter().unbind(this);
         super.onStop();
-        notifier.notifyOnStop();
     }
 
     @Override
     public void onDestroy() {
-        if (endOfScopeOnDestroy) {
-            endOfScope();
-        }
+        resetDependencies(isFinishing);
         super.onDestroy();
     }
 
     @Override
     public void onCancel(DialogInterface dialog) {
-        if (this instanceof MvpFragmentScopedFragment) {
-            endOfScopeOnDestroy = true;
-        }
+        endOfScope();
         super.onCancel(dialog);
     }
 
     @Override
     public void dismiss() {
-        if (this instanceof MvpFragmentScopedFragment) {
-            endOfScopeOnDestroy = true;
-        }
+        endOfScope();
         super.dismiss();
     }
 
     /**
-     * Callback when view if out of scope and all dependent objects need to be destroyed
+     * Provides associated presenter instance
+     * @return presenter
      */
-    @CallSuper
+    protected abstract P getPresenter();
+
     void endOfScope() {
-        notifier.notifyOnEnd();
-        resetDependencies();
+        isFinishing = true;
     }
 
-    protected MvpActivity getBaseActivity() {
+    MvpActivity getMvpActivity() {
         return (MvpActivity) super.getActivity();
     }
 
-    /**
-     * Add listener to this fragment lifecycle
-     * @param listener    lifecycle listener
-     */
-    public final void addListener(LifeCycleListener listener) {
-        notifier.register(listener);
-    }
-
     private void injectDependencies() {
-        final MvpActivityScopeComponent activityComponent = DependencyComponentManager.getInstance().getComponentFor(getBaseActivity());
         if (this instanceof MvpFragmentScopedFragment) {
-            final MvpFragmentScopedFragment fragment = (MvpFragmentScopedFragment) this;
-            DependencyComponentManager.getInstance().getComponentFor(fragment, activityComponent).inject(fragment);
+            DependencyComponentManager.getInstance().getComponentFor(this).inject(this);
         } else if (this instanceof MvpActivityScopedFragment){
             final MvpActivityScopedFragment fragment = (MvpActivityScopedFragment) this;
-            fragment.injectDependencies(activityComponent);
+            fragment.injectDependencies(DependencyComponentManager.getInstance().getComponentFor(this));
         } else {
             throw new ClassCastException("MvpFragment must implement " +
                     "one of interfaces: MvpFragmentScopedFragment or MvpActivityScopedFragment");
         }
     }
 
-    private void resetDependencies() {
-        if (this instanceof MvpFragmentScopedFragment) {
-            final MvpFragmentScopedFragment fragment = (MvpFragmentScopedFragment) this;
-            DependencyComponentManager.getInstance().releaseComponentFor(fragment);
+    private void resetDependencies(boolean isFinishing) {
+        if (DependencyComponentManager.getInstance().releaseComponentFor(this, isFinishing)) {
+            getPresenter().onFinish();
         }
-        // else dependencies will be reset by activity
     }
 }

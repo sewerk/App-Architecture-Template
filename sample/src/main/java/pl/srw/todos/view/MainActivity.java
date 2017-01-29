@@ -8,17 +8,14 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.srw.mfvp.MvpActivity;
 import pl.srw.todos.R;
 import pl.srw.todos.TodosApplication;
-import pl.srw.mfvp.MvpActivity;
-import pl.srw.mfvp.view.delegate.presenter.PresenterHandlingDelegate;
-import pl.srw.mfvp.view.delegate.presenter.PresenterOwner;
-import pl.srw.mfvp.view.delegate.presenter.SinglePresenterHandlingDelegate;
 import pl.srw.todos.di.component.MainActivityComponent;
 import pl.srw.todos.presenter.MainViewPresenter;
 
-public class MainActivity extends MvpActivity<MainActivityComponent>
-        implements MainViewPresenter.MainView, PresenterOwner {
+public class MainActivity extends MvpActivity<MainActivityComponent, MainViewPresenter>
+        implements MainViewPresenter.MainView {
 
     @Bind(R.id.add) View addView;
 
@@ -36,8 +33,8 @@ public class MainActivity extends MvpActivity<MainActivityComponent>
     }
 
     @Override
-    public PresenterHandlingDelegate createPresenterDelegate() {
-        return new SinglePresenterHandlingDelegate(this, presenter);
+    public MainViewPresenter getPresenter() {
+        return presenter;
     }
 
     @Override

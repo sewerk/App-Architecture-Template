@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -12,7 +13,7 @@ import org.mockito.Spy;
 
 import java.util.Collections;
 
-import pl.srw.mfvp.di.component.MvpActivityScopeComponent;
+import pl.srw.mfvp.di.component.MvpComponent;
 import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 
@@ -156,16 +157,60 @@ public class MvpActivityTest {
         verify(fragment, never()).endOfScope();
     }
 
+    @Test
+    @Ignore // TODO
+    public void onCreate_injectsDependencies() throws Exception {
+        // GIVEN
+        // set mocked dependencies instance by Whitebox
+        // WHEN
+        // THEN
+    }
 
+    @Test
+    @Ignore // TODO
+    public void onStart_bindPresenter() throws Exception {
+        // GIVEN
+        // WHEN
+        // THEN
+    }
 
-    private class TestMvpActivity extends MvpActivity {
+    @Test
+    @Ignore // TODO
+    public void onStop_unbindPresenter() throws Exception {
+        // GIVEN
+        // WHEN
+        // THEN
+    }
+
+    @Test
+    @Ignore // TODO
+    public void onDestroy_resetDependencies() throws Exception {
+        // GIVEN
+        // WHEN
+        // THEN
+    }
+
+    @Test
+    @Ignore // TODO
+    public void onDestroy_finishPresenter() throws Exception {
+        // GIVEN
+        // WHEN
+        // THEN
+    }
+
+    public static class TestMvpActivity extends MvpActivity {
 
         public TestMvpActivity() {
         }
 
         @Override
-        public MvpActivityScopeComponent prepareComponent() {
-            return null;
+        protected MvpPresenter getPresenter() {
+            return mock(MvpPresenter.class);
+        }
+
+        @Override
+        public MvpComponent prepareComponent() {
+            return mock(MvpComponent.class);
         }
 
         @Override
