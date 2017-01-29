@@ -21,6 +21,7 @@ public class AddViewPresenterTest {
 
     @Before
     public void setUp() throws Exception {
+        sut = new AddViewPresenter(pushTask);
         MockitoAnnotations.initMocks(this);
     }
 
@@ -35,9 +36,6 @@ public class AddViewPresenterTest {
 
     @Test
     public void addClicked_closeView() throws Exception {
-        // GIVEN
-        sut.bind(view);
-
         // WHEN
         sut.addClicked(false, "");
 

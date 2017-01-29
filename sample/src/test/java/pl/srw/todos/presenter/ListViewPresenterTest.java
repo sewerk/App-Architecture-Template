@@ -32,6 +32,7 @@ public class ListViewPresenterTest {
 
     @Before
     public void setUp() throws Exception {
+        sut = new ListViewPresenter(getTask, pushTaskProvider);
         MockitoAnnotations.initMocks(this);
         when(pushTaskProvider.get()).thenReturn(pushTask);
     }
@@ -39,7 +40,7 @@ public class ListViewPresenterTest {
     @Test
     public void onFirstBind_executeGetTask() throws Exception {
         // WHEN
-        sut.bind(view);
+        sut.onFirstBind();
 
         // THEN
         verify(getTask).execute(any(GetTask.Caller.class));
@@ -48,7 +49,6 @@ public class ListViewPresenterTest {
     @Test
     public void onDataRetrieved_displayList() throws Exception {
         // GIVEN
-        sut.bind(view);
         final Collection<Todo> collection = mock(Collection.class);
 
         // WHEN
@@ -60,9 +60,6 @@ public class ListViewPresenterTest {
 
     @Test
     public void onNewViewRestoreState_dontExecuteGetTask() throws Exception {
-        // GIVEN
-        sut.bind(view);
-
         // WHEN
         sut.onNewViewRestoreState();
 
@@ -72,9 +69,6 @@ public class ListViewPresenterTest {
 
     @Test
     public void onNewViewRestoreState_displayList() throws Exception {
-        // GIVEN
-        sut.bind(view);
-
         // WHEN
         sut.onNewViewRestoreState();
 

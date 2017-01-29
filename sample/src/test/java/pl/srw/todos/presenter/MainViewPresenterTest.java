@@ -18,16 +18,14 @@ public class MainViewPresenterTest {
 
     @Before
     public void setUp() throws Exception {
+        sut = new MainViewPresenter();
         MockitoAnnotations.initMocks(this);
     }
 
     @Test
     public void onFirstBind_showListView() throws Exception {
-        // GIVEN
-        sut = new MainViewPresenter();
-
         // WHEN
-        sut.bind(view);
+        sut.onFirstBind();
 
         // THEN
         verify(view).showListView();
