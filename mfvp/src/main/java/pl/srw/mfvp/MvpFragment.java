@@ -6,6 +6,9 @@ import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 
+import pl.srw.mfvp.presenter.PresenterOwner;
+import pl.srw.mfvp.view.delegate.LifeCycleListener;
+import pl.srw.mfvp.view.delegate.LifeCycleNotifier;
 import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 
@@ -14,30 +17,35 @@ import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
  * Features:
  *  - dependency injection is done every time fragment is created
  *  - releasing dependencies depends on associated scope component
- *  - associated presenter will be bind and unbind from/to this view
+ *  - lifecycle events will be communicated to added listeners
  */
-public abstract class MvpFragment<P extends MvpPresenter> extends DialogFragment {
+public abstract class MvpFragment extends DialogFragment {
 
     private boolean isFinishing;
+    private LifeCycleNotifier notifier = new LifeCycleNotifier();
 
     @Override
     @CallSuper
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         injectDependencies();
+        if (this instanceof PresenterOwner) {
+            PresenterOwner presenterFragment = (PresenterOwner) this;
+            addListener(presenterFragment.createPresenterDelegate());
+        }
     }
 
     @Override
     @CallSuper
     public void onStart() {
         super.onStart();
-        getPresenter().bind(this);
+        notifier.notifyOnStart();
     }
 
     @Override
     @CallSuper
     public void onStop() {
-        getPresenter().unbind(this);
+        notifier.notifyOnStop();
         super.onStop();
     }
 
@@ -59,18 +67,20 @@ public abstract class MvpFragment<P extends MvpPresenter> extends DialogFragment
         super.dismiss();
     }
 
-    /**
-     * Provides associated presenter instance
-     * @return presenter
-     */
-    protected abstract P getPresenter();
-
-    void endOfScope() {
+    final void endOfScope() {
         isFinishing = true;
     }
 
     MvpActivity getMvpActivity() {
         return (MvpActivity) super.getActivity();
+    }
+
+    /**
+     * Add listener to this fragment lifecycle
+     * @param listener    lifecycle listener
+     */
+    public final void addListener(LifeCycleListener listener) {
+        notifier.register(listener);
     }
 
     private void injectDependencies() {
@@ -87,7 +97,7 @@ public abstract class MvpFragment<P extends MvpPresenter> extends DialogFragment
 
     private void resetDependencies(boolean isFinishing) {
         if (DependencyComponentManager.getInstance().releaseComponentFor(this, isFinishing)) {
-            getPresenter().onFinish();
+            notifier.notifyOnEnd();
         }
     }
 }

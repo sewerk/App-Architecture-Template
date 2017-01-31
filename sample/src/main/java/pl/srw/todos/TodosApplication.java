@@ -23,9 +23,7 @@ public class TodosApplication extends Application {
             Timber.plant(new Timber.DebugTree());
         }
 
-        applicationComponent = DaggerApplicationComponent.builder()
-                .applicationModule(new ApplicationModule(this))
-                .build();
+        applicationComponent = DaggerApplicationComponent.create();
     }
 
     public static TodosApplication get(Context context) {

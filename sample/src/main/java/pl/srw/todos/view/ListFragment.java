@@ -19,12 +19,16 @@ import butterknife.ButterKnife;
 import pl.srw.mfvp.MvpFragment;
 import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.todos.R;
+import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
+import pl.srw.mfvp.presenter.PresenterOwner;
+import pl.srw.mfvp.presenter.SinglePresenterHandlingDelegate;
 import pl.srw.todos.di.component.MainActivityComponent;
 import pl.srw.todos.model.Todo;
 import pl.srw.todos.presenter.ListViewPresenter;
 
-public class ListFragment extends MvpFragment<ListViewPresenter>
+public class ListFragment extends MvpFragment
         implements ListViewPresenter.ListView,
+        PresenterOwner,
         MvpActivityScopedFragment<MainActivityComponent> {
 
     @Inject ListViewPresenter presenter;
@@ -64,8 +68,8 @@ public class ListFragment extends MvpFragment<ListViewPresenter>
     }
 
     @Override
-    public ListViewPresenter getPresenter() {
-        return presenter;
+    public PresenterHandlingDelegate createPresenterDelegate() {
+        return new SinglePresenterHandlingDelegate(this, presenter);
     }
 
     @Override

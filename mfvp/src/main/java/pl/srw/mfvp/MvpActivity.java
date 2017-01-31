@@ -10,7 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
+import pl.srw.mfvp.presenter.PresenterOwner;
 import pl.srw.mfvp.di.component.MvpComponent;
+import pl.srw.mfvp.view.delegate.LifeCycleListener;
+import pl.srw.mfvp.view.delegate.LifeCycleNotifier;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 import timber.log.Timber;
 
@@ -19,11 +22,13 @@ import timber.log.Timber;
  * Features:
  *  - dependency injection is done every time activity is created
  *  - releasing dependencies happens when activity is finishing
- *  - associated presenter will be bind and unbind to/from this view
+ *  - lifecycle events will be communicated to added listeners
  *  - provide methods for fragment management to manage scoping
  * See also {@link pl.srw.mfvp.di.scope.RetainActivityScope}
  */
-public abstract class MvpActivity<C extends MvpComponent, P extends MvpPresenter> extends AppCompatActivity {
+public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActivity {
+
+    private LifeCycleNotifier notifier = new LifeCycleNotifier();
 
     @Override
     @CallSuper
@@ -31,19 +36,23 @@ public abstract class MvpActivity<C extends MvpComponent, P extends MvpPresenter
         super.onCreate(savedInstanceState);
         setContentView(getContentLayoutId());
         injectDependencies();
+        if (this instanceof PresenterOwner) {
+            PresenterOwner presenterActivity = (PresenterOwner) this;
+            addListener(presenterActivity.createPresenterDelegate());
+        }
     }
 
     @Override
     @CallSuper
     protected void onStart() {
         super.onStart();
-        getPresenter().bind(this);
+        notifier.notifyOnStart();
     }
 
     @Override
     @CallSuper
     protected void onStop() {
-        getPresenter().unbind(this);
+        notifier.notifyOnStop();
         super.onStop();
     }
 
@@ -69,10 +78,12 @@ public abstract class MvpActivity<C extends MvpComponent, P extends MvpPresenter
     }
 
     /**
-     * Provides associated presenter instance
-     * @return presenter
+     * Add listener to this activity lifecycle
+     * @param listener    lifecycle listener
      */
-    protected abstract P getPresenter();
+    public final void addListener(LifeCycleListener listener) {
+        notifier.register(listener);
+    }
 
     /**
      * Provides associated dependency component.
@@ -176,7 +187,7 @@ public abstract class MvpActivity<C extends MvpComponent, P extends MvpPresenter
 
     private void resetDependencies(boolean isFinishing) {
         if (DependencyComponentManager.getInstance().releaseComponentFor(this, isFinishing)) {
-            getPresenter().onFinish();
+            notifier.notifyOnEnd();
         }
     }
 }

@@ -204,11 +204,6 @@ public class MvpActivityTest {
         }
 
         @Override
-        protected MvpPresenter getPresenter() {
-            return mock(MvpPresenter.class);
-        }
-
-        @Override
         public MvpComponent prepareComponent() {
             return mock(MvpComponent.class);
         }

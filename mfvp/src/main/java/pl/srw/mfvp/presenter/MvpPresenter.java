@@ -1,4 +1,4 @@
-package pl.srw.mfvp;
+package pl.srw.mfvp.presenter;
 
 import android.support.annotation.CallSuper;
 

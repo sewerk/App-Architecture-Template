@@ -11,11 +11,14 @@ import butterknife.OnClick;
 import pl.srw.mfvp.MvpActivity;
 import pl.srw.todos.R;
 import pl.srw.todos.TodosApplication;
+import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
+import pl.srw.mfvp.presenter.PresenterOwner;
+import pl.srw.mfvp.presenter.SinglePresenterHandlingDelegate;
 import pl.srw.todos.di.component.MainActivityComponent;
 import pl.srw.todos.presenter.MainViewPresenter;
 
-public class MainActivity extends MvpActivity<MainActivityComponent, MainViewPresenter>
-        implements MainViewPresenter.MainView {
+public class MainActivity extends MvpActivity<MainActivityComponent>
+        implements MainViewPresenter.MainView, PresenterOwner {
 
     @Bind(R.id.add) View addView;
 
@@ -33,8 +36,8 @@ public class MainActivity extends MvpActivity<MainActivityComponent, MainViewPre
     }
 
     @Override
-    public MainViewPresenter getPresenter() {
-        return presenter;
+    public PresenterHandlingDelegate createPresenterDelegate() {
+        return new SinglePresenterHandlingDelegate(this, presenter);
     }
 
     @Override

@@ -13,15 +13,19 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import pl.srw.todos.R;
+import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
+import pl.srw.mfvp.presenter.PresenterOwner;
+import pl.srw.mfvp.presenter.SinglePresenterHandlingDelegate;
 import pl.srw.mfvp.MvpFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
-import pl.srw.todos.R;
 import pl.srw.todos.di.component.AddFragmentComponent;
 import pl.srw.todos.di.component.MainActivityComponent;
 import pl.srw.todos.presenter.AddViewPresenter;
 
-public class AddFragment extends MvpFragment<AddViewPresenter>
-        implements AddViewPresenter.AddView,
+public class AddFragment extends MvpFragment
+        implements PresenterOwner,
+        AddViewPresenter.AddView,
         MvpFragmentScopedFragment<AddFragmentComponent, MainActivityComponent> {
 
     @Bind(R.id.add_text) EditText textView;
@@ -60,8 +64,8 @@ public class AddFragment extends MvpFragment<AddViewPresenter>
     }
 
     @Override
-    public AddViewPresenter getPresenter() {
-        return presenter;
+    public PresenterHandlingDelegate createPresenterDelegate() {
+        return new SinglePresenterHandlingDelegate(this, presenter);
     }
 
     @OnClick(R.id.add_add)

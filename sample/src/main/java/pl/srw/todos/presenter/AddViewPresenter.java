@@ -3,7 +3,7 @@ package pl.srw.todos.presenter;
 import javax.inject.Inject;
 
 import pl.srw.mfvp.di.scope.RetainFragmentScope;
-import pl.srw.mfvp.MvpPresenter;
+import pl.srw.mfvp.presenter.MvpPresenter;
 import pl.srw.todos.model.Todo;
 import pl.srw.todos.presenter.task.PushTask;
 

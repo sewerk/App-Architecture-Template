@@ -159,11 +159,6 @@ public class MvpFragmentTest {
 
     public static class TestActivityScopedMvpFragment extends MvpFragment implements MvpActivityScopedFragment<MvpComponent> {
         @Override
-        protected MvpPresenter getPresenter() {
-            return mock(MvpPresenter.class);
-        }
-
-        @Override
         MvpActivity getMvpActivity() {
             return new MvpActivityTest.TestMvpActivity();
         }
@@ -175,11 +170,6 @@ public class MvpFragmentTest {
 
     public static class TestFragmentScopeMvpFragment extends MvpFragment implements MvpFragmentScopedFragment {
         @Override
-        protected MvpPresenter getPresenter() {
-            return mock(MvpPresenter.class);
-        }
-
-        @Override
         public MvpComponent prepareComponent(MvpComponent activityComponent) {
             return mock(MvpComponent.class);
         }
@@ -187,5 +177,6 @@ public class MvpFragmentTest {
         @Override
         MvpActivity getMvpActivity() {
             return new MvpActivityTest.TestMvpActivity();
-        }}
+        }
+    }
 }

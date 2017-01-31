@@ -3,7 +3,7 @@ package pl.srw.todos.presenter;
 import javax.inject.Inject;
 
 import pl.srw.mfvp.di.scope.RetainActivityScope;
-import pl.srw.mfvp.MvpPresenter;
+import pl.srw.mfvp.presenter.MvpPresenter;
 
 /**
  * Main view presenter
