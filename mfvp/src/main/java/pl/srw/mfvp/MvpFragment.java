@@ -67,7 +67,7 @@ public abstract class MvpFragment extends DialogFragment {
         super.dismiss();
     }
 
-    final void endOfScope() {
+    void endOfScope() {
         isFinishing = true;
     }
 
