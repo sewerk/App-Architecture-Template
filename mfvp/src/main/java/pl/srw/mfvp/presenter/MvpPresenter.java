@@ -32,6 +32,7 @@ public abstract class MvpPresenter<V> {
     final void bind(V view) {
         if (this.view != null) {
             Timber.v("Concurrent view bind before previous unbind.");
+            firstBind = true;
         }
         this.view = view;
         if (firstBind) {

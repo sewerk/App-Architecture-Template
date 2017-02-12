@@ -121,6 +121,21 @@ public class MvpPresenterTest {
     }
 
     @Test
+    public void nextViewBindBeforeFirstUnbindCallsOnFirstBind() throws Exception {
+        // GIVEN
+        sut = spy(sut);
+        TestView view1 = view;
+        TestView view2 = mock(TestView.class);
+
+        // WHEN
+        sut.bind(view1);
+        sut.bind(view2);
+
+        // THEN
+        verify(sut, times(2)).onFirstBind();
+    }
+
+    @Test
     public void presentUIChangeIsExecutedImmediatelyWhenViewIsBind() throws Exception {
         // GIVEN
         sut.bind(view);

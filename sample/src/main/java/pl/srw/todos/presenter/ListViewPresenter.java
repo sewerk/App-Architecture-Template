@@ -27,17 +27,16 @@ public class ListViewPresenter extends MvpPresenter<ListViewPresenter.ListView>
     public ListViewPresenter(GetTask getTask, Provider<PushTask> pushTasks) {
         this.getTask = getTask;
         this.pushTasks = pushTasks;
-    }
 
-    @Override
-    protected void onFirstBind() {
         getTask.execute(this);
     }
 
     @Override
     protected void onNewViewRestoreState() {
-        Timber.d("Displaying cached data");
-        displayEntries();
+        if (entries != null) { // entries will be displayed when retrieved
+            Timber.d("Displaying cached data");
+            displayEntries();
+        }
     }
 
     public void checkboxClickedFor(Todo todo) {
