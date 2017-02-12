@@ -20,12 +20,10 @@ public class ListViewPresenter extends MvpPresenter<ListViewPresenter.ListView>
         implements GetTask.Caller {
 
     private Collection<Todo> entries;
-    private GetTask getTask;
     private Provider<PushTask> pushTasks;
 
     @Inject
     public ListViewPresenter(GetTask getTask, Provider<PushTask> pushTasks) {
-        this.getTask = getTask;
         this.pushTasks = pushTasks;
 
         getTask.execute(this);

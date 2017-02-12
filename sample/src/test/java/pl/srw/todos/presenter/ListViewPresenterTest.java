@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import java.util.Collection;
 
@@ -15,9 +16,9 @@ import pl.srw.todos.presenter.task.GetTask;
 import pl.srw.todos.presenter.task.PushTask;
 
 import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyCollectionOf;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -32,16 +33,13 @@ public class ListViewPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        sut = new ListViewPresenter(getTask, pushTaskProvider);
         MockitoAnnotations.initMocks(this);
+        Whitebox.setInternalState(sut, "view", view);
         when(pushTaskProvider.get()).thenReturn(pushTask);
     }
 
     @Test
-    public void onFirstBind_executeGetTask() throws Exception {
-        // WHEN
-        sut.onFirstBind();
-
+    public void constructor_executeGetTask() throws Exception {
         // THEN
         verify(getTask).execute(any(GetTask.Caller.class));
     }
@@ -68,12 +66,42 @@ public class ListViewPresenterTest {
     }
 
     @Test
-    public void onNewViewRestoreState_displayList() throws Exception {
+    public void onNewViewRestoreState_whenEntriesRetrieved_displayList() throws Exception {
+        // GIVEN
+        final Collection<Todo> collection = mock(Collection.class);
+        Whitebox.setInternalState(sut, "entries", collection);
+
         // WHEN
         sut.onNewViewRestoreState();
 
         // THEN
-        verify(view).showEntries(anyCollectionOf(Todo.class));
+        verify(view).showEntries(collection);
+    }
+
+    @Test
+    public void onDataRetrieved_afterOnNewRestoreState_displayListOnce() throws Exception {
+        // GIVEN
+        final Collection<Todo> collection = mock(Collection.class);
+
+        // WHEN
+        sut.onNewViewRestoreState();
+        sut.onDataRetrieved(collection);
+
+        // THEN
+        verify(view).showEntries(collection);
+    }
+
+    @Test
+    public void onDataRetrieved_beforeOnNewRestoreState_displayListTwice() throws Exception {
+        // GIVEN
+        final Collection<Todo> collection = mock(Collection.class);
+
+        // WHEN
+        sut.onDataRetrieved(collection);
+        sut.onNewViewRestoreState();
+
+        // THEN
+        verify(view, times(2)).showEntries(collection);
     }
 
     @Test
