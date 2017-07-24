@@ -1,7 +1,6 @@
 package pl.srw.mfvp;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import pl.srw.mfvp.di.component.MvpComponent;
