@@ -13,21 +13,42 @@ public class MultiplePresenterHandlingDelegate extends PresenterHandlingDelegate
     }
 
     @Override
-    public void onStart() {
+    public void onReady() {
         for (int i = 0; i < presenters.length; i++) {
             presenters[i].bind(view);
         }
     }
 
     @Override
-    public void onStop() {
+    public void onRestart() {
+        for (int i = 0; i < presenters.length; i++) {
+            presenters[i].onRestart(view);
+        }
+    }
+
+    @Override
+    public void onVisible() {
+        for (int i = 0; i < presenters.length; i++) {
+            presenters[i].onViewVisible(view);
+        }
+    }
+
+    @Override
+    public void onHidden() {
+        for (int i = 0; i < presenters.length; i++) {
+            presenters[i].onViewHidden(view);
+        }
+    }
+
+    @Override
+    public void onUnavailable() {
         for (int i = 0; i < presenters.length; i++) {
             presenters[i].unbind(view);
         }
     }
 
     @Override
-    public void onEnd() {
+    public void onFinish() {
         for (int i = 0; i < presenters.length; i++) {
             presenters[i].onFinish();
         }

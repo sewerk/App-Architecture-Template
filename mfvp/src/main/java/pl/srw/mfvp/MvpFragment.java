@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.View;
 
 import pl.srw.mfvp.presenter.PresenterOwner;
 import pl.srw.mfvp.view.delegate.LifeCycleListener;
@@ -23,6 +24,7 @@ public abstract class MvpFragment extends DialogFragment {
 
     private boolean isFinishing;
     private LifeCycleNotifier notifier = new LifeCycleNotifier();
+    private boolean wasStopped;
 
     @Override
     @CallSuper
@@ -31,22 +33,38 @@ public abstract class MvpFragment extends DialogFragment {
         injectDependencies();
         if (this instanceof PresenterOwner) {
             PresenterOwner presenterFragment = (PresenterOwner) this;
-            addListener(presenterFragment.createPresenterDelegate());
+            addLifecycleListener(presenterFragment.createPresenterDelegate());
         }
     }
 
     @Override
     @CallSuper
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        notifier.notifyViewReady();
+    }
+
+    @Override
+    @CallSuper
     public void onStart() {
+        if (wasStopped)
+            notifier.notifyViewRestarted(); // restart after stop might mean background-ing the app which is not necessary restart scenario
         super.onStart();
-        notifier.notifyOnStart();
+        notifier.notifyViewVisible();
     }
 
     @Override
     @CallSuper
     public void onStop() {
-        notifier.notifyOnStop();
+        notifier.notifyViewHidden();
         super.onStop();
+        wasStopped = true;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        notifier.notifyViewUnavailable();
     }
 
     @Override
@@ -79,7 +97,7 @@ public abstract class MvpFragment extends DialogFragment {
      * Add listener to this fragment lifecycle
      * @param listener    lifecycle listener
      */
-    public final void addListener(LifeCycleListener listener) {
+    public final void addLifecycleListener(LifeCycleListener listener) {
         notifier.register(listener);
     }
 
@@ -97,7 +115,7 @@ public abstract class MvpFragment extends DialogFragment {
 
     private void resetDependencies(boolean isFinishing) {
         if (DependencyComponentManager.getInstance().releaseComponentFor(this, isFinishing)) {
-            notifier.notifyOnEnd();
+            notifier.notifyFinishing();
         }
     }
 }

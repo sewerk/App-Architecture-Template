@@ -19,13 +19,18 @@ import timber.log.Timber;
 public class ListViewPresenter extends MvpPresenter<ListViewPresenter.ListView>
         implements GetTask.Caller {
 
+    private final GetTask getTask;
+    private final Provider<PushTask> pushTasks;
     private Collection<Todo> entries;
-    private Provider<PushTask> pushTasks;
 
     @Inject
     public ListViewPresenter(GetTask getTask, Provider<PushTask> pushTasks) {
+        this.getTask = getTask;
         this.pushTasks = pushTasks;
+    }
 
+    @Override
+    protected void onFirstBind() {
         getTask.execute(this);
     }
 
@@ -35,6 +40,11 @@ public class ListViewPresenter extends MvpPresenter<ListViewPresenter.ListView>
             Timber.d("Displaying cached data");
             displayEntries();
         }
+    }
+
+    @Override
+    protected void onRestart(ListView view) {
+        view.showEntries(entries); // there might be new entries when comming back from 'add' view
     }
 
     public void checkboxClickedFor(Todo todo) {

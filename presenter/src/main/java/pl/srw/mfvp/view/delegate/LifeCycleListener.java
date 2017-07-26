@@ -6,17 +6,34 @@ package pl.srw.mfvp.view.delegate;
 public interface LifeCycleListener {
 
     /**
-     * Reacts on onStart callback
+     * Reacts on view ready
      */
-    void onStart();
+    void onReady();
 
     /**
-     * Reacts on onStop callback
+     * Reacts on view restart
      */
-    void onStop();
+    void onRestart();
 
     /**
-     * Reacts on 'view went out of scope' callback
+     * Reacts on view visible to user
      */
-    void onEnd();
+    void onVisible();
+
+    /**
+     * Reacts on view hidden from user
+     */
+    void onHidden();
+
+    /**
+     * Reacts on view unavailable
+     */
+    void onUnavailable();
+
+    /**
+     * Reacts on view 'finishing'.
+     * View will no longer be available in current scope.
+     * This means cleanup can be done here, if necessary.
+     */
+    void onFinish();
 }

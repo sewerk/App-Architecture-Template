@@ -39,7 +39,10 @@ public class ListViewPresenterTest {
     }
 
     @Test
-    public void constructor_executeGetTask() throws Exception {
+    public void onFirstBind_executeGetTask() throws Exception {
+        // WHEN
+        sut.onFirstBind();
+
         // THEN
         verify(getTask).execute(any(GetTask.Caller.class));
     }
@@ -73,6 +76,19 @@ public class ListViewPresenterTest {
 
         // WHEN
         sut.onNewViewRestoreState();
+
+        // THEN
+        verify(view).showEntries(collection);
+    }
+
+    @Test
+    public void onRestart_refreshesEntriesOnList() throws Exception {
+        // GIVEN
+        final Collection<Todo> collection = mock(Collection.class);
+        Whitebox.setInternalState(sut, "entries", collection);
+
+        // WHEN
+        sut.onRestart(view);
 
         // THEN
         verify(view).showEntries(collection);

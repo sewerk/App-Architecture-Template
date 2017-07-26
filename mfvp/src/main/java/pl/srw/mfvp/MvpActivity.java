@@ -38,21 +38,35 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
         injectDependencies();
         if (this instanceof PresenterOwner) {
             PresenterOwner presenterActivity = (PresenterOwner) this;
-            addListener(presenterActivity.createPresenterDelegate());
+            addLifecycleListener(presenterActivity.createPresenterDelegate());
         }
+    }
+
+    @Override
+    @CallSuper
+    public void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        notifier.notifyViewReady();
+    }
+
+    @Override
+    @CallSuper
+    protected void onRestart() {
+        super.onRestart();
+        notifier.notifyViewRestarted();
     }
 
     @Override
     @CallSuper
     protected void onStart() {
         super.onStart();
-        notifier.notifyOnStart();
+        notifier.notifyViewVisible();
     }
 
     @Override
     @CallSuper
     protected void onStop() {
-        notifier.notifyOnStop();
+        notifier.notifyViewHidden();
         super.onStop();
     }
 
@@ -63,6 +77,7 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
             notifyStackedFragmentsActivityIsFinishing();
         }
         resetDependencies(isFinishing());
+        notifier.notifyViewUnavailable();
         super.onDestroy();
     }
 
@@ -81,7 +96,7 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
      * Add listener to this activity lifecycle
      * @param listener    lifecycle listener
      */
-    public final void addListener(LifeCycleListener listener) {
+    public final void addLifecycleListener(LifeCycleListener listener) {
         notifier.register(listener);
     }
 
@@ -187,7 +202,7 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
 
     private void resetDependencies(boolean isFinishing) {
         if (DependencyComponentManager.getInstance().releaseComponentFor(this, isFinishing)) {
-            notifier.notifyOnEnd();
+            notifier.notifyFinishing();
         }
     }
 }

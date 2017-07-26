@@ -13,17 +13,32 @@ public class SinglePresenterHandlingDelegate extends PresenterHandlingDelegate {
     }
 
     @Override
-    public void onStart() {
+    public void onReady() {
         presenter.bind(view);
     }
 
     @Override
-    public void onStop() {
+    public void onRestart() {
+        presenter.onRestart(view);
+    }
+
+    @Override
+    public void onVisible() {
+        presenter.onViewVisible(view);
+    }
+
+    @Override
+    public void onHidden() {
+        presenter.onViewHidden(view);
+    }
+
+    @Override
+    public void onUnavailable() {
         presenter.unbind(view);
     }
 
     @Override
-    public void onEnd() {
+    public void onFinish() {
         presenter.onFinish();
     }
 }

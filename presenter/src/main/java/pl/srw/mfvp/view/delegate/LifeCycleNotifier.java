@@ -18,21 +18,39 @@ public class LifeCycleNotifier {
         listeners.add(listener);
     }
 
-    public void notifyOnStart() {
+    public void notifyViewReady() {
         for (LifeCycleListener listener : listeners) {
-            listener.onStart();
+            listener.onReady();
         }
     }
 
-    public void notifyOnStop() {
+    public void notifyViewRestarted() {
         for (LifeCycleListener listener : listeners) {
-            listener.onStop();
+            listener.onRestart();
         }
     }
 
-    public void notifyOnEnd() {
+    public void notifyViewVisible() {
         for (LifeCycleListener listener : listeners) {
-            listener.onEnd();
+            listener.onVisible();
+        }
+    }
+
+    public void notifyViewHidden() {
+        for (LifeCycleListener listener : listeners) {
+            listener.onHidden();
+        }
+    }
+
+    public void notifyViewUnavailable() {
+        for (LifeCycleListener listener : listeners) {
+            listener.onUnavailable();
+        }
+    }
+
+    public void notifyFinishing() {
+        for (LifeCycleListener listener : listeners) {
+            listener.onFinish();
         }
     }
 }

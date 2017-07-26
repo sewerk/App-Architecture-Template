@@ -52,8 +52,8 @@ public class ListFragment extends MvpFragment
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        super.onViewCreated(view, savedInstanceState);
     }
 
     @Override

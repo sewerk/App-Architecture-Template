@@ -30,10 +30,6 @@ public abstract class MvpPresenter<V> {
      * @param view view to control
      */
     final void bind(V view) {
-        if (this.view != null) {
-            Timber.v("Concurrent view bind before previous unbind.");
-            firstBind = true;
-        }
         this.view = view;
         if (firstBind) {
             onFirstBind();
@@ -68,6 +64,27 @@ public abstract class MvpPresenter<V> {
      * Does additional work on second and every next bind
      */
     protected void onNewViewRestoreState() {
+    }
+
+    /**
+     * Does additional work when user goes back to the view
+     * @param view bind view
+     */
+    protected void onRestart(V view) {
+    }
+
+    /**
+     * Does additional work when view starts being visible to the user
+     * @param view bind view
+     */
+    protected void onViewVisible(V view) {
+    }
+
+    /**
+     * Does additional work when view stops being visible to the user
+     * @param view bind view
+     */
+    protected void onViewHidden(V view) {
     }
 
     /**
