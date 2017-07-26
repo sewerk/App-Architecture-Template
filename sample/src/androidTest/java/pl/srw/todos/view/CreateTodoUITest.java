@@ -11,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import pl.srw.todos.EspressoTestRule;
 import pl.srw.todos.R;
 
 import static android.support.test.espresso.Espresso.onView;
@@ -32,7 +33,7 @@ import static org.hamcrest.Matchers.instanceOf;
 public class CreateTodoUITest {
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityTestRule = new ActivityTestRule<>(MainActivity.class);
+    public ActivityTestRule<MainActivity> mActivityTestRule = new EspressoTestRule<>(MainActivity.class);
 
     @Test
     public void shouldShowElementOnListWhenCreated() {
