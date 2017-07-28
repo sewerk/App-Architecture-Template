@@ -15,6 +15,7 @@ public class SinglePresenterHandlingDelegate extends PresenterHandlingDelegate {
     @Override
     public void onReady() {
         presenter.bind(view);
+        isViewBind = true;
     }
 
     @Override
@@ -30,6 +31,7 @@ public class SinglePresenterHandlingDelegate extends PresenterHandlingDelegate {
     @Override
     public void onUnavailable() {
         presenter.unbind(view);
+        isViewBind = false;
     }
 
     @Override

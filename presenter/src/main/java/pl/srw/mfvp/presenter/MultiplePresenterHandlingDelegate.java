@@ -17,6 +17,7 @@ public class MultiplePresenterHandlingDelegate extends PresenterHandlingDelegate
         for (int i = 0; i < presenters.length; i++) {
             presenters[i].bind(view);
         }
+        isViewBind = true;
     }
 
     @Override
@@ -38,6 +39,7 @@ public class MultiplePresenterHandlingDelegate extends PresenterHandlingDelegate
         for (int i = 0; i < presenters.length; i++) {
             presenters[i].unbind(view);
         }
+        isViewBind = false;
     }
 
     @Override

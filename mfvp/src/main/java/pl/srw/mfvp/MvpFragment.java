@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 
+import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
 import pl.srw.mfvp.presenter.PresenterOwner;
 import pl.srw.mfvp.view.delegate.ViewStateListener;
 import pl.srw.mfvp.view.delegate.ViewStateNotifier;
@@ -24,6 +25,7 @@ public abstract class MvpFragment extends DialogFragment {
 
     private boolean isFinishing;
     private ViewStateNotifier notifier = new ViewStateNotifier();
+    private PresenterHandlingDelegate presenterDelegate;
 
     @Override
     @CallSuper
@@ -32,7 +34,8 @@ public abstract class MvpFragment extends DialogFragment {
         injectDependencies();
         if (this instanceof PresenterOwner) {
             PresenterOwner presenterFragment = (PresenterOwner) this;
-            addStateListener(presenterFragment.createPresenterDelegate());
+            presenterDelegate = presenterFragment.createPresenterDelegate();
+            addStateListener(presenterDelegate);
         }
     }
 
@@ -47,7 +50,16 @@ public abstract class MvpFragment extends DialogFragment {
     @CallSuper
     public void onStart() {
         super.onStart();
-        notifier.notifyViewVisible();
+        if (!presenterDelegate.isViewBind()) {
+            notifier.notifyViewReady();
+        }
+        notifier.notifyViewVisible(); // TODO
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        notifier.notifyViewUnavailable();
     }
 
     @Override

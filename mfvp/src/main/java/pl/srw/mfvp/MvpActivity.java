@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
+import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
 import pl.srw.mfvp.presenter.PresenterOwner;
 import pl.srw.mfvp.di.component.MvpComponent;
 import pl.srw.mfvp.view.delegate.ViewStateListener;
@@ -29,6 +30,7 @@ import timber.log.Timber;
 public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActivity {
 
     private ViewStateNotifier notifier = new ViewStateNotifier();
+    private PresenterHandlingDelegate presenterDelegate;
 
     @Override
     @CallSuper
@@ -38,15 +40,18 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
         injectDependencies();
         if (this instanceof PresenterOwner) {
             PresenterOwner presenterActivity = (PresenterOwner) this;
-            addStateListener(presenterActivity.createPresenterDelegate());
+            presenterDelegate = presenterActivity.createPresenterDelegate();
+            addStateListener(presenterDelegate);
         }
+        notifier.notifyViewReady();
     }
 
     @Override
-    @CallSuper
-    public void onPostCreate(@Nullable Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
-        notifier.notifyViewReady();
+    protected void onRestart() {
+        super.onRestart();
+        if (!presenterDelegate.isViewBind()) {
+            notifier.notifyViewReady();
+        }
     }
 
     @Override
@@ -54,6 +59,12 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
     protected void onStart() {
         super.onStart();
         notifier.notifyViewVisible();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        notifier.notifyViewUnavailable();
     }
 
     @Override
@@ -69,8 +80,8 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
         if (isFinishing()) {
             notifyStackedFragmentsActivityIsFinishing();
         }
-        resetDependencies(isFinishing());
         notifier.notifyViewUnavailable();
+        resetDependencies(isFinishing());
         super.onDestroy();
     }
 
