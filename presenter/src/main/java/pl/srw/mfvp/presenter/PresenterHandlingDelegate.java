@@ -1,11 +1,11 @@
 package pl.srw.mfvp.presenter;
 
-import pl.srw.mfvp.view.delegate.LifeCycleListener;
+import pl.srw.mfvp.view.delegate.ViewStateListener;
 
 /**
- * Delegates lifecycle events to associated presenter
+ * Delegates view state events to associated presenter
  */
-public abstract class PresenterHandlingDelegate implements LifeCycleListener {
+public abstract class PresenterHandlingDelegate implements ViewStateListener {
 
     protected final PresenterOwner view;
 

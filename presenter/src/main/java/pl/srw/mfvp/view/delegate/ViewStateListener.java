@@ -3,7 +3,7 @@ package pl.srw.mfvp.view.delegate;
 /**
  * Component lifecycle listener
  */
-public interface LifeCycleListener {
+public interface ViewStateListener {
 
     /**
      * Reacts on view ready

@@ -12,8 +12,8 @@ import java.util.List;
 
 import pl.srw.mfvp.presenter.PresenterOwner;
 import pl.srw.mfvp.di.component.MvpComponent;
-import pl.srw.mfvp.view.delegate.LifeCycleListener;
-import pl.srw.mfvp.view.delegate.LifeCycleNotifier;
+import pl.srw.mfvp.view.delegate.ViewStateListener;
+import pl.srw.mfvp.view.delegate.ViewStateNotifier;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 import timber.log.Timber;
 
@@ -28,7 +28,7 @@ import timber.log.Timber;
  */
 public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActivity {
 
-    private LifeCycleNotifier notifier = new LifeCycleNotifier();
+    private ViewStateNotifier notifier = new ViewStateNotifier();
 
     @Override
     @CallSuper
@@ -38,7 +38,7 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
         injectDependencies();
         if (this instanceof PresenterOwner) {
             PresenterOwner presenterActivity = (PresenterOwner) this;
-            addLifecycleListener(presenterActivity.createPresenterDelegate());
+            addStateListener(presenterActivity.createPresenterDelegate());
         }
     }
 
@@ -94,9 +94,9 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
 
     /**
      * Add listener to this activity lifecycle
-     * @param listener    lifecycle listener
+     * @param listener    view state listener
      */
-    public final void addLifecycleListener(LifeCycleListener listener) {
+    public final void addStateListener(ViewStateListener listener) {
         notifier.register(listener);
     }
 

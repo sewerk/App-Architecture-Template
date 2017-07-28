@@ -1,7 +1,7 @@
 package pl.srw.mfvp.presenter;
 
 /**
- * Delegates associated owner lifecycle to single presenter
+ * Delegates associated owner state to single presenter
  */
 public class SinglePresenterHandlingDelegate extends PresenterHandlingDelegate {
 

@@ -6,50 +6,50 @@ import java.util.List;
 /**
  * Notifies registered listeners about lifecycle events
  */
-public class LifeCycleNotifier {
+public class ViewStateNotifier {
 
-    private List<LifeCycleListener> listeners;
+    private List<ViewStateListener> listeners;
 
-    public LifeCycleNotifier() {
+    public ViewStateNotifier() {
         this.listeners = new ArrayList<>(1);
     }
 
-    public void register(LifeCycleListener listener) {
+    public void register(ViewStateListener listener) {
         listeners.add(listener);
     }
 
     public void notifyViewReady() {
-        for (LifeCycleListener listener : listeners) {
+        for (ViewStateListener listener : listeners) {
             listener.onReady();
         }
     }
 
     public void notifyViewRestarted() {
-        for (LifeCycleListener listener : listeners) {
+        for (ViewStateListener listener : listeners) {
             listener.onRestart();
         }
     }
 
     public void notifyViewVisible() {
-        for (LifeCycleListener listener : listeners) {
+        for (ViewStateListener listener : listeners) {
             listener.onVisible();
         }
     }
 
     public void notifyViewHidden() {
-        for (LifeCycleListener listener : listeners) {
+        for (ViewStateListener listener : listeners) {
             listener.onHidden();
         }
     }
 
     public void notifyViewUnavailable() {
-        for (LifeCycleListener listener : listeners) {
+        for (ViewStateListener listener : listeners) {
             listener.onUnavailable();
         }
     }
 
     public void notifyFinishing() {
-        for (LifeCycleListener listener : listeners) {
+        for (ViewStateListener listener : listeners) {
             listener.onFinish();
         }
     }

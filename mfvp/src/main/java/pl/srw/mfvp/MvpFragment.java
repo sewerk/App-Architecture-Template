@@ -8,8 +8,8 @@ import android.support.v4.app.DialogFragment;
 import android.view.View;
 
 import pl.srw.mfvp.presenter.PresenterOwner;
-import pl.srw.mfvp.view.delegate.LifeCycleListener;
-import pl.srw.mfvp.view.delegate.LifeCycleNotifier;
+import pl.srw.mfvp.view.delegate.ViewStateListener;
+import pl.srw.mfvp.view.delegate.ViewStateNotifier;
 import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 
@@ -23,7 +23,7 @@ import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 public abstract class MvpFragment extends DialogFragment {
 
     private boolean isFinishing;
-    private LifeCycleNotifier notifier = new LifeCycleNotifier();
+    private ViewStateNotifier notifier = new ViewStateNotifier();
     private boolean wasStopped;
 
     @Override
@@ -33,7 +33,7 @@ public abstract class MvpFragment extends DialogFragment {
         injectDependencies();
         if (this instanceof PresenterOwner) {
             PresenterOwner presenterFragment = (PresenterOwner) this;
-            addLifecycleListener(presenterFragment.createPresenterDelegate());
+            addStateListener(presenterFragment.createPresenterDelegate());
         }
     }
 
@@ -95,9 +95,9 @@ public abstract class MvpFragment extends DialogFragment {
 
     /**
      * Add listener to this fragment lifecycle
-     * @param listener    lifecycle listener
+     * @param listener    view state listener
      */
-    public final void addLifecycleListener(LifeCycleListener listener) {
+    public final void addStateListener(ViewStateListener listener) {
         notifier.register(listener);
     }
 

@@ -1,7 +1,7 @@
 package pl.srw.mfvp.presenter;
 
 /**
- * Delegates associated owner lifecycle to multiple presenters
+ * Delegates associated owner state to multiple presenters
  */
 public class MultiplePresenterHandlingDelegate extends PresenterHandlingDelegate {
 
