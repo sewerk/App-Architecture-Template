@@ -42,11 +42,6 @@ public class ListViewPresenter extends MvpPresenter<ListViewPresenter.ListView>
         }
     }
 
-    @Override
-    protected void onRestart(ListView view) {
-        view.showEntries(entries); // there might be new entries when comming back from 'add' view
-    }
-
     public void checkboxClickedFor(Todo todo) {
         pushTasks.get().execute(new Todo(!todo.isDone(), todo.getText()));
     }

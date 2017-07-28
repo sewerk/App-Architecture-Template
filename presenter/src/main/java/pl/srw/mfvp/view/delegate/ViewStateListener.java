@@ -11,11 +11,6 @@ public interface ViewStateListener {
     void onReady();
 
     /**
-     * Reacts on view restart
-     */
-    void onRestart();
-
-    /**
      * Reacts on view visible to user
      */
     void onVisible();

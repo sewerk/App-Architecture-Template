@@ -20,13 +20,6 @@ public class MultiplePresenterHandlingDelegate extends PresenterHandlingDelegate
     }
 
     @Override
-    public void onRestart() {
-        for (int i = 0; i < presenters.length; i++) {
-            presenters[i].onRestart(view);
-        }
-    }
-
-    @Override
     public void onVisible() {
         for (int i = 0; i < presenters.length; i++) {
             presenters[i].onViewVisible(view);

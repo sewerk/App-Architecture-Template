@@ -18,11 +18,6 @@ public class SinglePresenterHandlingDelegate extends PresenterHandlingDelegate {
     }
 
     @Override
-    public void onRestart() {
-        presenter.onRestart(view);
-    }
-
-    @Override
     public void onVisible() {
         presenter.onViewVisible(view);
     }

@@ -82,19 +82,6 @@ public class ListViewPresenterTest {
     }
 
     @Test
-    public void onRestart_refreshesEntriesOnList() throws Exception {
-        // GIVEN
-        final Collection<Todo> collection = mock(Collection.class);
-        Whitebox.setInternalState(sut, "entries", collection);
-
-        // WHEN
-        sut.onRestart(view);
-
-        // THEN
-        verify(view).showEntries(collection);
-    }
-
-    @Test
     public void onDataRetrieved_afterOnNewRestoreState_displayListOnce() throws Exception {
         // GIVEN
         final Collection<Todo> collection = mock(Collection.class);

@@ -24,12 +24,6 @@ public class ViewStateNotifier {
         }
     }
 
-    public void notifyViewRestarted() {
-        for (ViewStateListener listener : listeners) {
-            listener.onRestart();
-        }
-    }
-
     public void notifyViewVisible() {
         for (ViewStateListener listener : listeners) {
             listener.onVisible();

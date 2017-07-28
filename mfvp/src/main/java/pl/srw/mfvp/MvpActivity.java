@@ -51,13 +51,6 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
 
     @Override
     @CallSuper
-    protected void onRestart() {
-        super.onRestart();
-        notifier.notifyViewRestarted();
-    }
-
-    @Override
-    @CallSuper
     protected void onStart() {
         super.onStart();
         notifier.notifyViewVisible();

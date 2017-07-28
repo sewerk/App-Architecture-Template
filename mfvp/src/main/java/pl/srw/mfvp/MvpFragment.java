@@ -24,7 +24,6 @@ public abstract class MvpFragment extends DialogFragment {
 
     private boolean isFinishing;
     private ViewStateNotifier notifier = new ViewStateNotifier();
-    private boolean wasStopped;
 
     @Override
     @CallSuper
@@ -47,8 +46,6 @@ public abstract class MvpFragment extends DialogFragment {
     @Override
     @CallSuper
     public void onStart() {
-        if (wasStopped)
-            notifier.notifyViewRestarted(); // restart after stop might mean background-ing the app which is not necessary restart scenario
         super.onStart();
         notifier.notifyViewVisible();
     }
@@ -58,7 +55,6 @@ public abstract class MvpFragment extends DialogFragment {
     public void onStop() {
         notifier.notifyViewHidden();
         super.onStop();
-        wasStopped = true;
     }
 
     @Override

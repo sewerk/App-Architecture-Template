@@ -67,13 +67,6 @@ public abstract class MvpPresenter<V> {
     }
 
     /**
-     * Does additional work when user goes back to the view
-     * @param view bind view
-     */
-    protected void onRestart(V view) {
-    }
-
-    /**
      * Does additional work when view starts being visible to the user
      * @param view bind view
      */
