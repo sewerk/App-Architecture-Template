@@ -9,8 +9,6 @@ import android.view.View;
 
 import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
 import pl.srw.mfvp.presenter.PresenterOwner;
-import pl.srw.mfvp.view.delegate.ViewStateListener;
-import pl.srw.mfvp.view.delegate.ViewStateNotifier;
 import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 
@@ -24,7 +22,6 @@ import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 public abstract class MvpFragment extends DialogFragment {
 
     private boolean isFinishing;
-    private ViewStateNotifier notifier = new ViewStateNotifier();
     private PresenterHandlingDelegate presenterDelegate;
 
     @Override
@@ -35,7 +32,6 @@ public abstract class MvpFragment extends DialogFragment {
         if (this instanceof PresenterOwner) {
             PresenterOwner presenterFragment = (PresenterOwner) this;
             presenterDelegate = presenterFragment.createPresenterDelegate();
-            addStateListener(presenterDelegate);
         }
     }
 
@@ -43,7 +39,7 @@ public abstract class MvpFragment extends DialogFragment {
     @CallSuper
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        notifier.notifyViewReady();
+        presenterDelegate.onReady();
     }
 
     @Override
@@ -51,43 +47,42 @@ public abstract class MvpFragment extends DialogFragment {
     public void onStart() {
         super.onStart();
         if (!presenterDelegate.isViewBind()) {
-            notifier.notifyViewReady();
+            presenterDelegate.onReady();
         }
-        notifier.notifyViewVisible(); // TODO
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        notifier.notifyViewUnavailable();
     }
 
     @Override
     @CallSuper
-    public void onStop() {
-        notifier.notifyViewHidden();
-        super.onStop();
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        presenterDelegate.onUnavailable();
     }
 
     @Override
+    @CallSuper
     public void onDestroyView() {
         super.onDestroyView();
-        notifier.notifyViewUnavailable();
+        if (presenterDelegate.isViewBind()) {
+            presenterDelegate.onUnavailable();
+        }
     }
 
     @Override
+    @CallSuper
     public void onDestroy() {
         resetDependencies(isFinishing);
         super.onDestroy();
     }
 
     @Override
+    @CallSuper
     public void onCancel(DialogInterface dialog) {
         endOfScope();
         super.onCancel(dialog);
     }
 
     @Override
+    @CallSuper
     public void dismiss() {
         endOfScope();
         super.dismiss();
@@ -99,14 +94,6 @@ public abstract class MvpFragment extends DialogFragment {
 
     MvpActivity getMvpActivity() {
         return (MvpActivity) super.getActivity();
-    }
-
-    /**
-     * Add listener to this fragment lifecycle
-     * @param listener    view state listener
-     */
-    public final void addStateListener(ViewStateListener listener) {
-        notifier.register(listener);
     }
 
     private void injectDependencies() {
@@ -123,7 +110,7 @@ public abstract class MvpFragment extends DialogFragment {
 
     private void resetDependencies(boolean isFinishing) {
         if (DependencyComponentManager.getInstance().releaseComponentFor(this, isFinishing)) {
-            notifier.notifyFinishing();
+            presenterDelegate.onFinish();
         }
     }
 }

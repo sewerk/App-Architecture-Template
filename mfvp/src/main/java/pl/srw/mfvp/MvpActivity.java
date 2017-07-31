@@ -13,8 +13,6 @@ import java.util.List;
 import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
 import pl.srw.mfvp.presenter.PresenterOwner;
 import pl.srw.mfvp.di.component.MvpComponent;
-import pl.srw.mfvp.view.delegate.ViewStateListener;
-import pl.srw.mfvp.view.delegate.ViewStateNotifier;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 import timber.log.Timber;
 
@@ -29,7 +27,6 @@ import timber.log.Timber;
  */
 public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActivity {
 
-    private ViewStateNotifier notifier = new ViewStateNotifier();
     private PresenterHandlingDelegate presenterDelegate;
 
     @Override
@@ -41,37 +38,24 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
         if (this instanceof PresenterOwner) {
             PresenterOwner presenterActivity = (PresenterOwner) this;
             presenterDelegate = presenterActivity.createPresenterDelegate();
-            addStateListener(presenterDelegate);
         }
-        notifier.notifyViewReady();
+        presenterDelegate.onReady();
     }
 
     @Override
+    @CallSuper
     protected void onRestart() {
         super.onRestart();
         if (!presenterDelegate.isViewBind()) {
-            notifier.notifyViewReady();
+            presenterDelegate.onReady();
         }
     }
 
     @Override
     @CallSuper
-    protected void onStart() {
-        super.onStart();
-        notifier.notifyViewVisible();
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        notifier.notifyViewUnavailable();
-    }
-
-    @Override
-    @CallSuper
-    protected void onStop() {
-        notifier.notifyViewHidden();
-        super.onStop();
+        presenterDelegate.onUnavailable();
     }
 
     @Override
@@ -80,7 +64,9 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
         if (isFinishing()) {
             notifyStackedFragmentsActivityIsFinishing();
         }
-        notifier.notifyViewUnavailable();
+        if (presenterDelegate.isViewBind()) {
+            presenterDelegate.onUnavailable();
+        }
         resetDependencies(isFinishing());
         super.onDestroy();
     }
@@ -94,14 +80,6 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
             notifyCurrentFragmentIsFinishing();
         }
         super.onBackPressed();
-    }
-
-    /**
-     * Add listener to this activity lifecycle
-     * @param listener    view state listener
-     */
-    public final void addStateListener(ViewStateListener listener) {
-        notifier.register(listener);
     }
 
     /**
@@ -206,7 +184,7 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
 
     private void resetDependencies(boolean isFinishing) {
         if (DependencyComponentManager.getInstance().releaseComponentFor(this, isFinishing)) {
-            notifier.notifyFinishing();
+            presenterDelegate.onFinish();
         }
     }
 }

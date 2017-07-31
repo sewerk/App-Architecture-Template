@@ -19,16 +19,6 @@ public class SinglePresenterHandlingDelegate extends PresenterHandlingDelegate {
     }
 
     @Override
-    public void onVisible() {
-        presenter.onViewVisible(view);
-    }
-
-    @Override
-    public void onHidden() {
-        presenter.onViewHidden(view);
-    }
-
-    @Override
     public void onUnavailable() {
         presenter.unbind(view);
         isViewBind = false;

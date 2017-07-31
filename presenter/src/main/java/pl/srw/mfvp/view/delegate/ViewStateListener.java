@@ -11,16 +11,6 @@ public interface ViewStateListener {
     void onReady();
 
     /**
-     * Reacts on view visible to user
-     */
-    void onVisible();
-
-    /**
-     * Reacts on view hidden from user
-     */
-    void onHidden();
-
-    /**
      * Reacts on view unavailable
      */
     void onUnavailable();
