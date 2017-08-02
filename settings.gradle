@@ -1,1 +1,1 @@
-include ':sample', ':mfvp', ':presenter'
+include ':sample', ':mfvp'
