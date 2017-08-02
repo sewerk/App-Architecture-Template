@@ -3,9 +3,9 @@ package pl.srw.mfvp;
 import java.util.HashMap;
 import java.util.Map;
 
-import pl.srw.mfvp.di.component.MvpComponent;
-import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
-import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
+import pl.srw.mfvp.di.MvpComponent;
+import pl.srw.mfvp.di.MvpActivityScopedFragment;
+import pl.srw.mfvp.di.MvpFragmentScopedFragment;
 import timber.log.Timber;
 
 /**

@@ -17,7 +17,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import pl.srw.mfvp.MvpFragment;
-import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
+import pl.srw.mfvp.di.MvpActivityScopedFragment;
 import pl.srw.todos.R;
 import pl.srw.todos.di.component.MainActivityComponent;
 import pl.srw.todos.model.Todo;

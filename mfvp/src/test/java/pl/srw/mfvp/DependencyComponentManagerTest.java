@@ -6,9 +6,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import pl.srw.mfvp.di.component.MvpComponent;
-import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
-import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
+import pl.srw.mfvp.di.MvpComponent;
+import pl.srw.mfvp.di.MvpActivityScopedFragment;
+import pl.srw.mfvp.di.MvpFragmentScopedFragment;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

@@ -2,6 +2,7 @@ package pl.srw.mfvp;
 
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -11,13 +12,15 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
 import org.mockito.internal.util.reflection.Whitebox;
 
-import pl.srw.mfvp.di.component.MvpComponent;
-import pl.srw.mfvp.presenter.MvpPresenter;
-import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
-import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
+import java.util.LinkedList;
+
+import pl.srw.mfvp.di.MvpComponent;
+import pl.srw.mfvp.di.MvpActivityScopedFragment;
+import pl.srw.mfvp.di.MvpFragmentScopedFragment;
 
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class MvpFragmentTest {
@@ -127,21 +130,38 @@ public class MvpFragmentTest {
     }
 
     @Test
-    @Ignore // TODO
-    public void onStart_bindPresenter() throws Exception {
+    public void onViewCreated_whenPresenterAttached_bindPresenter() throws Exception {
         // GIVEN
-        final MvpPresenter presenter = mock(MvpPresenter.class);
-
-        // WHEN
+        final MvpPresenter<TestActivityScopedMvpFragment> presenter = mock(MvpPresenter.class);
+        Whitebox.setInternalState(presenter, "changes", new LinkedList<>());
         sut.attachPresenter(presenter);
 
+        // WHEN
+        sut.onViewCreated(mock(View.class), null);
+
         // THEN
-//        verify(presenter).bind(sut);
+        verify(presenter).bind(sut);
     }
 
     @Test
     @Ignore // TODO
-    public void onStop_unbindPresenter() throws Exception {
+    public void onStart_whenViewNotBind_bindPresenter() throws Exception {
+        // GIVEN
+        // WHEN
+        // THEN
+    }
+
+    @Test
+    @Ignore // TODO
+    public void onSaveInstanceState_unbindPresenter() throws Exception {
+        // GIVEN
+        // WHEN
+        // THEN
+    }
+
+    @Test
+    @Ignore // TODO
+    public void onDestroyView_whenViewBind_unbindPresenter() throws Exception {
         // GIVEN
         // WHEN
         // THEN

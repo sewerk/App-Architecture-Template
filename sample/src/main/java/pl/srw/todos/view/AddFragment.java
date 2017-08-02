@@ -14,7 +14,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import pl.srw.mfvp.MvpFragment;
-import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
+import pl.srw.mfvp.di.MvpFragmentScopedFragment;
 import pl.srw.todos.R;
 import pl.srw.todos.di.component.AddFragmentComponent;
 import pl.srw.todos.di.component.MainActivityComponent;

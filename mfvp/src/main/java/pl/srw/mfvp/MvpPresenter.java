@@ -1,4 +1,4 @@
-package pl.srw.mfvp.presenter;
+package pl.srw.mfvp;
 
 import android.support.annotation.CallSuper;
 
@@ -64,20 +64,6 @@ public abstract class MvpPresenter<V> {
      * Does additional work on second and every next bind
      */
     protected void onNewViewRestoreState() {
-    }
-
-    /**
-     * Does additional work when view starts being visible to the user
-     * @param view bind view
-     */
-    protected void onViewVisible(V view) {
-    }
-
-    /**
-     * Does additional work when view stops being visible to the user
-     * @param view bind view
-     */
-    protected void onViewHidden(V view) {
     }
 
     /**

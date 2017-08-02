@@ -9,10 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
-import pl.srw.mfvp.di.component.MvpComponent;
-import pl.srw.mfvp.presenter.MvpPresenter;
-import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
-import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
+import pl.srw.mfvp.di.MvpComponent;
+import pl.srw.mfvp.di.MvpFragmentScopedFragment;
 import timber.log.Timber;
 
 /**

@@ -10,13 +10,14 @@ import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.Spy;
+import org.mockito.internal.util.reflection.Whitebox;
 
 import java.util.Collections;
+import java.util.LinkedList;
 
-import pl.srw.mfvp.di.component.MvpComponent;
-import pl.srw.mfvp.presenter.MvpPresenter;
-import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
-import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
+import pl.srw.mfvp.di.MvpComponent;
+import pl.srw.mfvp.di.MvpActivityScopedFragment;
+import pl.srw.mfvp.di.MvpFragmentScopedFragment;
 
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyInt;
@@ -168,20 +169,37 @@ public class MvpActivityTest {
     }
 
     @Test
-    @Ignore // TODO
     public void attachPresenter_bindPresenter() throws Exception {
         // GIVEN
-        final MvpPresenter presenter = mock(MvpPresenter.class);
+        MvpPresenter<TestMvpActivity> presenter = mock(MvpPresenter.class);
+        Whitebox.setInternalState(presenter, "changes", new LinkedList<>());
+
         // WHEN
         sut.attachPresenter(presenter);
 
         // THEN
-//        verify(presenter).bind(sut);
+        verify(presenter).bind(sut);
     }
 
     @Test
     @Ignore // TODO
-    public void onStop_unbindPresenter() throws Exception {
+    public void onRestart_whenViewNotBind_bindPresenter() throws Exception {
+        // GIVEN
+        // WHEN
+        // THEN
+    }
+
+    @Test
+    @Ignore // TODO
+    public void onSaveInstanceState_unbindPresenter() throws Exception {
+        // GIVEN
+        // WHEN
+        // THEN
+    }
+
+    @Test
+    @Ignore // TODO
+    public void onDestroy_whenViewBind_unbindPresenter() throws Exception {
         // GIVEN
         // WHEN
         // THEN

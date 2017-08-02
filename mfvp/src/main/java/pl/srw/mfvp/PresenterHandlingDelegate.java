@@ -1,4 +1,4 @@
-package pl.srw.mfvp.presenter;
+package pl.srw.mfvp;
 
 /**
  * Delegates view state events to associated presenter
@@ -11,36 +11,36 @@ public class PresenterHandlingDelegate<V> {
 
     private boolean isViewBind;
 
-    public PresenterHandlingDelegate(V view) {
+    PresenterHandlingDelegate(V view) {
         this(view, new MvpPresenter[0]);
     }
 
-    public PresenterHandlingDelegate(V view, MvpPresenter<V>... presenter) {
+    PresenterHandlingDelegate(V view, MvpPresenter<V>... presenter) {
         this.view = view;
         this.presenters = presenter;
     }
 
-    public void onReady() {
+    void onReady() {
         for (int i = 0; i < presenters.length; i++) {
             presenters[i].bind(view);
         }
         isViewBind = true;
     }
 
-    public void onUnavailable() {
+    void onUnavailable() {
         for (int i = 0; i < presenters.length; i++) {
             presenters[i].unbind(view);
         }
         isViewBind = false;
     }
 
-    public void onFinish() {
+    void onFinish() {
         for (int i = 0; i < presenters.length; i++) {
             presenters[i].onFinish();
         }
     }
 
-    public boolean isViewBind() {
+    boolean isViewBind() {
         return isViewBind;
     }
 }

@@ -1,4 +1,4 @@
-package pl.srw.mfvp.di.component;
+package pl.srw.mfvp.di;
 
 /**
  * Dependency injection component. Injects references to related object.

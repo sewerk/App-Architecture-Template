@@ -1,4 +1,4 @@
-package pl.srw.mfvp.presenter;
+package pl.srw.mfvp;
 
 import org.junit.Before;
 import org.junit.Test;

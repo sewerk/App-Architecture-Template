@@ -7,10 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 
-import pl.srw.mfvp.presenter.MvpPresenter;
-import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
-import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
-import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
+import pl.srw.mfvp.di.MvpActivityScopedFragment;
+import pl.srw.mfvp.di.MvpFragmentScopedFragment;
 
 /**
  * Parent class for fragments-view in MVP model.

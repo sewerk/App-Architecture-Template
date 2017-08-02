@@ -1,8 +1,7 @@
-package pl.srw.mfvp.view.fragment;
+package pl.srw.mfvp.di;
 
 import pl.srw.mfvp.MvpActivity;
 import pl.srw.mfvp.MvpFragment;
-import pl.srw.mfvp.di.component.MvpComponent;
 
 /**
  * Fragment depending on own {@link MvpComponent}
