@@ -121,7 +121,7 @@ public class MvpPresenterTest {
     }
 
     @Test
-    public void nextViewBindBeforeFirstUnbindCallsOnFirstBind() throws Exception {
+    public void nextViewBindBeforeFirstUnbindCallsOnNewViewRestoreState() throws Exception {
         // GIVEN
         sut = spy(sut);
         TestView view1 = view;
@@ -132,7 +132,7 @@ public class MvpPresenterTest {
         sut.bind(view2);
 
         // THEN
-        verify(sut, times(2)).onFirstBind();
+        verify(sut).onNewViewRestoreState();
     }
 
     @Test

@@ -12,6 +12,7 @@ import org.mockito.Spy;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import pl.srw.mfvp.di.component.MvpComponent;
+import pl.srw.mfvp.presenter.MvpPresenter;
 import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 
@@ -129,8 +130,13 @@ public class MvpFragmentTest {
     @Ignore // TODO
     public void onStart_bindPresenter() throws Exception {
         // GIVEN
+        final MvpPresenter presenter = mock(MvpPresenter.class);
+
         // WHEN
+        sut.attachPresenter(presenter);
+
         // THEN
+//        verify(presenter).bind(sut);
     }
 
     @Test

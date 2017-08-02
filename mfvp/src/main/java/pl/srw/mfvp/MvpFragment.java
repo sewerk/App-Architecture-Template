@@ -7,8 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.View;
 
+import pl.srw.mfvp.presenter.MvpPresenter;
 import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
-import pl.srw.mfvp.presenter.PresenterOwner;
 import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 
@@ -17,22 +17,17 @@ import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
  * Features:
  *  - dependency injection is done every time fragment is created
  *  - releasing dependencies depends on associated scope component
- *  - lifecycle events will be communicated to added listeners
  */
 public abstract class MvpFragment extends DialogFragment {
 
     private boolean isFinishing;
-    private PresenterHandlingDelegate presenterDelegate;
+    private PresenterHandlingDelegate presenterDelegate = new PresenterHandlingDelegate(this);
 
     @Override
     @CallSuper
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         injectDependencies();
-        if (this instanceof PresenterOwner) {
-            PresenterOwner presenterFragment = (PresenterOwner) this;
-            presenterDelegate = presenterFragment.createPresenterDelegate();
-        }
     }
 
     @Override
@@ -86,6 +81,15 @@ public abstract class MvpFragment extends DialogFragment {
     public void dismiss() {
         endOfScope();
         super.dismiss();
+    }
+
+    /**
+     * Attach presenter to this view so that in can be bind/unbind when needed
+     * Should be called in {@link #onCreate}
+     * @param presenters at least one presenter
+     */
+    protected void attachPresenter(MvpPresenter... presenters) {
+        presenterDelegate = new PresenterHandlingDelegate(this, presenters);
     }
 
     void endOfScope() {

@@ -14,6 +14,7 @@ import org.mockito.Spy;
 import java.util.Collections;
 
 import pl.srw.mfvp.di.component.MvpComponent;
+import pl.srw.mfvp.presenter.MvpPresenter;
 import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 
@@ -168,10 +169,14 @@ public class MvpActivityTest {
 
     @Test
     @Ignore // TODO
-    public void onStart_bindPresenter() throws Exception {
+    public void attachPresenter_bindPresenter() throws Exception {
         // GIVEN
+        final MvpPresenter presenter = mock(MvpPresenter.class);
         // WHEN
+        sut.attachPresenter(presenter);
+
         // THEN
+//        verify(presenter).bind(sut);
     }
 
     @Test
@@ -206,11 +211,6 @@ public class MvpActivityTest {
         @Override
         public MvpComponent prepareComponent() {
             return mock(MvpComponent.class);
-        }
-
-        @Override
-        protected int getContentLayoutId() {
-            return 0;
         }
     }
 }

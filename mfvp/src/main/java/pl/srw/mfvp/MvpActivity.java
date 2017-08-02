@@ -2,7 +2,6 @@ package pl.srw.mfvp;
 
 import android.os.Bundle;
 import android.support.annotation.CallSuper;
-import android.support.annotation.LayoutRes;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,9 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 
 import java.util.List;
 
-import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
-import pl.srw.mfvp.presenter.PresenterOwner;
 import pl.srw.mfvp.di.component.MvpComponent;
+import pl.srw.mfvp.presenter.MvpPresenter;
+import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
 import pl.srw.mfvp.view.fragment.MvpFragmentScopedFragment;
 import timber.log.Timber;
 
@@ -21,25 +20,18 @@ import timber.log.Timber;
  * Features:
  *  - dependency injection is done every time activity is created
  *  - releasing dependencies happens when activity is finishing
- *  - lifecycle events will be communicated to added listeners
  *  - provide methods for fragment management to manage scoping
  * See also {@link pl.srw.mfvp.di.scope.RetainActivityScope}
  */
 public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActivity {
 
-    private PresenterHandlingDelegate presenterDelegate;
+    private PresenterHandlingDelegate presenterDelegate = new PresenterHandlingDelegate(this);
 
     @Override
     @CallSuper
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(getContentLayoutId());
         injectDependencies();
-        if (this instanceof PresenterOwner) {
-            PresenterOwner presenterActivity = (PresenterOwner) this;
-            presenterDelegate = presenterActivity.createPresenterDelegate();
-        }
-        presenterDelegate.onReady();
     }
 
     @Override
@@ -83,18 +75,22 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
     }
 
     /**
+     * Attach presenter to this view so that in can be bind/unbind when needed.
+     * Should be called in {@link #onCreate}
+     * @param presenters at least one presenter
+     */
+    protected void attachPresenter(MvpPresenter... presenters) {
+        presenterDelegate = new PresenterHandlingDelegate(this, presenters);
+        presenterDelegate.onReady();
+    }
+
+    /**
      * Provides associated dependency component.
      * Component instance will be used to inject dependencies to this activity
      * and hold them according to scope.
      * @return component instance
      */
     protected abstract C prepareComponent();
-
-    /**
-     * Provides content layout resource id
-     * @return layout id
-     */
-    @LayoutRes protected abstract int getContentLayoutId();
 
     /**
      * Replaces content fragment with adding to backstack

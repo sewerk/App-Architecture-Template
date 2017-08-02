@@ -19,16 +19,12 @@ import butterknife.ButterKnife;
 import pl.srw.mfvp.MvpFragment;
 import pl.srw.mfvp.view.fragment.MvpActivityScopedFragment;
 import pl.srw.todos.R;
-import pl.srw.mfvp.presenter.PresenterHandlingDelegate;
-import pl.srw.mfvp.presenter.PresenterOwner;
-import pl.srw.mfvp.presenter.SinglePresenterHandlingDelegate;
 import pl.srw.todos.di.component.MainActivityComponent;
 import pl.srw.todos.model.Todo;
 import pl.srw.todos.presenter.ListViewPresenter;
 
 public class ListFragment extends MvpFragment
         implements ListViewPresenter.ListView,
-        PresenterOwner,
         MvpActivityScopedFragment<MainActivityComponent> {
 
     @Inject ListViewPresenter presenter;
@@ -36,12 +32,14 @@ public class ListFragment extends MvpFragment
     @Bind(R.id.list)
     LinearLayout listView;
 
-    public ListFragment() {
-        // Required empty public constructor
-    }
-
     public static ListFragment newInstance() {
         return new ListFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        attachPresenter(presenter);
     }
 
     @Override
@@ -65,11 +63,6 @@ public class ListFragment extends MvpFragment
     @Override
     public void injectDependencies(MainActivityComponent activityComponent) {
         activityComponent.inject(this);
-    }
-
-    @Override
-    public PresenterHandlingDelegate createPresenterDelegate() {
-        return new SinglePresenterHandlingDelegate(this, presenter);
     }
 
     @Override
