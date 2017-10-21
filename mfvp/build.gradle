@@ -4,14 +4,14 @@ apply plugin: 'com.github.dcendents.android-maven'
 group='com.github.sewerk'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion '23.0.3'
+    compileSdkVersion 25
+    buildToolsVersion '26.0.2'
 
     defaultConfig {
         minSdkVersion 15
-        targetSdkVersion 23
-        versionCode 4
-        versionName "1.0-alpha4"
+        targetSdkVersion 25
+        versionCode 5
+        versionName "1.0-beta1"
     }
     buildTypes {
         release {
