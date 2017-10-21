@@ -45,6 +45,14 @@ public abstract class MvpFragment extends DialogFragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (!presenterDelegate.isViewBound()) {
+            presenterDelegate.onReady();
+        }
+    }
+
+    @Override
     @CallSuper
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

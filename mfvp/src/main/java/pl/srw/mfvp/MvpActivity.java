@@ -42,6 +42,14 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (!presenterDelegate.isViewBound()) {
+            presenterDelegate.onReady();
+        }
+    }
+
+    @Override
     @CallSuper
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);

@@ -153,6 +153,14 @@ public class MvpFragmentTest {
 
     @Test
     @Ignore // TODO
+    public void onResume_whenViewNotBind_bindPresenter() throws Exception {
+        // GIVEN
+        // WHEN
+        // THEN
+    }
+
+    @Test
+    @Ignore // TODO
     public void onSaveInstanceState_unbindPresenter() throws Exception {
         // GIVEN
         // WHEN
