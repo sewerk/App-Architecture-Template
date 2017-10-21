@@ -1,6 +1,6 @@
 # Model Fragment-View Presenter
 
-Small and powerful combination for your Android app architecture: **MVP+Fragments+Dagger2**
+Small and powerful combination for your Android app architecture: **MVP+Fragments+DI**
  - Activity+Fragment as a view 
  - retain-over-configuration-change presenter
  - automatic dependency injection and scope management
@@ -12,7 +12,7 @@ Get it from [![](https://jitpack.io/v/sewerk/mfvp.svg)](https://jitpack.io/#sewe
 ### Changes in progress
 
 This API might change until stable version is released. The documentation below might be outdated.
-
+I recommend looking into `sample/` module for correct setup
 
 ## How to start
 
@@ -26,8 +26,7 @@ This API might change until stable version is released. The documentation below 
     }
     dependencies {
         ...
-        compile 'com.github.sewerk:mfvp:1.0-alpha3'
-        annotationProcessor 'com.google.dagger:dagger-compiler:2.0.1'
+        compile 'com.github.sewerk:mfvp:1.0-beta1'
     }
 ```
 
@@ -47,12 +46,7 @@ public class MainViewPresenter extends MvpPresenter<MainViewPresenter.MainView> 
         data = model.getData(); // do work once and cache the result in field
 
         // when data ready, present result
-        present(new UIChange<MainView>() {
-            @Override
-            public void change(MainView view) {
-                view.displayData(data)
-            }
-        });
+        present(view -> view.displayData(data));
     }
 
     @Override
@@ -67,7 +61,8 @@ public class MainViewPresenter extends MvpPresenter<MainViewPresenter.MainView> 
     }
 }
 ```
-### 2. Create Dagger **component** for Activity, extending `MvpActivityScopeComponent`
+### 2. Create DI **component** for Activity, extending `MvpActivityScopeComponent`
+I recommend [Dagger 2](https://google.github.io/dagger/) as DI framework
 ```java
 @RetainActivityScope
 public interface MainActivityComponent
@@ -79,14 +74,15 @@ public interface MainActivityComponent
 ### 3. Create **activity**, by extending `MvpActivity`
 ```java
 public class MainActivity extends MvpActivity<MainActivityComponent>
-        implements PresenterOwner, // required when using presenter
-        MainViewPresenter.MainView { // fulfill presenter commands
+        implements MainViewPresenter.MainView { // fulfill presenter commands
 
     @Inject MainViewPresenter presenter; // injection will be done in super.onCreate()
 
     @Override
-    public PresenterHandlingDelegate createPresenterDelegate() {
-        return new SinglePresenterHandlingDelegate(this, presenter); // single presenter managing this activity
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+        attachPresenter(presenter);
     }
 
     @Override
@@ -104,40 +100,20 @@ public class MainActivity extends MvpActivity<MainActivityComponent>
 // living in activity scope
 public class ListFragment extends MvpFragment
         implements MvpActivityScopedFragment<MainActivityComponent>,
-        PresenterOwner, // required when using presenter
         ListViewPresenter.ListView { // fulfill presenter commands
 
     @Inject ListViewPresenter presenter; // will live until activity is finishing
 
     @Override
-    public PresenterHandlingDelegate createPresenterDelegate() {
-        return new SinglePresenterHandlingDelegate(this, presenter);
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        attachPresenter(presenter);
     }
 
     @Override
     public void injectDependencies(MainActivityComponent activityComponent) {
         activityComponent.inject(this);
     }
-}
-
-// or in own(fragment) scope
-public class AddFragment extends MvpFragment
-        implements MvpFragmentScopedFragment<AddFragmentComponent, MainActivityComponent>, // own and parent component types
-        PresenterOwner, // required when using presenter 
-        AddViewPresenter.AddView { // fulfill presenter commands
-
-    @Inject AddViewPresenter presenter; // will live until fragment is finishing
-
-    @Override
-    public AddFragmentComponent getFragmentComponent(MainActivityComponent activityComponent) {
-        return activityComponent.getAddFragmentComponent();
-    }
-}
-
-@RetainFragmentScope
-@Subcomponent
-public interface AddFragmentComponent extends MvpFragmentScopeComponent<AddFragment> {
-
 }
 ```
 
