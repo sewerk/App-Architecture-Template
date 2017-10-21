@@ -39,7 +39,7 @@ public abstract class MvpFragment extends DialogFragment {
     @CallSuper
     public void onStart() {
         super.onStart();
-        if (!presenterDelegate.isViewBind()) {
+        if (!presenterDelegate.isViewBound()) {
             presenterDelegate.onReady();
         }
     }
@@ -55,7 +55,7 @@ public abstract class MvpFragment extends DialogFragment {
     @CallSuper
     public void onDestroyView() {
         super.onDestroyView();
-        if (presenterDelegate.isViewBind()) {
+        if (presenterDelegate.isViewBound()) {
             presenterDelegate.onUnavailable();
         }
     }

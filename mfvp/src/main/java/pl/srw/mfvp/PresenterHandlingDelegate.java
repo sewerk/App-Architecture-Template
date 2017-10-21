@@ -9,7 +9,7 @@ public class PresenterHandlingDelegate<V> {
     protected final V view;
     private final MvpPresenter<V>[] presenters;
 
-    private boolean isViewBind;
+    private boolean isViewBound;
 
     PresenterHandlingDelegate(V view) {
         this(view, new MvpPresenter[0]);
@@ -24,14 +24,14 @@ public class PresenterHandlingDelegate<V> {
         for (int i = 0; i < presenters.length; i++) {
             presenters[i].bind(view);
         }
-        isViewBind = true;
+        isViewBound = true;
     }
 
     void onUnavailable() {
         for (int i = 0; i < presenters.length; i++) {
             presenters[i].unbind(view);
         }
-        isViewBind = false;
+        isViewBound = false;
     }
 
     void onFinish() {
@@ -40,7 +40,7 @@ public class PresenterHandlingDelegate<V> {
         }
     }
 
-    boolean isViewBind() {
-        return isViewBind;
+    boolean isViewBound() {
+        return isViewBound;
     }
 }

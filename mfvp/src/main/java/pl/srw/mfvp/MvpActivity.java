@@ -36,7 +36,7 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
     @CallSuper
     protected void onRestart() {
         super.onRestart();
-        if (!presenterDelegate.isViewBind()) {
+        if (!presenterDelegate.isViewBound()) {
             presenterDelegate.onReady();
         }
     }
@@ -54,7 +54,7 @@ public abstract class MvpActivity<C extends MvpComponent> extends AppCompatActiv
         if (isFinishing()) {
             notifyStackedFragmentsActivityIsFinishing();
         }
-        if (presenterDelegate.isViewBind()) {
+        if (presenterDelegate.isViewBound()) {
             presenterDelegate.onUnavailable();
         }
         resetDependencies(isFinishing());
